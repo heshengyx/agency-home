@@ -11,7 +11,15 @@
 	<!-- 自动扫描dao和service包(自动注入)
 		<context:component-scan base-package="com.myself.finance.security" />
 		 -->
-
+  <bean id="houseService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    <property name="serviceUrl">  
+      <value>http://localhost:8088/agency-core/hessian/houseService</value>   
+    </property>   
+    <property name="serviceInterface">  
+      <value>com.house.agency.service.IHouseService</value>  
+    </property>
+  </bean>
+  
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">  
 		<property name="basename" value="messages"/>
 		<property name="useCodeAsDefaultMessage" value="true" />

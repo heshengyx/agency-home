@@ -350,20 +350,35 @@
 						
 						<li class="active open">
 							<a href="#" class="dropdown-toggle">
-								<i class="icon-desktop"></i>
-								<span class="menu-text"> 房源管理 </span>
+								<i class="icon-gift"></i>
+								<span class="menu-text"> 新房 </span>
 								<b class="arrow icon-angle-down"></b>
 							</a>
 							<ul class="submenu">
 								<li class="active">
-									<a href="${ctx}/home/house"><i class="icon-double-angle-right"></i>房源列表</a>
+									<a href="${ctx}/home/house?target=new&trade=sale"><i class="icon-double-angle-right"></i>出售</a>
 								</li>
 								<li>
-									<a href="${ctx}/manage/house/add"><i class="icon-double-angle-right"></i>房源新增</a>
+									<a href="${ctx}/manage/house/add"><i class="icon-double-angle-right"></i>出租</a>
 								</li>
 							</ul>
 						</li>
 						<li>
+              <a href="#" class="dropdown-toggle">
+                <i class="icon-home"></i>
+                <span class="menu-text"> 二手房 </span>
+                <b class="arrow icon-angle-down"></b>
+              </a>
+              <ul class="submenu">
+                <li class="active">
+                  <a href="${ctx}/home/house"><i class="icon-double-angle-right"></i>出售</a>
+                </li>
+                <li>
+                  <a href="${ctx}/manage/house/add"><i class="icon-double-angle-right"></i>出租</a>
+                </li>
+              </ul>
+            </li>
+						<%-- <li>
 							<a href="${ctx}/manage/houseImage">
 								<i class="icon-text-width"></i>
 								<span class="menu-text"> 房源图片 </span>
@@ -374,7 +389,7 @@
 								<i class="icon-text-width"></i>
 								<span class="menu-text"> 文字排版 </span>
 							</a>
-						</li>
+						</li> --%>
 					</ul><!-- /.nav-list -->
 
 					<div class="sidebar-collapse" id="sidebar-collapse">
