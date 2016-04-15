@@ -11,6 +11,24 @@
 	<!-- 自动扫描dao和service包(自动注入)
 		<context:component-scan base-package="com.myself.finance.security" />
 		 -->
+  <bean id="regionService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    <property name="serviceUrl">  
+      <value>http://localhost:8088/agency-core/hessian/regionService</value>   
+    </property>   
+    <property name="serviceInterface">  
+      <value>com.house.agency.service.IRegionService</value>  
+    </property>
+  </bean>
+  
+  <bean id="buildingService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    <property name="serviceUrl">  
+      <value>http://localhost:8088/agency-core/hessian/buildingService</value>   
+    </property>   
+    <property name="serviceInterface">  
+      <value>com.house.agency.service.IBuildingService</value>  
+    </property>
+  </bean>
+  
   <bean id="houseService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
     <property name="serviceUrl">  
       <value>http://localhost:8088/agency-core/hessian/houseService</value>   

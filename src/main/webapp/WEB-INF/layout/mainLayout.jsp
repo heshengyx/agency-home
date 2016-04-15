@@ -16,11 +16,9 @@
 		<!--[if IE 7]>
 		  <link rel="stylesheet" href="${ctx}/css/font-awesome-ie7.min.css">
 		<![endif]-->
-	
-		<!-- page specific plugin styles -->
-		<sitemesh:write property="head" />
+
 		<!-- fonts -->
-		<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" rel="stylesheet">
+		<!-- <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" rel="stylesheet"> -->
 	
 		<!-- ace styles -->
 		<link href="${ctx}/css/ace.min.css" rel="stylesheet">
@@ -30,6 +28,9 @@
 		<!--[if lte IE 8]>
 		  <link href="${ctx}/css/ace-ie.min.css" rel="stylesheet">
 		<![endif]-->
+		
+		<!-- page specific plugin styles -->
+    <sitemesh:write property="head" />
 	
 		<!-- inline styles related to this page -->
 		<!-- ace settings handler -->
@@ -356,7 +357,7 @@
 							</a>
 							<ul class="submenu">
 								<li class="active">
-									<a href="${ctx}/home/house?target=new&trade=sale"><i class="icon-double-angle-right"></i>出售</a>
+									<a href="${ctx}/home/house/new/sale"><i class="icon-double-angle-right"></i>出售</a>
 								</li>
 								<li>
 									<a href="${ctx}/manage/house/add"><i class="icon-double-angle-right"></i>出租</a>
@@ -371,7 +372,7 @@
               </a>
               <ul class="submenu">
                 <li class="active">
-                  <a href="${ctx}/home/house"><i class="icon-double-angle-right"></i>出售</a>
+                  <a href="${ctx}/home/house/used/sale"><i class="icon-double-angle-right"></i>出售</a>
                 </li>
                 <li>
                   <a href="${ctx}/manage/house/add"><i class="icon-double-angle-right"></i>出租</a>
@@ -398,54 +399,7 @@
 				</div>
 
 				<sitemesh:write property="body" />
-
-				<div class="ace-settings-container" id="ace-settings-container">
-					<div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
-						<i class="icon-cog bigger-150"></i>
-					</div>
-
-					<div class="ace-settings-box" id="ace-settings-box">
-						<div>
-							<div class="pull-left">
-								<select id="skin-colorpicker" class="hide">
-									<option data-skin="default" value="#438EB9">#438EB9</option>
-									<option data-skin="skin-1" value="#222A2D">#222A2D</option>
-									<option data-skin="skin-2" value="#C6487E">#C6487E</option>
-									<option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
-								</select>
-							</div>
-							<span>&nbsp; Choose Skin</span>
-						</div>
-
-						<div>
-							<input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-navbar" />
-							<label class="lbl" for="ace-settings-navbar"> Fixed Navbar</label>
-						</div>
-
-						<div>
-							<input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-sidebar" />
-							<label class="lbl" for="ace-settings-sidebar"> Fixed Sidebar</label>
-						</div>
-
-						<div>
-							<input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-breadcrumbs" />
-							<label class="lbl" for="ace-settings-breadcrumbs"> Fixed Breadcrumbs</label>
-						</div>
-
-						<div>
-							<input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl" />
-							<label class="lbl" for="ace-settings-rtl"> Right To Left (rtl)</label>
-						</div>
-
-						<div>
-							<input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container" />
-							<label class="lbl" for="ace-settings-add-container">
-								Inside
-								<b>.container</b>
-							</label>
-						</div>
-					</div>
-				</div><!-- /#ace-settings-container -->
+        <!-- /#ace-settings-container -->
 			</div><!-- /.main-container-inner -->
 
 			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">

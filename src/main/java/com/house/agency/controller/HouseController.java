@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.house.agency.data.HouseListData;
+import com.house.agency.entity.Region;
 import com.house.agency.page.IPage;
 import com.house.agency.param.HouseQueryParam;
+import com.house.agency.param.RegionQueryParam;
 import com.house.agency.service.IHouseService;
+import com.house.agency.service.IRegionService;
 import com.myself.common.message.JsonResult;
 
 @Controller
@@ -21,9 +24,31 @@ public class HouseController extends BaseController {
 	@Autowired
 	private IHouseService houseService;
 	
-	@RequestMapping("")
-	public String page(Model model) {
+	@Autowired
+	private IRegionService regionService;
+	
+	@RequestMapping("/used/sale")
+	public String pageUsedSale(Model model) {
+		setModel(model);
 		return "house";
+	}
+	
+	@RequestMapping("/new/sale")
+	public String pageNewSale(Model model) {
+		setModel(model);
+		return "house";
+	}
+	
+	@RequestMapping("/used/sale/add")
+	public String pageUsedSaleAdd(Model model) {
+		return "house-add";
+	}
+	
+	private void setModel(Model model) {
+		RegionQueryParam param = new RegionQueryParam();
+		param.setCode("SZ");
+		List<Region> regions = regionService.list(param);
+		model.addAttribute("regions", regions);
 	}
 	
 	@RequestMapping("/queryData")
