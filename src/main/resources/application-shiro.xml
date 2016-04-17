@@ -46,6 +46,8 @@
         /unauthor.jsp = anon
         /404.jsp = anon
         /505.jsp = anon
+        /home/login = anon
+        /home/logout = anon
        
         /home/** = authc  
 			</value>  

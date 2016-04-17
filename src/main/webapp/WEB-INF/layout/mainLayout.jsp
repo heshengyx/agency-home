@@ -1,5 +1,6 @@
 <%@ page language="java" pageEncoding="UTF-8"%>
 <%@ include file="/common/include.jsp"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
@@ -269,7 +270,7 @@
 								<img class="nav-user-photo" src="${ctx}/avatars/user.jpg" alt="Jason's Photo" />
 								<span class="user-info">
 									<small>Welcome,</small>
-									Jason
+									<shiro:principal property="username" />
 								</span>
 
 								<i class="icon-caret-down"></i>
@@ -289,15 +290,8 @@
 										Profile
 									</a>
 								</li>
-
 								<li class="divider"></li>
-
-								<li>
-									<a href="#">
-										<i class="icon-off"></i>
-										Logout
-									</a>
-								</li>
+								<li><a href="${ctx}/home/logout"><i class="icon-off"></i>Logout</a></li>
 							</ul>
 						</li>
 					</ul><!-- /.ace-nav -->

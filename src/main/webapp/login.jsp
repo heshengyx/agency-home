@@ -30,7 +30,8 @@
     <![endif]-->
     
     <!-- page specific plugin styles -->
-  
+    <link href="${ctx}/css/bootstrapValidator.min.css" rel="stylesheet">
+    
     <!-- inline styles related to this page -->
     <!-- ace settings handler -->
     <script src="${ctx}/js/ace-extra.min.js"></script>
@@ -70,18 +71,18 @@
 
                       <div class="space-6"></div>
 
-                      <form>
+                      <form id="dataForm" action="${ctx}/home/login" method="post">
                         <fieldset>
                           <label class="block clearfix">
                             <span class="block input-icon input-icon-right">
-                              <input type="text" class="form-control" placeholder="手机/账号/邮箱" />
+                              <input type="text" class="form-control" name="username" placeholder="手机/账号/邮箱" />
                               <i class="icon-user"></i>
                             </span>
                           </label>
 
                           <label class="block clearfix">
                             <span class="block input-icon input-icon-right">
-                              <input type="password" class="form-control" placeholder="密码" />
+                              <input type="password" class="form-control" name="password" placeholder="密码" />
                               <i class="icon-lock"></i>
                             </span>
                           </label>
@@ -94,7 +95,7 @@
                               <span class="lbl"> 记住我</span>
                             </label>
 
-                            <button type="button" class="width-35 pull-right btn btn-sm btn-primary">
+                            <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
                               <i class="icon-key"></i>登录
                             </button>
                           </div>
@@ -259,6 +260,59 @@
         </div><!-- /.row -->
       </div>
     </div><!-- /.main-container -->
+    
+    <!--[if !IE]> -->
+    <script type="text/javascript">
+      window.jQuery || document.write("<script src='${ctx}/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+    </script>
+    <!-- <![endif]-->
+    <!--[if IE]>
+    <script type="text/javascript">
+     window.jQuery || document.write("<script src='${ctx}/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+    </script>
+    <![endif]-->
+
+    <script type="text/javascript">
+      if("ontouchend" in document) document.write("<script src='${ctx}/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+    </script>
+    <script src="${ctx}/js/bootstrap.min.js"></script>
+    <script src="${ctx}/js/typeahead-bs2.min.js"></script>
+    <!-- ace scripts -->
+    <script src="${ctx}/js/ace-elements.min.js"></script>
+    <script src="${ctx}/js/ace.min.js"></script>
+    <script src="${ctx}/js/bootstrapValidator.min.js"></script>
+    <script>
+    $(document).ready(function() {
+			$('#dataForm').bootstrapValidator({
+			  submitHandler: function(validator, form, submitButton) {
+			    $.post(form.attr('action'), form.serialize(), function(result) {
+			      if (result.code == '500') {
+			        //$('#message').text(result.message);
+			        validator.disableSubmitButtons(false);
+			      } else {
+			        window.location.href = '${ctx}/home/house/used/sale';
+			      }
+			    }, 'json');
+			  },
+			  fields: {
+			    username: {
+            validators: {
+              notEmpty: {
+            	  message: '用户名不能为空'
+              }
+            }
+          },
+          password: {
+            validators: {
+              notEmpty: {
+            	  message: '密码不能为空'
+              }
+            }
+          }
+			  }
+		  });
+    });
+    </script>
   </body>
 </html>
 
