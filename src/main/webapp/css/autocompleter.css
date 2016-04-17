@@ -2,7 +2,7 @@
 	width: 100%;
 	background: #dddddd;
 	position: absolute;
-	top: 34px;
+	top: 28px;
 	left: 0;
 	z-index: 100;
 }
@@ -48,11 +48,11 @@
 .autocompleter-hint {
 	color: #ccc;
 	text-align: left;
-	top: -39px;
+	top: -37px;
 	/* font-weight: 100; */
 	left: 0;
 	width: 100%;
-	padding: 12px 12px 12px 13px;
+	padding: 12px 12px 12px 7px;
 	font-size: 16px;
 	display: none;
 }
