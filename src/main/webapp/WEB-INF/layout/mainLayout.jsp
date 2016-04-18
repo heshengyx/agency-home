@@ -31,6 +31,7 @@
 		<![endif]-->
 		
 		<!-- page specific plugin styles -->
+		<link href="${ctx}/css/ui-dialog.css" rel="stylesheet">
     <sitemesh:write property="head" />
 	
 		<!-- inline styles related to this page -->
@@ -291,7 +292,7 @@
 									</a>
 								</li>
 								<li class="divider"></li>
-								<li><a href="${ctx}/home/logout"><i class="icon-off"></i>Logout</a></li>
+								<li><a href="#" id="logout"><i class="icon-off"></i>Logout</a></li>
 							</ul>
 						</li>
 					</ul><!-- /.ace-nav -->
@@ -420,7 +421,30 @@
 		<!-- ace scripts -->
 		<script src="${ctx}/js/ace-elements.min.js"></script>
 		<script src="${ctx}/js/ace.min.js"></script>
-
+    <script src="${ctx}/js/dialog-min.js"></script>
+    <script src="${ctx}/js/dialog-util.js"></script>
+    <script>
+    $(document).ready(function() {
+    	$("#logout").click(function() {
+    		dialog({
+   		    title: '消息',
+   		    content: '确定要退出吗?',
+   		    okValue: '确定',
+   		    ok: function () {
+   		    	var that = this;
+   		    	this.title('退出中…');
+   		      setTimeout(function () {
+               that.close().remove();
+               location.href = "${ctx}/home/logout";
+            }, 2000);
+            return false;
+   		    },
+   		    cancelValue: '取消',
+   	      cancel: function () {}
+    		}).width(150).showModal();
+    	});
+    });
+    </script>
 		<sitemesh:write property="jscript" />
 	</body>
 </html>

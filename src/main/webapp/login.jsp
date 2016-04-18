@@ -283,7 +283,7 @@
     <script src="${ctx}/js/bootstrapValidator.min.js"></script>
     <script>
     $(document).ready(function() {
-			$('#dataForm').bootstrapValidator({
+			$("#dataForm").bootstrapValidator({
 			  submitHandler: function(validator, form, submitButton) {
 			    $.post(form.attr('action'), form.serialize(), function(result) {
 			      if (result.code == '500') {

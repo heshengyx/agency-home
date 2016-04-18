@@ -83,9 +83,6 @@ public class SecurityRealm extends AuthorizingRealm {
 				+ ReflectionToStringBuilder.toString(token,
 						ToStringStyle.MULTI_LINE_STYLE));
 		User user = userService.getDataByUsername(token.getUsername());
-		user = new User();
-		user.setUsername(token.getUsername());
-		user.setPassword("123456");
 		if (null != user) {
 			authcInfo = new SimpleAuthenticationInfo(user,
 					user.getPassword(), user.getUsername());

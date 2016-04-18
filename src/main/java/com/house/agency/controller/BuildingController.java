@@ -11,7 +11,7 @@ import com.house.agency.param.BuildingQueryParam;
 import com.house.agency.service.IBuildingService;
 
 @Controller
-@RequestMapping("/house/building")
+@RequestMapping("/home/building")
 public class BuildingController extends BaseController {
 
 	private final static Logger logger = LoggerFactory

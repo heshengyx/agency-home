@@ -3,7 +3,6 @@
 <html>
 <head>
   <title>首页-爱房网</title>
-  <link href="${ctx}/css/ui-dialog.css" rel="stylesheet">
   <link href="${ctx}/css/jquery.autocompleter.css" rel="stylesheet">
   <link href="${ctx}/css/autocompleter.css" rel="stylesheet">
   <link href="${ctx}/css/datepicker.css" rel="stylesheet">
@@ -105,12 +104,12 @@
 		                    </div>
 		                    <label class="col-md-1 control-label no-padding-right">栋座：</label>
 		                    <div class="col-md-4">
-	                        <select class="input-select" id="form-field-select-1">
-                            <option value="">选择栋座</option>
+	                        <select class="input-select" id="buildingUnit">
+                            <option value="0">选择栋座</option>
                           </select>
                           <small>~</small>
-                          <select class="input-select" id="form-field-select-2">
-                            <option value="">选择房号</option>
+                          <select class="input-select" id="house">
+                            <option value="0">选择房号</option>
                           </select>
 		                    </div>
 		                  </div>
@@ -131,16 +130,33 @@
                       <div class="form-group form-row">
                         <label class="col-md-1 control-label no-padding-right">户型：</label>
                         <div class="col-md-8">
-                          <select class="input-select" id="form-field-select-1">
-                            <option value="">选择室</option>
+                          <select class="input-select" id="room">
+                            <option value="0">选择室</option>
+                            <option value="1">1室</option>
+                            <option value="2">2室</option>
+                            <option value="3">3室</option>
+                            <option value="4">4室</option>
+                            <option value="5">5室</option>
+                            <option value="5:gt">5室以上</option>
                           </select>
                           <small>~</small>
-                          <select class="input-select" id="form-field-select-1">
-                            <option value="">选择厅</option>
+                          <select class="input-select" id="saloon">
+                            <option value="0">选择厅</option>
+                            <option value="1">1厅</option>
+                            <option value="2">2厅</option>
+                            <option value="3">3厅</option>
+                            <option value="4">4厅</option>
+                            <option value="5">5厅</option>
+                            <option value="5">5厅</option>
                           </select>
                           <small>~</small>
-                          <select class="input-select" id="form-field-select-1">
-                            <option value="">选择卫</option>
+                          <select class="input-select" id="toilet">
+                            <option value="0">选择卫</option>
+                            <option value="1">1卫</option>
+                            <option value="2">2卫</option>
+                            <option value="3">3卫</option>
+                            <option value="4">4卫</option>
+                            <option value="5">5卫</option>
                           </select>
                         </div>
                       </div>
@@ -148,12 +164,12 @@
                         <label class="col-md-1 control-label no-padding-right">时间：</label>
                         <div class="col-md-5">
                           <span class="input-icon input-icon-right">
-                            <input class="date-picker" style="width:110px" id="id-date-picker-1" type="text" data-date-format="yyyy-mm-dd" placeholder="开始时间">
+                            <input class="date-picker" style="width:110px" id="dateBegin" type="text" data-date-format="yyyy-mm-dd" placeholder="开始时间">
                             <i class="icon-calendar"></i>
                           </span>
                           <small>~</small>
                           <span class="input-icon input-icon-right">
-                            <input class="date-picker" style="width:110px" id="id-date-picker-1" type="text" data-date-format="yyyy-mm-dd" placeholder="结束时间">
+                            <input class="date-picker" style="width:110px" id="dateEnd" type="text" data-date-format="yyyy-mm-dd" placeholder="结束时间">
                             <i class="icon-calendar"></i>
                           </span>
                         </div>
@@ -181,7 +197,7 @@
                         <div class="col-md-3 col-md-offset-1">
                           <div class="input-group">
                             <span class="input-group-btn">
-                              <button type="button" class="btn btn-info btn-sm input-text">搜索<i class="icon-search icon-on-right"></i></button>
+                              <button type="button" class="btn btn-info btn-sm input-text" id="btnSearch">搜索<i class="icon-search icon-on-right"></i></button>
                               &nbsp;&nbsp;
                               <button type="reset" class="btn btn-sm input-text">重置<i class="icon-undo icon-on-right"></i></button>
                             </span>
@@ -229,7 +245,7 @@
 
 		        <div class="widget-body widget-none">
 			        <div class="table-responsive">
-			          <table id="sample-table-2" class="table table-striped table-bordered table-hover" width="100%">
+			          <table id="tableData" class="table table-striped table-bordered table-hover" width="100%">
 			            <thead>
 			              <tr>
 			                <th></th>
@@ -258,14 +274,14 @@
 	<script src="${ctx}/js/jquery.dataTables.min.js"></script>
   <script src="${ctx}/js/dataTables.bootstrap.js"></script>
   <script src="${ctx}/js/jquery.autocompleter.js"></script>
-  <script src="${ctx}/js/dialog-min.js"></script>
-  <script src="${ctx}/js/dialog-util.js"></script>
   <script src="${ctx}/js/date-time/bootstrap-datepicker.min.js"></script>
 	<script>
+	var d = null;
+	var table = null;
 	$(document).ready(function() {
 		//http://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTegdm0LZdjqr5-oayXSOefg.woff2
 		$("#townsPane").hide();
-		$('#sample-table-2').DataTable({
+		table = $('#tableData').DataTable({
 			 "language": {
 	       "processing":  "处理中...",
 	       "lengthMenu":  "每页 _MENU_ 条记录",
@@ -338,9 +354,9 @@
         { "orderable": false, "targets": 8, "render": function(data, type, row) {
           var content = "<div class=\"text-center\">";
           content += "<div class=\"visible-md visible-lg hidden-sm hidden-xs action-buttons\">";
-          content += "  <a class=\"blue\" href=\"#\"><i class=\"icon-zoom-in bigger-130\"></i></a>";
-          content += "  <a class=\"green\" href=\"#\"><i class=\"icon-pencil bigger-130\"></i></a>";
-          content += "  <a class=\"red\" href=\"#\"><i class=\"icon-trash bigger-130\"></i></a>";
+          content += "  <a class=\"blue\" href=\"#\" title=\"详情\"><i class=\"icon-zoom-in bigger-130\"></i></a>";
+          content += "  <a class=\"green\" href=\"#\" title=\"编辑\"><i class=\"icon-pencil bigger-130\"></i></a>";
+          content += "  <a class=\"red\" href=\"#\" title=\"删除\"><i class=\"icon-trash bigger-130\"></i></a>";
           content += "</div>";
           content += "<div class=\"visible-xs visible-sm hidden-md hidden-lg\">";
           content += "  <div class=\"inline position-relative\">";
@@ -387,7 +403,7 @@
       // marker for autocomplete matches
       highlightMatches: true,
       // object to local or url to remote search
-      source: '${ctx}/house/building/search',
+      source: '${ctx}/home/building/search',
       // custom template
       template: '{{ label }} <span>({{ districtName }}-{{ townName }})</span>',
       // show hint
@@ -412,16 +428,110 @@
       },
       callback: function (value, index, selected) {
         if (selected) {
-          alert(selected.buildingId);
+          var buildingId = selected.buildingId;
+          if (buildingId) {
+        	  var url = "${ctx}/home/buildingUnit/select?random="+ Math.random();
+            var params = {
+            		buildingId: buildingId
+            };
+            $.post(url, params, function(result) {
+              if ("500" != result.code) {
+            	  $("#buildingUnit:not(':first')").empty();
+            	  var $buildingUnit = $("#buildingUnit");
+            	  for(var i=0; i<result.data.length; i++) {
+            		  $buildingUnit.append("<option value=\"" + result.data[i].id + "\">" + result.data[i].name + "</option>");
+            	  }
+              }
+            }, "json");
+          }
         }
       }
     });
 		
-		$('.date-picker').datepicker({autoclose:true}).next().on(ace.click_event, function(){
+		$("#buildingUnit").change(function() {
+			var buildingUnitId = $(this).val();
+			if (buildingUnitId != "0") {
+				var url = "${ctx}/home/house/select?random="+ Math.random();
+        var params = {
+        		buildingUnitId: buildingUnitId
+        };
+        $.post(url, params, function(result) {
+          if ("500" != result.code) {
+            $("#house:not(':first')").empty();
+            var $house = $("#house");
+            for(var i=0; i<result.data.length; i++) {
+              $house.append("<option value=\"\">" + result.data[i].card + "</option>");
+            }
+          }
+        }, "json");
+			}
+		});
+		
+		$(".date-picker").datepicker({autoclose:true}).next().on(ace.click_event, function(){
       $(this).prev().focus();
     });
+		
+		$("#btnSearch").click(function() {
+			d = dialog({
+	      title: '房源载入中...'
+	    });
+	    d.showModal();
+	    var search = "?random=" + Math.random();
+	    var townsValue = $("#townsValue").val();
+      if (townsValue && townsValue != "0") {
+        search += "&townId=" + townsValue;
+      } else {
+        var districtsValue = $("#districtsValue").val();
+        if (districtsValue && districtsValue != "0") {
+          search += "&districtId=" + districtsValue;
+        }
+      }
+      var priceBeginValue = $("#priceBegin").val();
+      if (priceBeginValue && priceBeginValue != "0") {
+        search += "&priceBegin=" + (Number(priceBeginValue)*100);
+      }
+      var priceEndValue = $("#priceEnd").val();
+      if (priceEndValue && priceEndValue != "0") {
+        search += "&priceEnd=" + (Number(priceEndValue)*100);
+      }
+      var areaBeginValue = $("#areaBegin").val();
+      if (areaBeginValue && areaBeginValue != "0") {
+        search += "&areaBegin=" + (Number(areaBeginValue)*100);
+      }
+      var areaEndValue = $("#areaEnd").val();
+      if (areaEndValue && areaEndValue != "0") {
+        search += "&areaEnd=" + (Number(areaEndValue)*100);
+      }
+      var roomValue = $("#room").val();
+      if (roomValue && roomValue != "0") {
+        var values = roomValue.split(":");
+        if (values.length > 1) {
+          search += "&symbol=" + values[1];
+        }
+        search += "&room=" + values[0];
+      }
+      var saloonValue = $("#saloon").val();
+      if (saloonValue && saloonValue != "0") {
+    	  search += "&saloon=" + saloonValue;
+      }
+      var toiletValue = $("#toilet").val();
+      if (toiletValue && toiletValue != "0") {
+        search += "&toilet=" + toiletValue;
+      }
+      
+      var dateBeginValue = $("#dateBegin").val();
+      if (dateBeginValue) {
+        search += "&releaseDateBegin=" + dateBeginValue;
+      }
+      var dateEndValue = $("#dateEnd").val();
+      if (dateEndValue) {
+        search += "&releaseDateEnd=" + dateEndValue;
+      }
+	    table.ajax.url("${ctx}/home/house/queryData" + search).load();
+	    d.close();
+		});
 	
-		$("#btn-add").click(function() {
+		$("#btnAdd").click(function() {
       var url = "${ctx}/home/house/used/sale/add?random=" + Math.random();
       var options = {
         title: '新增',
