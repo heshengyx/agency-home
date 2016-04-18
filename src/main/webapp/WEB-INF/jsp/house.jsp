@@ -7,7 +7,7 @@
   <link href="${ctx}/css/autocompleter.css" rel="stylesheet">
   <link href="${ctx}/css/datepicker.css" rel="stylesheet">
   <style>
-  #townsPane hr {
+  .hr-line {
     margin-top: 0;
     margin-bottom: 8px;
   }
@@ -32,6 +32,8 @@
   .table-search {margin-bottom: 0;}
   .action-close {color: #e09e96;}
   .action-close:hover {color: #ffd9d5;}
+  
+  .modal-body-content {padding-top: 5px;}
   </style>
 </head>
 <body>
@@ -78,7 +80,7 @@
                             </c:forEach> 
                           </ul>
                           <div id="townsPane">
-						                <hr>
+						                <hr class="hr-line">
 						                <ul class="list-inline" id="towns">
 						                  <li><button type="button" class="btn btn-danger btn-xs">不限</button></li>
 						                </ul>
@@ -233,7 +235,7 @@
 		        <div class="widget-header header-color-blue">
 		          <h5><i class="icon-table"></i>新房出售</h5>
 	            <div class="widget-toolbar">
-	              <button class="btn btn-minier btn-purple">新增<i class="icon-edit align-top icon-on-right"></i>
+	              <button class="btn btn-minier btn-purple" data-toggle="modal" data-target="#modal-form">新增<i class="icon-edit align-top icon-on-right"></i>
                 </button>
 	              <button class="btn btn-minier">导出<i class="icon-print align-top icon-on-right"></i>
 								</button>
@@ -253,8 +255,8 @@
 			                <th>楼盘信息</th>
 			                <th class="text-right" width="90">户型</th>
 			                <th width="110">价格（万）</th>
-			                <th width="120">面积（平米）</th>
-			                <th width="150"><i class="icon-time hidden-480"></i>发布时间</th>
+			                <th width="110">面积（㎡）</th>
+			                <th width="130"><i class="icon-time hidden-480"></i>发布时间</th>
 			                <th class="text-center hidden-480" width="50">状态</th>
 			                <th class="text-center" width="110">操作</th>
 			              </tr>
@@ -264,6 +266,107 @@
 		        </div>
 	        </div>
 	        
+	        <div id="modal-form" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-body overflow-visible modal-body-content">
+                  <div class="widget-container-span">
+                    <div class="widget-box transparent">
+						          <div class="widget-header">
+						            <h6>房源新增</h6>
+						            <div class="widget-toolbar no-border">
+						              <a href="#" data-action="collapse"><i class="icon-chevron-up"></i></a>
+						            </div>
+						          </div>
+						          
+						          <div class="widget-body">
+						            <table class="table table-striped table-search">
+						            <tbody>
+						            <tr>
+						            <td>
+						            <form class="form-horizontal">
+		                      <div class="form-group form-row">
+		                        <label class="col-md-2 control-label no-padding-right">区域：</label>
+		                        <div class="col-md-10">
+		                          <ul class="list-inline" id="districts1">
+		                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('0', '', this);">不限</button></li>
+		                            <c:forEach var="data" items="${regions}">
+		                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this);">${data.name}</button></li>
+		                            </c:forEach> 
+		                          </ul>
+		                          <div id="townsPane1">
+		                            <hr class="hr-line">
+		                            <ul class="list-inline" id="towns1">
+		                              <li><button type="button" class="btn btn-danger btn-xs">不限</button></li>
+		                            </ul>
+		                          </div>
+		                        </div>
+		                      </div>
+		                    </form>
+		                    </td>
+		                    </tr>
+		                    </tbody>
+		                    </table>
+						          </div>
+						        </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-5">
+                      <div class="space"></div>
+
+                      <input type="file" />
+                    </div>
+
+                    <div class="col-xs-12 col-sm-7">
+                      <div class="form-group">
+                        <label for="form-field-select-3">Location</label>
+
+                        <div>
+                          <select class="chosen-select" data-placeholder="Choose a Country...">
+                            <option value="">&nbsp;</option>
+                            <option value="AL">Alabama</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="space-4"></div>
+
+                      <div class="form-group">
+                        <label for="form-field-username">Username</label>
+
+                        <div>
+                          <input class="input-large" type="text" id="form-field-username" placeholder="Username" value="alexdoe" />
+                        </div>
+                      </div>
+
+                      <div class="space-4"></div>
+
+                      <div class="form-group">
+                        <label for="form-field-first">Name</label>
+
+                        <div>
+                          <input class="input-medium" type="text" id="form-field-first" placeholder="First Name" value="Alex" />
+                          <input class="input-medium" type="text" id="form-field-last" placeholder="Last Name" value="Doe" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="icon-remove"></i>
+                    Cancel
+                  </button>
+
+                  <button class="btn btn-sm btn-primary">
+                    <i class="icon-ok"></i>
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
 	        <!-- PAGE CONTENT ENDS -->
 	      </div><!-- /.col -->
 	    </div><!-- /.row -->
@@ -342,7 +445,7 @@
           return content;
         }},
         { "targets": 6, "render": function(data, type, row) {
-          var content = to_date_hms(data.releaseTime);
+          var content = to_date_hm(data.releaseTime);
           return content;
         }},
         { "orderable": false, "targets": 7, "render": function(data, type, row) {
@@ -534,7 +637,7 @@
 		$("#btnAdd").click(function() {
       var url = "${ctx}/home/house/used/sale/add?random=" + Math.random();
       var options = {
-        title: '新增',
+        title: '房源新增',
         width: 500
       };
       showDialog(url, options);
