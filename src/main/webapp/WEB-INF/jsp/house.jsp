@@ -24,12 +24,16 @@
   
   .btn-list {padding: 0;}
   .list-inline li {padding-left: 0;}
-  /* .list-inline li button {border: 0;}
-  .list-inline li button.btn-danger {border: 0;}
-  .list-inline li button.btn-link {border: 0;} */
   
   .widget-none {border: 0;}
-  .table-search {margin-bottom: 0;}
+  .table-search {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .table-search>tbody>tr>td {
+    padding-top: 0;
+    padding-bottom: 0;
+  } 
   .action-close {color: #e09e96;}
   .action-close:hover {color: #ffd9d5;}
   
@@ -74,9 +78,9 @@
                         <label class="col-md-1 control-label no-padding-right">区域：</label>
                         <div class="col-md-11">
                           <ul class="list-inline" id="districts">
-                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('0', '', this);">不限</button></li>
+                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('0', '', this, ['districts', 'towns', 'townsPane']);">不限</button></li>
                             <c:forEach var="data" items="${regions}">
-                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this);">${data.name}</button></li>
+                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['districts', 'towns', 'townsPane']);">${data.name}</button></li>
                             </c:forEach> 
                           </ul>
                           <div id="townsPane">
@@ -87,15 +91,6 @@
 						              </div>
                         </div>
                       </div>
-                      <!-- <div class="form-group form-row">
-                        <label class="col-md-1 control-label no-padding-right" for="buildingName">楼盘：</label>
-                        <div class="col-md-3">
-                          <input type="text" id="buildingName" placeholder="楼盘名称">
-                        </div>
-                        <div class="col-md-3">
-                          <input type="text" id="form-field-icon-2">
-                        </div>
-                      </div> -->
                       <div class="form-group form-row">
 		                    <label class="col-md-1 control-label no-padding-right">楼盘：</label>
 		                    <div class="col-md-4">
@@ -176,25 +171,6 @@
                           </span>
                         </div>
                       </div>
-                      <!-- <div class="form-group form-row">
-                        <label class="col-md-1 control-label no-padding-right">时间：</label>
-                        <div class="col-md-2">
-                          <div class="input-group">
-                            <input class="date-picker input-field" id="id-date-picker-1" type="text" data-date-format="yyyy-mm-dd" placeholder="开始时间">
-                            <span class="input-group-addon">
-                              <i class="icon-calendar icon-on-left"></i>
-                            </span>
-                          </div>
-                        </div>
-                        <div class="col-md-2">
-                          <div class="input-group"> 
-                            <input class="date-picker input-field" id="id-date-picker-2" type="text" data-date-format="yyyy-mm-dd" placeholder="结束时间">
-                            <span class="input-group-addon">
-                              <i class="icon-calendar"></i>
-                            </span>
-                          </div>
-                        </div>
-                      </div> -->
                       <div class="form-group form-row">
                         <div class="col-md-3 col-md-offset-1">
                           <div class="input-group">
@@ -203,9 +179,6 @@
                               &nbsp;&nbsp;
                               <button type="reset" class="btn btn-sm input-text">重置<i class="icon-undo icon-on-right"></i></button>
                             </span>
-                            <!-- <span class="input-group-btn">
-                              <button type="reset" class="btn btn-sm">重置<i class="icon-undo icon-on-right"></i></button>
-                            </span> -->
                           </div>
                         </div>  
                       </div>
@@ -220,6 +193,8 @@
       
       <input id="districtsValue" type="hidden">
       <input id="townsValue" type="hidden">
+      <input id="districtsAddValue" type="hidden">
+      <input id="townsAddValue" type="hidden">
       
 	    <div class="row">
 	      <div class="col-xs-12 widget-container-span">
@@ -282,86 +257,104 @@
 						          <div class="widget-body">
 						            <table class="table table-striped table-search">
 						            <tbody>
-						            <tr>
-						            <td>
-						            <form class="form-horizontal">
-		                      <div class="form-group form-row">
-		                        <label class="col-md-2 control-label no-padding-right">区域：</label>
-		                        <div class="col-md-10">
-		                          <ul class="list-inline" id="districts1">
-		                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('0', '', this);">不限</button></li>
-		                            <c:forEach var="data" items="${regions}">
-		                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this);">${data.name}</button></li>
-		                            </c:forEach> 
-		                          </ul>
-		                          <div id="townsPane1">
-		                            <hr class="hr-line">
-		                            <ul class="list-inline" id="towns1">
-		                              <li><button type="button" class="btn btn-danger btn-xs">不限</button></li>
-		                            </ul>
-		                          </div>
-		                        </div>
-		                      </div>
-		                    </form>
-		                    </td>
-		                    </tr>
+							            <tr>
+								            <td>
+									            <form class="form-horizontal">
+					                      <div class="form-group form-row">
+					                        <label class="col-md-2 control-label no-padding-right">区域：</label>
+					                        <div class="col-md-10">
+					                          <ul class="list-inline" id="districtsAdd">
+					                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('0', '', this, ['districtsAdd', 'townsAdd', 'townsPaneAdd']);">不限</button></li>
+					                            <c:forEach var="data" items="${regions}">
+					                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['districtsAdd', 'townsAdd', 'townsPaneAdd']);">${data.name}</button></li>
+					                            </c:forEach> 
+					                          </ul>
+					                          <div id="townsPaneAdd">
+					                            <hr class="hr-line">
+					                            <ul class="list-inline" id="townsAdd">
+					                              <li><button type="button" class="btn btn-danger btn-xs">不限</button></li>
+					                            </ul>
+					                          </div>
+					                        </div>
+					                      </div>
+					                      <div class="form-group form-row">
+					                        <label class="col-md-2 control-label no-padding-right">楼盘：</label>
+					                        <div class="col-md-8">
+					                          <div class="input-group">
+					                            <input class="input-field" type="text" id="buildingNameAdd" placeholder="楼盘名称">
+					                            <span class="input-group-addon"><i class="icon-home"></i></span>
+					                          </div>
+					                        </div>
+					                      </div>
+                                <div class="form-group form-row">
+					                        <label class="col-md-2 control-label no-padding-right">栋座：</label>
+					                        <div class="col-md-8">
+					                          <select class="input-select" id="buildingUnitAdd">
+					                            <option value="0">选择栋座</option>
+					                          </select>
+					                          <small>~</small>
+					                          <select class="input-select" id="houseAdd">
+					                            <option value="0">选择房号</option>
+					                          </select>
+					                        </div>
+					                      </div>
+					                      <div class="form-group form-row">
+                                  <label class="col-md-2 control-label no-padding-right">面积：</label>
+                                  <div class="col-md-8">
+                                    <input class="input-text" type="text" id="areaAdd" value="300" disabled="disabled">
+                                    <small>~</small>
+                                    <input class="input-text" type="text" id="pAdd" value="3室2厅1卫" disabled="disabled">      
+                                    <small>~</small>
+                                    <input class="input-text" type="text" id="faceAdd" value="东南" disabled="disabled">
+                                  </div>
+                                </div>
+					                    </form>
+				                    </td>
+			                    </tr>
 		                    </tbody>
 		                    </table>
 						          </div>
 						        </div>
                   </div>
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-5">
-                      <div class="space"></div>
-
-                      <input type="file" />
-                    </div>
-
-                    <div class="col-xs-12 col-sm-7">
-                      <div class="form-group">
-                        <label for="form-field-select-3">Location</label>
-
-                        <div>
-                          <select class="chosen-select" data-placeholder="Choose a Country...">
-                            <option value="">&nbsp;</option>
-                            <option value="AL">Alabama</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div class="space-4"></div>
-
-                      <div class="form-group">
-                        <label for="form-field-username">Username</label>
-
-                        <div>
-                          <input class="input-large" type="text" id="form-field-username" placeholder="Username" value="alexdoe" />
-                        </div>
-                      </div>
-
-                      <div class="space-4"></div>
-
-                      <div class="form-group">
-                        <label for="form-field-first">Name</label>
-
-                        <div>
-                          <input class="input-medium" type="text" id="form-field-first" placeholder="First Name" value="Alex" />
-                          <input class="input-medium" type="text" id="form-field-last" placeholder="Last Name" value="Doe" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <table class="table table-search">
+                  <tbody>
+                    <tr>
+                      <td>
+                        <form class="form-horizontal">
+                          <div class="form-group form-row">
+                            <label class="col-md-2 control-label no-padding-right">标题：</label>
+				                    <div class="col-md-8">
+				                      <input class="input-field" type="text" id="titleAdd" placeholder="标题">
+				                    </div>
+				                  </div>
+				                  <div class="form-group form-row">
+                            <label class="col-md-2 control-label no-padding-right">价格：</label>
+                            <div class="col-md-3">
+                              <div class="input-group">
+                                <input class="input-field" type="text" id="priceAdd" placeholder="价格">
+                                <div class="input-group-addon"><small>万</small></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group form-row">
+                            <label class="col-md-2 control-label no-padding-right">描述：</label>
+                            <div class="col-md-10">
+                              <div class="wysiwyg-editor" id="editor1"></div>
+                            </div>
+                          </div>
+				                </form>
+                      </td>
+                    </tr>
+                  </tbody>
+                  </table>
                 </div>
 
                 <div class="modal-footer">
                   <button class="btn btn-sm" data-dismiss="modal">
-                    <i class="icon-remove"></i>
-                    Cancel
+                    <i class="icon-remove"></i>关闭
                   </button>
-
                   <button class="btn btn-sm btn-primary">
-                    <i class="icon-ok"></i>
-                    Save
+                    <i class="icon-ok"></i>保存
                   </button>
                 </div>
               </div>
@@ -378,12 +371,15 @@
   <script src="${ctx}/js/dataTables.bootstrap.js"></script>
   <script src="${ctx}/js/jquery.autocompleter.js"></script>
   <script src="${ctx}/js/date-time/bootstrap-datepicker.min.js"></script>
+  <script src="${ctx}/js/jquery.hotkeys.min.js"></script>
+  <script src="${ctx}/js/bootstrap-wysiwyg.min.js"></script>
 	<script>
 	var d = null;
 	var table = null;
 	$(document).ready(function() {
 		//http://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTegdm0LZdjqr5-oayXSOefg.woff2
 		$("#townsPane").hide();
+		$("#townsPaneAdd").hide();
 		table = $('#tableData').DataTable({
 			 "language": {
 	       "processing":  "处理中...",
@@ -501,74 +497,10 @@
         { "data": null }
       ]
 		});
-		
-		$("#buildingName").autocompleter({
-      // marker for autocomplete matches
-      highlightMatches: true,
-      // object to local or url to remote search
-      source: '${ctx}/home/building/search',
-      // custom template
-      template: '{{ label }} <span>({{ districtName }}-{{ townName }})</span>',
-      // show hint
-      hint: true,
-      // abort source if empty field
-      empty: false,
-      // max results
-      //limit: 1,
-      combine: function() {
-        var districtId = $("#districtsValue").val();
-        var townId = $("#townsValue").val();
-        if (townId) {
-          districtId = "";
-        } else {
-          townId = "";
-        }
-        return {
-          buildingName: $("#buildingName").val(),
-          districtId: districtId,
-          townId: townId
-        };
-      },
-      callback: function (value, index, selected) {
-        if (selected) {
-          var buildingId = selected.buildingId;
-          if (buildingId) {
-        	  var url = "${ctx}/home/buildingUnit/select?random="+ Math.random();
-            var params = {
-            		buildingId: buildingId
-            };
-            $.post(url, params, function(result) {
-              if ("500" != result.code) {
-            	  $("#buildingUnit:not(':first')").empty();
-            	  var $buildingUnit = $("#buildingUnit");
-            	  for(var i=0; i<result.data.length; i++) {
-            		  $buildingUnit.append("<option value=\"" + result.data[i].id + "\">" + result.data[i].name + "</option>");
-            	  }
-              }
-            }, "json");
-          }
-        }
-      }
-    });
-		
-		$("#buildingUnit").change(function() {
-			var buildingUnitId = $(this).val();
-			if (buildingUnitId != "0") {
-				var url = "${ctx}/home/house/select?random="+ Math.random();
-        var params = {
-        		buildingUnitId: buildingUnitId
-        };
-        $.post(url, params, function(result) {
-          if ("500" != result.code) {
-            $("#house:not(':first')").empty();
-            var $house = $("#house");
-            for(var i=0; i<result.data.length; i++) {
-              $house.append("<option value=\"\">" + result.data[i].card + "</option>");
-            }
-          }
-        }, "json");
-			}
-		});
+		queryBuildingName("buildingName", "buildingUnit", "districtsValue", "townsValue");
+		queryBuildingName("buildingNameAdd", "buildingUnitAdd", "districtsAddValue", "townsAddValue");
+		changeBuildingUnit("buildingUnit", "house");
+		changeBuildingUnit("buildingUnitAdd", "houseAdd");
 		
 		$(".date-picker").datepicker({autoclose:true}).next().on(ace.click_event, function(){
       $(this).prev().focus();
@@ -642,30 +574,77 @@
       };
       showDialog(url, options);
     });
+		
+		$('#editor1').ace_wysiwyg({
+	    toolbar:
+	    [
+	      'font',
+	      null,
+	      'fontSize',
+	      null,
+	      {name:'bold', className:'btn-info'},
+	      {name:'italic', className:'btn-info'},
+	      {name:'strikethrough', className:'btn-info'},
+	      {name:'underline', className:'btn-info'},
+	      null,
+	      {name:'insertunorderedlist', className:'btn-success'},
+	      {name:'insertorderedlist', className:'btn-success'},
+	      {name:'outdent', className:'btn-purple'},
+	      {name:'indent', className:'btn-purple'},
+	      null,
+	      {name:'justifyleft', className:'btn-primary'},
+	      {name:'justifycenter', className:'btn-primary'},
+	      {name:'justifyright', className:'btn-primary'},
+	      {name:'justifyfull', className:'btn-inverse'},
+	      null,
+	      {name:'createLink', className:'btn-pink'},
+	      {name:'unlink', className:'btn-pink'},
+	      null,
+	      {name:'insertImage', className:'btn-success'},
+	      null,
+	      'foreColor',
+	      null,
+	      {name:'undo', className:'btn-grey'},
+	      {name:'redo', className:'btn-grey'}
+	    ],
+	    'wysiwyg': {
+	      fileUploadError: showErrorAlert
+	    }
+	  }).prev().addClass('wysiwyg-style2');
 	});
-	function queryRegions(regionId, name, _this) {
-		addActivedName("districts", regionId, name, _this);
-    var $towns = $("#towns");
-    $("#towns li").remove();
+	function showErrorAlert(reason, detail) {
+    var msg='';
+    if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
+    else {
+      console.log("error uploading file", reason, detail);
+    }
+    $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+ 
+     '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+  }
+	function queryRegions(regionId, name, _this, fieldIds) {
+		addActivedName(fieldIds[0], regionId, name, _this);
+    var $towns = $("#" + fieldIds[1]);
+    var $townsPane = $("#" + fieldIds[2]);
+    $towns.children().remove();
     if (regionId != "0") {
       var url = "${ctx}/home/region/list?random="+ Math.random();
       var params = {
         parentId: regionId
       };
-      var $htmlLi = $("<li><button type=\"button\" class=\"btn btn-danger btn-xs\" onclick=\"addActivedName('towns', '0', '', this);\">不限</button></li>");
+      var $htmlLi = $("<li><button type=\"button\" class=\"btn btn-danger btn-xs\" onclick=\"addActivedName('" + fieldIds[1] + "', '0', '', this);\">不限</button></li>");
       $towns.append($htmlLi).append("\n");
       
       $.post(url, params, function(result) {
         if ("500" != result.code) {
           for (var i=0; i<result.data.length; i++) {
-            $htmlLi = $("<li><button type=\"button\" class=\"btn btn-link btn-xs\" onclick=\"addActivedName('towns', '" + result.data[i].id + "', '" + result.data[i].name + "', this);\">" + result.data[i].name + "</button></li>");
+            $htmlLi = $("<li><button type=\"button\" class=\"btn btn-link btn-xs\" onclick=\"addActivedName('" + fieldIds[1] + "', '" + result.data[i].id + "', '" + result.data[i].name + "', this);\">" + result.data[i].name + "</button></li>");
             $towns.append($htmlLi).append("\n");
           }
-          $("#townsPane").show();
+          $townsPane.show();
         }
       }, "json");
     } else {
-      $("#townsPane").hide();
+    	$townsPane.hide();
     }
   }
 	function addActivedName(fieldId, val, name, _this) {
@@ -676,6 +655,90 @@
     if (name) {
        $("#" + fieldId + "Value").val(val);
     }
+	}
+	function queryBuildingName(buildingName, buildingUnit, districts, towns) {
+		$("#" + buildingName).autocompleter({
+      // marker for autocomplete matches
+      highlightMatches: true,
+      // object to local or url to remote search
+      source: '${ctx}/home/building/search',
+      // custom template
+      template: '{{ label }} <span>({{ districtName }}-{{ townName }})</span>',
+      // show hint
+      hint: true,
+      // abort source if empty field
+      empty: false,
+      // max results
+      //limit: 1,
+      combine: function() {
+        var districtId = $("#" + districts).val();
+        var townId = $("#" + towns).val();
+        if (townId) {
+          districtId = "";
+        } else {
+          townId = "";
+        }
+        return {
+          buildingName: $("#" + buildingName).val(),
+          districtId: districtId,
+          townId: townId
+        };
+      },
+      callback: function (value, index, selected) {
+        if (selected) {
+          var buildingId = selected.buildingId;
+          if (buildingId) {
+            var url = "${ctx}/home/buildingUnit/select?random="+ Math.random();
+            var params = {
+                buildingId: buildingId
+            };
+            $.post(url, params, function(result) {
+              if ("500" != result.code) {
+                var $buildingUnit = $("#" + buildingUnit);
+                $buildingUnit.children().not(':first').remove();
+                for(var i=0; i<result.data.length; i++) {
+                  $buildingUnit.append("<option value=\"" + result.data[i].id + "\">" + result.data[i].name + "</option>");
+                }
+              }
+            }, "json");
+          }
+        }
+      }
+    });
+	}
+	function changeBuildingUnit(buildingUnit, house) {
+		$("#" + buildingUnit).change(function() {
+	    var buildingUnitId = $(this).val();
+	    if (buildingUnitId != "0") {
+	      var url = "${ctx}/home/house/select?random="+ Math.random();
+	      var params = {
+	          buildingUnitId: buildingUnitId
+	      };
+	      $.post(url, params, function(result) {
+	        if ("500" != result.code) {
+	        	var $house = $("#" + house);
+	          $house.children().not(':first').remove();
+	          var items = [];
+	          for(var i=0; i<result.data.length; i++) {
+	        	  items.push(result.data[i].area);
+	        	  items.push(result.data[i].room);
+	        	  items.push(result.data[i].saloon);
+	        	  items.push(result.data[i].toilet);
+	            $house.append("<option value=\"" + items.join() + "\">" + result.data[i].card + "</option>");
+	            items.length = 0;
+	          }
+	        }
+	      }, "json");
+	    }
+	  });
+	}
+	function changeHouse(house) {
+		$("#" + house).change(function() {
+			var houseId = $(this).val();
+			if (houseId != "0") {
+				
+			}
+		});
 	}
 	</script>
 	</jscript>
