@@ -346,7 +346,7 @@
 						
 						<li class="active open">
 							<a href="#" class="dropdown-toggle">
-								<i class="icon-gift"></i>
+								<i class="icon-calendar"></i>
 								<span class="menu-text"> 新房 </span>
 								<b class="arrow icon-angle-down"></b>
 							</a>
@@ -371,6 +371,21 @@
                 </li>
                 <li>
                   <a href="${ctx}/manage/house/add"><i class="icon-double-angle-right"></i>出租</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#" class="dropdown-toggle">
+                <i class="icon-list"></i>
+                <span class="menu-text"> 小区 </span>
+                <b class="arrow icon-angle-down"></b>
+              </a>
+              <ul class="submenu">
+                <li class="active">
+                  <a href="${ctx}/home/building"><i class="icon-double-angle-right"></i>楼盘</a>
+                </li>
+                <li>
+                  <a href="${ctx}/manage/house/add"><i class="icon-double-angle-right"></i>房源</a>
                 </li>
               </ul>
             </li>
