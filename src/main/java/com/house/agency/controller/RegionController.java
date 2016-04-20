@@ -35,10 +35,10 @@ public class RegionController extends BaseController {
 		List<Region> regions = null;
 		try {
 			regions = regionService.list(param);
-			jMessage.setCode(JsonMessage.SUCCESS_CODE);
+			jMessage.setStatus(JsonMessage.TRUE);
 			jMessage.setData(regions);
 		} catch (Exception e) {
-			jMessage.setCode(JsonMessage.ERROR_CODE);
+			jMessage.setStatus(JsonMessage.FALSE);
 			if (e instanceof ServiceException) {
 				jMessage.setMessage(e.getMessage());
 			} else {

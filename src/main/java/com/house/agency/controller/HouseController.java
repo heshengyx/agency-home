@@ -66,10 +66,10 @@ public class HouseController extends BaseController {
 		List<House> datas = null;
 		try {
 			datas = houseService.queryByBuildingUnitId(buildingUnitId);
-			jMessage.setCode(JsonMessage.SUCCESS_CODE);
+			jMessage.setStatus(JsonMessage.TRUE);
 			jMessage.setData(datas);
 		} catch (Exception e) {
-			jMessage.setCode(JsonMessage.ERROR_CODE);
+			jMessage.setStatus(JsonMessage.FALSE);
 			if (e instanceof ServiceException) {
 				jMessage.setMessage(e.getMessage());
 			} else {

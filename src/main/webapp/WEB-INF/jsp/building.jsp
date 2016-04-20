@@ -93,7 +93,7 @@
                       </div>
                       <div class="form-group form-row">
 		                    <label class="col-md-1 control-label no-padding-right">楼盘：</label>
-		                    <div class="col-md-4">
+		                    <div class="col-md-3">
 		                      <div class="input-group">
 		                        <input class="input-field" type="text" id="buildingName" placeholder="楼盘名称">
 		                        <span class="input-group-addon"><i class="icon-home"></i></span>
@@ -118,9 +118,9 @@
                         <div class="col-md-3 col-md-offset-1">
                           <div class="input-group">
                             <span class="input-group-btn">
-                              <button type="button" class="btn btn-info btn-sm input-text" id="btnSearch">搜索<i class="icon-search icon-on-right"></i></button>
-                              &nbsp;&nbsp;
-                              <button type="reset" class="btn btn-sm input-text">重置<i class="icon-undo icon-on-right"></i></button>
+                              <button type="button" class="btn btn-info btn-xs" id="btnBuildingSearch">搜索<i class="icon-search icon-on-right"></i></button>
+                              &nbsp;
+                              <button type="reset" class="btn btn-xs">重置<i class="icon-undo icon-on-right"></i></button>
                             </span>
                           </div>
                         </div>  
@@ -138,6 +138,7 @@
       <input id="townsValue" type="hidden">
       <input id="districtsAddValue" type="hidden">
       <input id="townsAddValue" type="hidden">
+      <input id="buildingId" type="hidden" value="0">
       
 	    <div class="row">
 	      <div class="col-xs-12 widget-container-span">
@@ -165,7 +166,7 @@
 
 		        <div class="widget-body widget-none">
 			        <div class="table-responsive">
-			          <table id="tableData" class="table table-striped table-bordered table-hover" width="100%">
+			          <table id="tableBuilding" class="table table-striped table-bordered table-hover" width="100%">
 			            <thead>
 			              <tr>
 			                <th></th>
@@ -175,7 +176,7 @@
 			                <th class="text-center" width="70">类型</th>
 			                <th width="130"><i class="icon-time hidden-480"></i>创建时间</th>
 			                <th class="text-center hidden-480" width="50">状态</th>
-			                <th class="text-center" width="110">操作</th>
+			                <th class="text-center" width="130">操作</th>
 			              </tr>
 			            </thead>
 			          </table>
@@ -183,6 +184,7 @@
 		        </div>
 	        </div>
 	        
+	        <!-- modal-form -->
 	        <div id="modal-form" class="modal" tabindex="-1">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -274,12 +276,69 @@
                 </div>
 
                 <div class="modal-footer">
-                  <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i>关闭</button>
-                  <button class="btn btn-sm btn-primary" id="btnSave"><i class="icon-ok"></i>保存</button>
+                  <button class="btn btn-xs" data-dismiss="modal"><i class="icon-remove"></i>关闭</button>
+                  <button class="btn btn-xs btn-primary" id="btnBuildingSave"><i class="icon-ok"></i>保存</button>
                 </div>
               </div>
             </div>
           </div>
+          <!-- modal-form -->
+          <!-- modal-table -->
+          <div id="modal-table" class="modal fade modal-pane" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header no-padding">
+                  <div class="table-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                      <span class="white">&times;</span>
+                    </button>
+                    <span id="buildingNameText"></span><small>（<span id="buildingAddressText"></span>）</small>
+                  </div>
+                </div>
+
+                <div class="modal-body no-padding">
+                  <form class="form-horizontal">
+                    <div class="form-group form-row">
+	                    <label class="col-md-2 control-label no-padding-right">栋座：</label>
+	                    <div class="col-md-8">
+	                      <input type="text" id="buildingUnitNameAdd" placeholder="栋座名称">
+	                    </div>
+	                  </div>
+	                  <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">楼层：</label>
+                      <div class="col-md-8">
+                        <input class="input-text" type="text" id="buildingFloorAdd" placeholder="楼层">
+                      </div>
+                    </div>
+                    <div class="form-group form-row">
+                      <div class="col-md-3 col-md-offset-2">
+                        <div class="input-group">
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-info btn-xs" id="btnBuildingUnitSave">保存<i class="icon-ok icon-on-right"></i></button>
+                            &nbsp;&nbsp;
+                            <button type="reset" class="btn btn-xs">重置<i class="icon-undo icon-on-right"></i></button>
+                          </span>
+                        </div>
+                      </div>  
+                    </div>
+                  </form>
+                  <div class="space-4"></div>
+                  <table class="table table-striped table-bordered table-hover no-margin-bottom" id="tableBuildingUnit">
+                    <thead>
+                      <tr>
+                        <th width="50"></th>
+                        <th class="text-center" width="50"><label><input type="checkbox" class="ace" /><span class="lbl"></span></label></th>
+                        <th>栋座名称</th>
+                        <th>楼层</th>
+                        <th class="text-center" width="130">操作</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- modal-table -->
 	        <!-- PAGE CONTENT ENDS -->
 	      </div><!-- /.col -->
 	    </div><!-- /.row -->
@@ -295,157 +354,247 @@
   <script src="${ctx}/js/bootstrap-wysiwyg.min.js"></script>
 	<script>
 	var d = null;
-	var table = null;
+	var tableBuilding = null;
+	var tableBuildingUnit = null;
 	$(document).ready(function() {
-		$("#townsPane").hide();
-		$("#townsPaneAdd").hide();
-		table = $('#tableData').DataTable({
-			 "language": {
-	       "processing":  "处理中...",
-	       "lengthMenu":  "每页 _MENU_ 条记录",
-	       "zeroRecords": "没有找到记录",
-	       "infoEmpty":   "无记录",
-	       "paginate": {
-	         "first":     "首页",
-	         "previous":  "上页 ",
-	         "next":      "下页 ",
-	         "last":      "末页 "
-	       }
-	    },
-			//"dom": "<'row'<'col-xs-12'>>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
-			"dom": "t<'row'<'col-xs-6'i><'col-xs-6'p>>",
-			"processing": true,
-      "serverSide": true, //开启服务器模式
-      //"deferRender": true, //开启延迟渲染
-      "ajax": {
-        "url": "${ctx}/home/building/query",
-        "type": "POST",
-        "data": function ( d ) { //添加额外的参数发送到服务器
-          //d.tag = "release";
-          //d.sort = $("#sort").val();
+		$('#townsPane').hide();
+		$('#townsPaneAdd').hide();
+		tableBuilding = $('#tableBuilding').DataTable({
+			'language': {
+         'processing':  '处理中...',
+         'lengthMenu':  '每页 _MENU_ 条记录',
+         'zeroRecords': '没有找到记录',
+         'infoEmpty':   '无记录',
+         'info':        '当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录',
+         'paginate': {
+           'first':     '首页',
+           'previous':  '上页 ',
+           'next':      '下页 ',
+           'last':      '末页 '
+         }
+      },
+      'dom': 't<"row"<"col-xs-6"i><"col-xs-6"p>>',
+      'processing': true,
+      'serverSide': true, //开启服务器模式
+      //'deferRender': true, //开启延迟渲染
+      'ajax': {
+        'url': '${ctx}/home/building/query',
+        'type': 'POST',
+        'data': function ( d ) { //添加额外的参数发送到服务器
+          //d.tag = 'release';
+          //d.sort = $('#sort').val();
         }
       },
-			"columnDefs": [
-        { "visible": false, "targets": 0},
-        { "orderable": false, "targets": 1, "render": function(data, type, row) {
-          var content = "<div class=\"text-center\"><label>";
-          content += "<input type=\"checkbox\" class=\"ace\" />";
-          content += "<span class=\"lbl\"></span>";
-          content += "</label></div>";
+			'columnDefs': [
+        { 'visible': true, 'orderable': false, 'targets': 0},
+        { 'orderable': false, 'targets': 1, 'render': function(data, type, row) {
+          var content = '<div class="text-center"><label>';
+          content += '<input type="checkbox" class="ace" />';
+          content += '<span class="lbl"></span>';
+          content += '</label></div>';
           return content;
         }},
-        { "orderable": false, "targets": 2, "render": function(data, type, row) {
-          var content = "";
-          content += data.buildingName + "<small>（福田-）</small>";
+        { 'orderable': false, 'targets': 2, 'render': function(data, type, row) {
+          var content = '';
+          content += data.buildingName + '<small>（福田-）</small>';
           return content;
         }},
-        { "orderable": false, "targets": 3, "render": function(data, type, row) {
+        { 'orderable': false, 'targets': 3, 'render': function(data, type, row) {
           return data.buildingAddress;
         }},
-        { "orderable": false, "targets": 4, "render": function(data, type, row) {
-        	var content = "<div class=\"text-center\">";
-          content += "<small>住宅</small>";
-          content += "</div>";
+        { 'orderable': false, 'targets': 4, 'render': function(data, type, row) {
+          var content = '<div class="text-center">';
+          content += '<small>住宅</small>';
+          content += '</div>';
           return content;
         }},
-        { "targets": 5, "render": function(data, type, row) {
+        { 'targets': 5, 'render': function(data, type, row) {
           var content = to_date_hm(data.createTime);
           return content;
         }},
-        { "orderable": false, "targets": 6, "render": function(data, type, row) {
-        	var content = "<div class=\"text-center\">";
-          content += "<span class=\"label label-sm label-warning\">有效</span>";
-          content += "</div>";
+        { 'orderable': false, 'targets': 6, 'render': function(data, type, row) {
+          var content = '<div class="text-center">';
+          content += '<span class="label label-sm label-warning">有效</span>';
+          content += '</div>';
           return content;
         }},
-        { "orderable": false, "targets": 7, "render": function(data, type, row) {
-          var content = "<div class=\"text-center\">";
-          content += "<div class=\"visible-md visible-lg hidden-sm hidden-xs action-buttons\">";
-          content += "  <a class=\"blue\" href=\"#\" title=\"详情\"><i class=\"icon-zoom-in bigger-130\"></i></a>";
-          content += "  <a class=\"green\" href=\"#\" title=\"编辑\"><i class=\"icon-pencil bigger-130\"></i></a>";
-          content += "  <a class=\"red\" href=\"#\" title=\"删除\"><i class=\"icon-trash bigger-130\"></i></a>";
-          content += "</div>";
-          content += "<div class=\"visible-xs visible-sm hidden-md hidden-lg\">";
-          content += "  <div class=\"inline position-relative\">";
-          content += "    <button class=\"btn btn-minier btn-yellow dropdown-toggle\" data-toggle=\"dropdown\">";
-          content += "      <i class=\"icon-caret-down icon-only bigger-120\"></i>";
-          content += "    </button>";
-          content += "    <ul class=\"dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close\">";
-          content += "      <li>";
-          content += "        <a href=\"#\" class=\"tooltip-info\" data-rel=\"tooltip\" title=\"View\">";
-          content += "          <span class=\"blue\"><i class=\"icon-zoom-in bigger-120\"></i></span>";
-          content += "        </a>";
-          content += "      </li>";
-          content += "      <li>";
-          content += "        <a href=\"#\" class=\"tooltip-success\" data-rel=\"tooltip\" title=\"Edit\">";
-          content += "          <span class=\"green\"><i class=\"icon-edit bigger-120\"></i></span>";
-          content += "        </a>";
-          content += "      </li>";
-          content += "      <li>";
-          content += "        <a href=\"#\" class=\"tooltip-error\" data-rel=\"tooltip\" title=\"Delete\">";
-          content += "          <span class=\"red\"><i class=\"icon-trash bigger-120\"></i></span>";
-          content += "        </a>";
-          content += "      </li>";
-          content += "    </ul>";
-          content += "  </div>";
-          content += "</div>";
-          content += "</div>";
+        { 'orderable': false, 'targets': 7, 'render': function(data, type, row) {
+        	var content = '<div class="text-center">';
+          content += '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
+          content += '  <a class="blue" href="#modal-table" role="button" data-toggle="modal" data-building="' + data.id + '" title="栋座"><i class="icon-list bigger-130"></i></a>';
+          content += '  <a class="blue" href="#" title="详情"><i class="icon-zoom-in bigger-130"></i></a>';
+          content += '  <a class="green" href="#" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
+          content += '  <a class="red" href="#" title="删除"><i class="icon-trash bigger-130"></i></a>';
+          content += '</div>';
+          content += '<div class="visible-xs visible-sm hidden-md hidden-lg">';
+          content += '  <div class="inline position-relative">';
+          content += '    <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown">';
+          content += '      <i class="icon-caret-down icon-only bigger-120"></i>';
+          content += '    </button>';
+          content += '    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">';
+          content += '      <li>';
+          content += '        <a href="#" class="tooltip-info" data-rel="tooltip" title="View">';
+          content += '          <span class="blue"><i class="icon-zoom-in bigger-120"></i></span>';
+          content += '        </a>';
+          content += '      </li>';
+          content += '      <li>';
+          content += '        <a href="#" class="tooltip-success" data-rel="tooltip" title="Edit">';
+          content += '          <span class="green"><i class="icon-edit bigger-120"></i></span>';
+          content += '        </a>';
+          content += '      </li>';
+          content += '      <li>';
+          content += '        <a href="#" class="tooltip-error" data-rel="tooltip" title="Delete">';
+          content += '          <span class="red"><i class="icon-trash bigger-120"></i></span>';
+          content += '        </a>';
+          content += '      </li>';
+          content += '    </ul>';
+          content += '  </div>';
+          content += '</div>';
+          content += '</div>';
           return content;
         }}
 			],
-			"columns": [
-        { "data": null },
-        { "data": null },
-        { "data": null },
-        { "data": null },
-        { "data": null },
-        { "data": null },
-        { "data": null },
-        { "data": null }
-      ]
+			'order': [
+        [0, null]
+      ],
+      'columns': [
+        { 'data': null },
+        { 'data': null },
+        { 'data': null },
+        { 'data': null },
+        { 'data': null },
+        { 'data': null },
+        { 'data': null },
+        { 'data': null }
+      ],
+      initComplete: function () {
+    	  
+      }
 		});
-		queryBuildingName("buildingName", "buildingUnit", "districtsValue", "townsValue");
+		tableBuilding.on('order.dt search.dt',
+      function () {
+			  tableBuilding.column(0, {
+          search: 'applied',
+          order: 'applied'
+        }).nodes().each(function (cell, i) {
+          cell.innerHTML = i + 1;
+        });
+    }).draw();
+		 
+		tableBuildingUnit = $('#tableBuildingUnit').DataTable({
+       'language': {
+         'processing':  '处理中...',
+         'lengthMenu':  '每页 _MENU_ 条记录',
+         'zeroRecords': '没有找到记录',
+         'infoEmpty':   '无记录',
+         'info':        '当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录',
+         'paginate': {
+           'first':     '首页',
+           'previous':  '上页',
+           'next':      '下页',
+           'last':      '末页'
+         }
+      },
+      'dom': 't<"row"<"col-xs-6"i><"col-xs-6"p>>',
+      'processing': true,
+      'serverSide': true, //开启服务器模式
+      //'deferRender': true, //开启延迟渲染
+      'ajax': {
+        'url': '${ctx}/home/buildingUnit/query',
+        'type': 'POST',
+        'data': function ( d ) { //添加额外的参数发送到服务器
+          d.buildingId = $('#buildingId').val();
+          //d.sort = $('#sort').val();
+        }
+      },
+      /* "rowCallback": function( row, data ) {
+          if ( $.inArray(data.DT_RowId, selected) !== -1 ) {
+              $(row).addClass('selected');
+          }
+      }, */
+      'columnDefs': [
+        { 'orderable': false, 'targets': 0},
+        { 'orderable': false, 'targets': 1, 'render': function(data, type, row) {
+          var content = '<div class="text-center"><label>';
+          content += '<input type="checkbox" class="ace" />';
+          content += '<span class="lbl"></span>';
+          content += '</label></div>';
+          return content;
+        }},
+			  { 'orderable': false, 'targets': 4, 'render': function(data, type, row) {
+          var content = '<div class="text-center">';
+          content += '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
+          content += '  <a class="blue" href="#" title="详情"><i class="icon-zoom-in bigger-130"></i></a>';
+          content += '  <a class="green" href="#" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
+          content += '  <a class="red" href="#" onclick="buildingUnitTrash(\'' + data.id + '\');" title="删除"><i class="icon-trash bigger-130"></i></a>';
+          content += '</div>';
+          content += '<div class="visible-xs visible-sm hidden-md hidden-lg">';
+          content += '  <div class="inline position-relative">';
+          content += '    <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown">';
+          content += '      <i class="icon-caret-down icon-only bigger-120"></i>';
+          content += '    </button>';
+          content += '    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">';
+          content += '      <li>';
+          content += '        <a href="#" class="tooltip-info" data-rel="tooltip" title="View">';
+          content += '          <span class="blue"><i class="icon-zoom-in bigger-120"></i></span>';
+          content += '        </a>';
+          content += '      </li>';
+          content += '      <li>';
+          content += '        <a href="#" class="tooltip-success" data-rel="tooltip" title="Edit">';
+          content += '          <span class="green"><i class="icon-edit bigger-120"></i></span>';
+          content += '        </a>';
+          content += '      </li>';
+          content += '      <li>';
+          content += '        <a href="#" class="tooltip-error" data-rel="tooltip" title="Delete">';
+          content += '          <span class="red"><i class="icon-trash bigger-120"></i></span>';
+          content += '        </a>';
+          content += '      </li>';
+          content += '    </ul>';
+          content += '  </div>';
+          content += '</div>';
+          content += '</div>';
+          return content;
+        }}
+      ],
+      'order': [
+        [0, null]
+      ],
+      'columns': [
+				{ 'data': null },
+				{ 'data': null },
+        { 'data': 'name' },
+        { 'data': 'floor' },
+        { 'data': null }
+      ]
+    });
+		tableBuildingUnit.on('order.dt search.dt',
+	     function () {
+			tableBuildingUnit.column(0, {
+	         search: 'applied',
+	         order: 'applied'
+	       }).nodes().each(function (cell, i) {
+	         cell.innerHTML = i + 1;
+	       });
+	  }).draw();
 		
-		$(".date-picker").datepicker({autoclose:true}).next().on(ace.click_event, function(){
+		queryBuildingName('buildingName', 'buildingUnit', 'districtsValue', 'townsValue');
+		
+		$('.date-picker').datepicker({autoclose:true}).next().on(ace.click_event, function(){
       $(this).prev().focus();
     });
 		
-		$("#btnSearch").click(function() {
-			d = dialog({
-	      title: '楼盘载入中...'
-	    });
-	    d.showModal();
-	    var search = "?random=" + Math.random();
-	    var townsValue = $("#townsValue").val();
-      if (townsValue && townsValue != "0") {
-        search += "&townId=" + townsValue;
-      } else {
-        var districtsValue = $("#districtsValue").val();
-        if (districtsValue && districtsValue != "0") {
-          search += "&districtId=" + districtsValue;
-        }
-      }
-      var dateBeginValue = $("#dateBegin").val();
-      if (dateBeginValue) {
-        search += "&releaseDateBegin=" + dateBeginValue;
-      }
-      var dateEndValue = $("#dateEnd").val();
-      if (dateEndValue) {
-        search += "&releaseDateEnd=" + dateEndValue;
-      }
-	    table.ajax.url("${ctx}/home/building/query" + search).load();
-	    d.close();
+		$('#btnBuildingSearch').click(function() {
+			queryBuildings();
 		});
 		
-		$("#btnSave").click(function() {
-			var townId = $("#townsAddValue").val();
-			var buildingName = $("#buildingNameAdd").val();
-			var buildingAddress = $("#buildingAddressAdd").val();
-			var buildingYear = $("#buildingYearAdd").val();
-			var type = $("#typeAdd").val();
-			var remarks = $("#editor1").html();
-			console.log(remarks);
-	    var url = "${ctx}/home/building/save?random="+ Math.random();
+		$('#btnBuildingSave').click(function() {
+			var townId = $('#townsAddValue').val();
+      var buildingName = $('#buildingNameAdd').val();
+      var buildingAddress = $('#buildingAddressAdd').val();
+      var buildingYear = $('#buildingYearAdd').val();
+      var type = $('#typeAdd').val();
+      var remarks = $('#editor1').html();
+      var url = '${ctx}/home/building/save?random='+ Math.random();
       var params = {
     		  townId: townId,
     		  buildingName: buildingName,
@@ -454,13 +603,63 @@
     		  type: type
       };
       $.post(url, params, function(result) {
+    	  $('#modal-form').modal('hide');
     	  dialog({
 	       title: '消息',
 	       content: result.message,
 	       okValue: '确定',
-	       ok: true
-	     }).showModal();
-      }, "json");
+	       ok: function () {
+	    	   queryBuildings();
+	    	   return true;
+	       }
+	     }).width(100).showModal();
+      }, 'json');
+		});
+		
+		$('#btnBuildingUnitSave').click(function() {
+			var buildingId = $('#buildingId').val();
+      var buildingUnitName = $('#buildingUnitNameAdd').val();
+      var buildingFloor = $('#buildingFloorAdd').val();
+      var url = '${ctx}/home/buildingUnit/save?random='+ Math.random();
+      var params = {
+    		  buildingId: buildingId,
+    		  name: buildingUnitName,
+    		  floor: buildingFloor
+      };
+      $.post(url, params, function(result) {
+        //$('#modal-table').modal('hide');
+        dialog({
+         title: '消息',
+         content: result.message,
+         okValue: '确定',
+         ok: function () {
+        	 tableBuildingUnit.ajax.reload();
+           return true;
+         }
+       }).width(100).showModal();
+      }, 'json');
+    });
+		
+		$('#modal-table').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget);
+			var buildingId = button.data('building');
+			$('#buildingId').val(buildingId);
+			var url = "${ctx}/home/building/getData?random="+ Math.random();
+      var params = {
+          id: buildingId
+      };
+      $.post(url, params, function(result) {
+        if (result.status) {
+        	var data = result.data;
+        	$('#buildingNameText').text(data.buildingName);
+        	$('#buildingAddressText').text(data.buildingAddress);
+        	
+        	//tableBuildingUnit.search(buildingId).draw();
+        	tableBuildingUnit.ajax.reload();
+        	//var args = tableBuildingUnit.ajax.params();
+          //console.log("额外传到后台的参数值extra_search为："+args.buildingId);
+        }
+      }, 'json');
 		});
 		
 		$('#editor1').ace_wysiwyg({
@@ -509,43 +708,75 @@
     $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+ 
      '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
   }
+	function queryBuildings() {
+		d = dialog({
+      title: '楼盘载入中...'
+    });
+    d.showModal();
+    var search = '?random=' + Math.random();
+    var townsValue = $('#townsValue').val();
+    if (townsValue && townsValue != '0') {
+      search += '&townId=' + townsValue;
+    } else {
+      var districtsValue = $('#districtsValue').val();
+      if (districtsValue && districtsValue != '0') {
+        search += '&districtId=' + districtsValue;
+      }
+    }
+    var dateBeginValue = $('#dateBegin').val();
+    if (dateBeginValue) {
+      search += '&releaseDateBegin=' + dateBeginValue;
+    }
+    var dateEndValue = $('#dateEnd').val();
+    if (dateEndValue) {
+      search += '&releaseDateEnd=' + dateEndValue;
+    }
+    tableBuilding.ajax.url('${ctx}/home/building/query' + search).load();
+    d.close();
+	}
+	function queryBuildingUnits() {
+		d = dialog({
+      title: '栋座载入中...'
+    });
+    d.showModal();
+	}
 	function queryRegions(regionId, name, _this, fieldIds) {
 		addActivedName(fieldIds[0], regionId, name, _this);
-    var $towns = $("#" + fieldIds[1]);
-    var $townsPane = $("#" + fieldIds[2]);
-    $towns.children().remove();
-    if (regionId != "0") {
-      var url = "${ctx}/home/region/list?random="+ Math.random();
-      var params = {
-        parentId: regionId
-      };
-      var $htmlLi = $("<li><button type=\"button\" class=\"btn btn-danger btn-xs\" onclick=\"addActivedName('" + fieldIds[1] + "', '0', '', this);\">不限</button></li>");
-      $towns.append($htmlLi).append("\n");
-      
-      $.post(url, params, function(result) {
-        if ("500" != result.code) {
-          for (var i=0; i<result.data.length; i++) {
-            $htmlLi = $("<li><button type=\"button\" class=\"btn btn-link btn-xs\" onclick=\"addActivedName('" + fieldIds[1] + "', '" + result.data[i].id + "', '" + result.data[i].name + "', this);\">" + result.data[i].name + "</button></li>");
-            $towns.append($htmlLi).append("\n");
-          }
-          $townsPane.show();
-        }
-      }, "json");
-    } else {
-    	$townsPane.hide();
-    }
+		var $towns = $('#' + fieldIds[1]);
+	    var $townsPane = $('#' + fieldIds[2]);
+	    $towns.children().remove();
+	    if (regionId != '0') {
+	      var url = '${ctx}/home/region/list?random='+ Math.random();
+	      var params = {
+	        parentId: regionId
+	      };
+	      var $htmlLi = $('<li><button type="button" class="btn btn-danger btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'0\', \'\', this);">不限</button></li>');
+	      $towns.append($htmlLi).append('\n');
+	      
+	      $.post(url, params, function(result) {
+	        if (result.status) {
+	          for (var i=0; i<result.data.length; i++) {
+	            $htmlLi = $('<li><button type="button" class="btn btn-link btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'' + result.data[i].id + '\', \'' + result.data[i].name + '\', this);">' + result.data[i].name + '</button></li>');
+	            $towns.append($htmlLi).append('\n');
+	          }
+	          $townsPane.show();
+	        }
+	      }, 'json');
+	    } else {
+	      $townsPane.hide();
+	    }
   }
 	function addActivedName(fieldId, val, name, _this) {
-    $("#" + fieldId + " li>button.btn-danger").removeClass("btn-danger").addClass("btn-link");
+		$('#' + fieldId + ' li>button.btn-danger').removeClass('btn-danger').addClass('btn-link');
     if (_this) {
-      $(_this).removeClass("btn-link").addClass("btn-danger");
+      $(_this).removeClass('btn-link').addClass('btn-danger');
     }
     if (name) {
-       $("#" + fieldId + "Value").val(val);
+       $('#' + fieldId + 'Value').val(val);
     }
 	}
 	function queryBuildingName(buildingName, buildingUnit, districts, towns) {
-		$("#" + buildingName).autocompleter({
+		$('#' + buildingName).autocompleter({
       // marker for autocomplete matches
       highlightMatches: true,
       // object to local or url to remote search
@@ -559,54 +790,48 @@
       // max results
       //limit: 1,
       combine: function() {
-        var districtId = $("#" + districts).val();
-        var townId = $("#" + towns).val();
+        var districtId = $('#' + districts).val();
+        var townId = $('#' + towns).val();
         if (townId) {
-          districtId = "";
+          districtId = '';
         } else {
-          townId = "";
+          townId = '';
         }
         return {
-          buildingName: $("#" + buildingName).val(),
+          buildingName: $('#' + buildingName).val(),
           districtId: districtId,
           townId: townId
         };
       }
     });
 	}
-	function changeBuildingUnit(buildingUnit, house) {
-		$("#" + buildingUnit).change(function() {
-	    var buildingUnitId = $(this).val();
-	    if (buildingUnitId != "0") {
-	      var url = "${ctx}/home/house/select?random="+ Math.random();
-	      var params = {
-	          buildingUnitId: buildingUnitId
-	      };
-	      $.post(url, params, function(result) {
-	        if ("500" != result.code) {
-	        	var $house = $("#" + house);
-	          $house.children().not(':first').remove();
-	          var items = [];
-	          for(var i=0; i<result.data.length; i++) {
-	        	  items.push(result.data[i].area);
-	        	  items.push(result.data[i].room);
-	        	  items.push(result.data[i].saloon);
-	        	  items.push(result.data[i].toilet);
-	            $house.append("<option value=\"" + items.join() + "\">" + result.data[i].card + "</option>");
-	            items.length = 0;
-	          }
-	        }
-	      }, "json");
-	    }
-	  });
-	}
-	function changeHouse(house) {
-		$("#" + house).change(function() {
-			var houseId = $(this).val();
-			if (houseId != "0") {
-				
-			}
-		});
+	function buildingUnitTrash(buildingUnitId) {
+		dialog({
+      title: '消息',
+      content: '确定要删除吗?',
+      okValue: '确定',
+      ok: function () {
+        var that = this;
+        this.title('删除中…');
+        var url = '${ctx}/home/buildingUnit/trash?random='+ Math.random();
+        var params = {
+            id: buildingUnitId
+        };
+        $.post(url, params, function(result) {
+          dialog({
+            title: '消息',
+            content: result.message,
+            okValue: '确定',
+            ok: function () {
+              tableBuildingUnit.ajax.reload();
+              return true;
+            }
+          }).width(100).showModal();
+        }, 'json');
+      },
+      cancelValue: '取消',
+      cancel: function () {}
+    }).width(100).showModal();
 	}
 	</script>
 	</jscript>

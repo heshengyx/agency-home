@@ -57,15 +57,37 @@ public class BuildingController extends BaseController {
 		return buildingService.list(param);
 	}
 	
+	@RequestMapping("/getData")
+	@ResponseBody
+	public Object getData(String id) {
+		JsonMessage jMessage = new JsonMessage();
+		Building data = null;
+		try {
+			data = buildingService.getDataById(id);
+			jMessage.setStatus(JsonMessage.TRUE);
+			jMessage.setData(data);
+		} catch (Exception e) {
+			jMessage.setStatus(JsonMessage.FALSE);
+			if (e instanceof ServiceException) {
+				jMessage.setMessage(e.getMessage());
+			} else {
+				jMessage.setMessage("系统异常");
+			}
+			logger.error(jMessage.getMessage(), e);
+		}
+		return jMessage;
+	}
+	
 	@RequestMapping("/save")
 	@ResponseBody
 	public Object save(Building param) {
 		JsonMessage jMessage = new JsonMessage();
 		try {
 			buildingService.save(param);
-			jMessage.setCode(JsonMessage.SUCCESS_CODE);
+			jMessage.setStatus(JsonMessage.TRUE);
+			jMessage.setMessage("保存成功");
 		} catch (Exception e) {
-			jMessage.setCode(JsonMessage.ERROR_CODE);
+			jMessage.setStatus(JsonMessage.FALSE);
 			if (e instanceof ServiceException) {
 				jMessage.setMessage(e.getMessage());
 			} else {

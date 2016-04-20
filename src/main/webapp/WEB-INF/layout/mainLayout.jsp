@@ -314,15 +314,12 @@
 							<button class="btn btn-success">
 								<i class="icon-signal"></i>
 							</button>
-
 							<button class="btn btn-info">
 								<i class="icon-pencil"></i>
 							</button>
-
 							<button class="btn btn-warning">
 								<i class="icon-group"></i>
 							</button>
-
 							<button class="btn btn-danger">
 								<i class="icon-cogs"></i>
 							</button>
@@ -344,14 +341,14 @@
 							</a>
 						</li>
 						
-						<li class="active open">
+						<li>
 							<a href="#" class="dropdown-toggle">
 								<i class="icon-calendar"></i>
 								<span class="menu-text"> 新房 </span>
 								<b class="arrow icon-angle-down"></b>
 							</a>
 							<ul class="submenu">
-								<li class="active">
+								<li>
 									<a href="${ctx}/home/house/new/sale"><i class="icon-double-angle-right"></i>出售</a>
 								</li>
 								<li>
@@ -366,7 +363,7 @@
                 <b class="arrow icon-angle-down"></b>
               </a>
               <ul class="submenu">
-                <li class="active">
+                <li>
                   <a href="${ctx}/home/house/used/sale"><i class="icon-double-angle-right"></i>出售</a>
                 </li>
                 <li>
@@ -381,7 +378,7 @@
                 <b class="arrow icon-angle-down"></b>
               </a>
               <ul class="submenu">
-                <li class="active">
+                <li>
                   <a href="${ctx}/home/building"><i class="icon-double-angle-right"></i>楼盘</a>
                 </li>
                 <li>
@@ -458,6 +455,17 @@
    	      cancel: function () {}
     		}).width(150).showModal();
     	});
+    	
+    	var href = window.location.href;
+   	  $(".nav-list li").removeClass("active");
+   	  $(".nav-list>li>ul.submenu>li>a").each(function() {
+   	    var $this = $(this);
+   	    var $href = $this.attr("href");
+   	    if (href.indexOf($href) != -1) {
+   	    	$this.parent().addClass("active");
+   	      $this.parent().parent().parent().addClass("active");
+   	    }
+   	  });
     });
     </script>
 		<sitemesh:write property="jscript" />

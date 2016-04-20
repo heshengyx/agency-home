@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.house.agency.entity.BuildingUnit;
+import com.house.agency.page.IPage;
+import com.house.agency.param.BuildingUnitQueryParam;
 import com.house.agency.service.IBuildingUnitService;
 import com.myself.common.exception.ServiceException;
 import com.myself.common.message.JsonMessage;
+import com.myself.common.message.JsonResult;
 
 @Controller
 @RequestMapping("/home/buildingUnit")
@@ -24,6 +27,39 @@ public class BuildingUnitController extends BaseController {
 	@Autowired
 	private IBuildingUnitService buildingUnitService;
 	
+	@RequestMapping("/query")
+	@ResponseBody
+	public Object query(BuildingUnitQueryParam param) {
+		IPage<BuildingUnit> datas = buildingUnitService.query(param, param.getPage(),
+				param.getLength());
+		JsonResult<BuildingUnit> jResult = new JsonResult<BuildingUnit>();
+		jResult.setDraw(param.getDraw());
+		jResult.setRecordsTotal(datas.getTotalRecord());
+		jResult.setRecordsFiltered(datas.getTotalRecord());
+		jResult.setData((List<BuildingUnit>) datas.getData());
+		return jResult;
+	}
+	
+	@RequestMapping("/save")
+	@ResponseBody
+	public Object save(BuildingUnit param) {
+		JsonMessage jMessage = new JsonMessage();
+		try {
+			buildingUnitService.save(param);
+			jMessage.setStatus(JsonMessage.TRUE);
+			jMessage.setMessage("保存成功");
+		} catch (Exception e) {
+			jMessage.setStatus(JsonMessage.FALSE);
+			if (e instanceof ServiceException) {
+				jMessage.setMessage(e.getMessage());
+			} else {
+				jMessage.setMessage("系统异常");
+			}
+			logger.error(jMessage.getMessage(), e);
+		}
+		return jMessage;
+	}
+	
 	@RequestMapping("/select")
 	@ResponseBody
 	public Object select(String buildingId) {
@@ -31,10 +67,30 @@ public class BuildingUnitController extends BaseController {
 		List<BuildingUnit> datas = null;
 		try {
 			datas = buildingUnitService.queryByBuildingId(buildingId);
-			jMessage.setCode(JsonMessage.SUCCESS_CODE);
+			jMessage.setStatus(JsonMessage.TRUE);
 			jMessage.setData(datas);
 		} catch (Exception e) {
-			jMessage.setCode(JsonMessage.ERROR_CODE);
+			jMessage.setStatus(JsonMessage.FALSE);
+			if (e instanceof ServiceException) {
+				jMessage.setMessage(e.getMessage());
+			} else {
+				jMessage.setMessage("系统异常");
+			}
+			logger.error(jMessage.getMessage(), e);
+		}
+		return jMessage;
+	}
+	
+	@RequestMapping("/trash")
+	@ResponseBody
+	public Object trash(String id) {
+		JsonMessage jMessage = new JsonMessage();
+		try {
+			buildingUnitService.deleteById(id);
+			jMessage.setStatus(JsonMessage.TRUE);
+			jMessage.setMessage("删除成功");
+		} catch (Exception e) {
+			jMessage.setStatus(JsonMessage.FALSE);
 			if (e instanceof ServiceException) {
 				jMessage.setMessage(e.getMessage());
 			} else {

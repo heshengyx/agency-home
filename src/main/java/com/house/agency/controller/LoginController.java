@@ -31,10 +31,11 @@ public class LoginController extends BaseController {
 		try {
 			// token.setRememberMe(true);
 			subject.login(token);
+			jMessage.setStatus(JsonMessage.TRUE);
 			logger.info("[{}]登录成功", new Object[]{username});
 		} catch (Exception e) {
 			logger.error("[{}]登录失败", new Object[]{username}, e);
-			jMessage.setCode(JsonMessage.ERROR_CODE);
+			jMessage.setStatus(JsonMessage.FALSE);
 			jMessage.setMessage("登录失败");
 		}
 		return jMessage;

@@ -125,13 +125,13 @@
 
                     <div class="toolbar clearfix">
                       <div>
-                        <a href="#" onclick="show_box('forgot-box'); return false;" class="forgot-password-link">
+                        <a href="#" onclick="show_box('forgot-box');" class="forgot-password-link">
                           <i class="icon-arrow-left"></i>忘记密码
                         </a>
                       </div>
 
                       <div>
-                        <a href="#" onclick="show_box('signup-box'); return false;" class="user-signup-link">我要注册
+                        <a href="#" onclick="show_box('signup-box');" class="user-signup-link">我要注册
                           <i class="icon-arrow-right"></i>
                         </a>
                       </div>
@@ -172,7 +172,7 @@
                     </div><!-- /widget-main -->
 
                     <div class="toolbar center">
-                      <a href="#" onclick="show_box('login-box'); return false;" class="back-to-login-link">
+                      <a href="#" onclick="show_box('login-box');" class="back-to-login-link">
                         Back to login
                         <i class="icon-arrow-right"></i>
                       </a>
@@ -247,7 +247,7 @@
                     </div>
 
                     <div class="toolbar center">
-                      <a href="#" onclick="show_box('login-box'); return false;" class="back-to-login-link">
+                      <a href="#" onclick="show_box('login-box');" class="back-to-login-link">
                         <i class="icon-arrow-left"></i>
                         Back to login
                       </a>
@@ -283,14 +283,14 @@
     <script src="${ctx}/js/bootstrapValidator.min.js"></script>
     <script>
     $(document).ready(function() {
-			$("#dataForm").bootstrapValidator({
+			$('#dataForm').bootstrapValidator({
 			  submitHandler: function(validator, form, submitButton) {
 			    $.post(form.attr('action'), form.serialize(), function(result) {
-			      if (result.code == '500') {
-			        //$('#message').text(result.message);
-			        validator.disableSubmitButtons(false);
+			      if (result.status) {
+			    	  window.location.href = '${ctx}/home/house/used/sale';
 			      } else {
-			        window.location.href = '${ctx}/home/house/used/sale';
+			    	  //$('#message').text(result.message);
+		          validator.disableSubmitButtons(false);
 			      }
 			    }, 'json');
 			  },

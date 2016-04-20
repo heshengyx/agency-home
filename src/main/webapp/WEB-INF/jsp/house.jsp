@@ -565,15 +565,6 @@
 	    table.ajax.url("${ctx}/home/house/queryData" + search).load();
 	    d.close();
 		});
-	
-		$("#btnAdd").click(function() {
-      var url = "${ctx}/home/house/used/sale/add?random=" + Math.random();
-      var options = {
-        title: '房源新增',
-        width: 500
-      };
-      showDialog(url, options);
-    });
 		
 		$('#editor1').ace_wysiwyg({
 	    toolbar:
@@ -635,7 +626,7 @@
       $towns.append($htmlLi).append("\n");
       
       $.post(url, params, function(result) {
-        if ("500" != result.code) {
+        if (result.status) {
           for (var i=0; i<result.data.length; i++) {
             $htmlLi = $("<li><button type=\"button\" class=\"btn btn-link btn-xs\" onclick=\"addActivedName('" + fieldIds[1] + "', '" + result.data[i].id + "', '" + result.data[i].name + "', this);\">" + result.data[i].name + "</button></li>");
             $towns.append($htmlLi).append("\n");
@@ -693,7 +684,7 @@
                 buildingId: buildingId
             };
             $.post(url, params, function(result) {
-              if ("500" != result.code) {
+              if (result.status) {
                 var $buildingUnit = $("#" + buildingUnit);
                 $buildingUnit.children().not(':first').remove();
                 for(var i=0; i<result.data.length; i++) {
@@ -715,7 +706,7 @@
 	          buildingUnitId: buildingUnitId
 	      };
 	      $.post(url, params, function(result) {
-	        if ("500" != result.code) {
+	        if (result.status) {
 	        	var $house = $("#" + house);
 	          $house.children().not(':first').remove();
 	          var items = [];
