@@ -6,6 +6,7 @@
 	<mapping path="/home/house/new/sale" decorator="/WEB-INF/layout/mainLayout.jsp"/>
 	
 	<mapping path="/home/building" decorator="/WEB-INF/layout/mainLayout.jsp"/>
+	<mapping path="/home/house" decorator="/WEB-INF/layout/mainLayout.jsp"/>
 	
 	<!-- 排除，不进行装饰的路径 -->
 	<mapping path="/avatars/*" exclude="true"/>

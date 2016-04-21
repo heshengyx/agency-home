@@ -382,7 +382,7 @@
                   <a href="${ctx}/home/building"><i class="icon-double-angle-right"></i>楼盘</a>
                 </li>
                 <li>
-                  <a href="${ctx}/manage/house/add"><i class="icon-double-angle-right"></i>房源</a>
+                  <a href="${ctx}/home/house"><i class="icon-double-angle-right"></i>房源</a>
                 </li>
               </ul>
             </li>
