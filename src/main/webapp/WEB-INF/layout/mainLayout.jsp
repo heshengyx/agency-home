@@ -17,7 +17,10 @@
 		<!--[if IE 7]>
 		  <link rel="stylesheet" href="${ctx}/css/font-awesome-ie7.min.css">
 		<![endif]-->
-
+		
+		<!-- page styles -->
+		<link href="${ctx}/css/ui-dialog.css" rel="stylesheet">
+    <sitemesh:write property="head" />
 		<!-- fonts -->
 		<!-- <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" rel="stylesheet"> -->
 	
@@ -30,15 +33,12 @@
 		  <link href="${ctx}/css/ace-ie.min.css" rel="stylesheet">
 		<![endif]-->
 		
-		<!-- page specific plugin styles -->
-		<link href="${ctx}/css/ui-dialog.css" rel="stylesheet">
-    <sitemesh:write property="head" />
-	
-		<!-- inline styles related to this page -->
-		<!-- ace settings handler -->
+		<!-- inline styles -->
+		<sitemesh:write property="css" />
+
+		<!-- settings handler -->
 		<script src="${ctx}/js/ace-extra.min.js"></script>
 	
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		<script src="${ctx}/js/html5shiv.js"></script>
 		<script src="${ctx}/js/respond.min.js"></script>
@@ -336,14 +336,14 @@
 					<ul class="nav nav-list">
 						<li>
 							<a href="index.html">
-								<i class="icon-dashboard"></i>
+								<i class="icon-cog"></i>
 								<span class="menu-text"> 控制台 </span>
 							</a>
 						</li>
 						
 						<li>
 							<a href="#" class="dropdown-toggle">
-								<i class="icon-calendar"></i>
+								<i class="icon-building"></i>
 								<span class="menu-text"> 新房 </span>
 								<b class="arrow icon-angle-down"></b>
 							</a>
@@ -373,7 +373,7 @@
             </li>
             <li>
               <a href="#" class="dropdown-toggle">
-                <i class="icon-list"></i>
+                <i class="icon-table"></i>
                 <span class="menu-text"> 小区 </span>
                 <b class="arrow icon-angle-down"></b>
               </a>

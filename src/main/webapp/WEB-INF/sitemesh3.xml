@@ -18,5 +18,6 @@
 	<content-processor>
 		<tag-rule-bundle class="com.house.agency.tag.NavTitleTagRuleBundle" />
 		<tag-rule-bundle class="com.house.agency.tag.JscriptTagRuleBundle" />
+		<tag-rule-bundle class="com.house.agency.tag.CssTagRuleBundle" />
 	</content-processor>
 </sitemesh>
