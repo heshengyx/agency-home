@@ -168,8 +168,8 @@
 			                <th>房号</th>
 			                <th>编号</th>
 			                <th class="text-right" width="90">户型</th>
-			                <th width="130"><i class="icon-time hidden-480"></i>发布时间</th>
-			                <th class="text-center hidden-480" width="50">状态</th>
+			                <th width="130"><i class="icon-time hidden-480"></i>创建时间</th>
+			                <th class="text-center hidden-480">状态</th>
 			                <th class="text-center" width="110">操作</th>
 			              </tr>
 			            </thead>
@@ -228,23 +228,9 @@
 					                        <div class="col-md-8">
 					                          <select class="input-select" id="buildingUnitAdd">
 					                            <option value="0">选择栋座</option>
-					                          </select>
-					                          <small>~</small>
-					                          <select class="input-select" id="houseAdd">
-					                            <option value="0">选择房号</option>
-					                          </select>
+					                          </select>          
 					                        </div>
 					                      </div>
-					                      <div class="form-group form-row">
-                                  <label class="col-md-2 control-label no-padding-right">面积：</label>
-                                  <div class="col-md-8">
-                                    <input class="input-text" type="text" id="areaAdd" value="300" disabled="disabled">
-                                    <small>~</small>
-                                    <input class="input-text" type="text" id="pAdd" value="3室2厅1卫" disabled="disabled">      
-                                    <small>~</small>
-                                    <input class="input-text" type="text" id="faceAdd" value="东南" disabled="disabled">
-                                  </div>
-                                </div>
 					                    </form>
 				                    </td>
 			                    </tr>
@@ -259,24 +245,70 @@
                       <td>
                         <form class="form-horizontal">
                           <div class="form-group form-row">
-                            <label class="col-md-2 control-label no-padding-right">标题：</label>
+                            <label class="col-md-2 control-label no-padding-right">房号：</label>
 				                    <div class="col-md-8">
-				                      <input class="input-field" type="text" id="titleAdd" placeholder="标题">
+				                      <input class="input-text" type="text" id="cardAdd" placeholder="房号">
 				                    </div>
 				                  </div>
 				                  <div class="form-group form-row">
-                            <label class="col-md-2 control-label no-padding-right">价格：</label>
-                            <div class="col-md-3">
-                              <div class="input-group">
-                                <input class="input-field" type="text" id="priceAdd" placeholder="价格">
-                                <div class="input-group-addon"><small>万</small></div>
-                              </div>
+                            <label class="col-md-2 control-label no-padding-right">户型：</label>
+                            <div class="col-md-8">
+		                          <select class="input-select" id="roomAdd">
+		                            <option value="0">选择室</option>
+		                            <option value="1">1室</option>
+		                            <option value="2">2室</option>
+		                            <option value="3">3室</option>
+		                            <option value="4">4室</option>
+		                            <option value="5">5室</option>
+		                          </select>
+		                          <small>~</small>
+		                          <select class="input-select" id="saloonAdd">
+		                            <option value="0">选择厅</option>
+		                            <option value="1">1厅</option>
+		                            <option value="2">2厅</option>
+		                            <option value="3">3厅</option>
+		                            <option value="4">4厅</option>
+		                            <option value="5">5厅</option>
+		                          </select>
+		                          <small>~</small>
+		                          <select class="input-select" id="toiletAdd">
+		                            <option value="0">选择卫</option>
+		                            <option value="1">1卫</option>
+		                            <option value="2">2卫</option>
+		                            <option value="3">3卫</option>
+		                            <option value="4">4卫</option>
+		                            <option value="5">5卫</option>
+		                          </select>
+		                        </div>
+                          </div>
+                          <div class="form-group form-row">
+                            <label class="col-md-2 control-label no-padding-right">面积：</label>
+                            <div class="col-md-8">
+                              <input class="input-text" type="text" id="areaAdd" placeholder="面积">
                             </div>
                           </div>
                           <div class="form-group form-row">
-                            <label class="col-md-2 control-label no-padding-right">描述：</label>
-                            <div class="col-md-10">
-                              <div class="wysiwyg-editor" id="editor1"></div>
+                            <label class="col-md-2 control-label no-padding-right">朝向：</label>
+                            <div class="col-md-8">
+                              <select class="input-select" id="faceAdd">
+                                <option value="0">选择朝向</option>
+                                <option value="1">东</option>
+                                <option value="2">南</option>
+                                <option value="3">西</option>
+                                <option value="4">北</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="form-group form-row">
+                            <label class="col-md-2 control-label no-padding-right">楼层：</label>
+                            <div class="col-md-8">
+                              <input class="input-text" type="text" id="floorAdd" placeholder="楼层">
+                            </div>
+                          </div>
+                          <div class="form-group form-row">
+                            <label class="col-md-2 control-label no-padding-right">编号：</label>
+                            <div class="col-md-8">
+                              <input type="text" id="codeAdd" placeholder="编号">
                             </div>
                           </div>
 				                </form>
@@ -287,12 +319,8 @@
                 </div>
 
                 <div class="modal-footer">
-                  <button class="btn btn-sm" data-dismiss="modal">
-                    <i class="icon-remove"></i>关闭
-                  </button>
-                  <button class="btn btn-sm btn-primary">
-                    <i class="icon-ok"></i>保存
-                  </button>
+                  <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i>关闭</button>
+                  <button class="btn btn-sm btn-primary" id="btnSaveHouse"><i class="icon-ok"></i>保存</button>
                 </div>
               </div>
             </div>
@@ -342,32 +370,32 @@
           //d.sort = $('#sort').val();
         }
       },
-     "columnDefs": [
+     'columnDefs': [
        { 'orderable': false, 'targets': 0},
-       { "orderable": false, "targets": 1, "render": function(data, type, row) {
+       { 'orderable': false, 'targets': 1, 'render': function(data, type, row) {
     	   var content = '<div class="text-center"><label>';
          content += '<input type="checkbox" class="ace" />';
          content += '<span class="lbl"></span>';
          content += '</label></div>';
          return content;
        }},
-       { "orderable": false, "targets": 2, "render": function(data, type, row) {
-         var content = "";
-         content += data.buildingName + "<small>（福田-" + data.townName + "）</small>，A栋";
+       { 'orderable': false, 'targets': 2, 'render': function(data, type, row) {
+         var content = '';
+         content += data.buildingName + '<small>（' + data.districtName + '-' + data.townName + '）</small>，A栋';
          return content;
        }},
-       { "orderable": false, "targets": 3, "render": function(data, type, row) {
-         var content = "";
-         content += "105房";
+       { 'orderable': false, 'targets': 3, 'render': function(data, type, row) {
+         var content = '';
+         content += '105房';
          return content;
        }},
-       { "orderable": false, "targets": 5, "render": function(data, type, row) {
-         var content = "<div class=\"text-right\">";
-         content += data.room + "室" + data.saloon + "厅" + data.toilet + "卫";
-         content += "</div>";
+       { 'orderable': false, 'targets': 5, 'render': function(data, type, row) {
+         var content = '<div class="text-right">';
+         content += data.room + '室' + data.saloon + '厅' + data.toilet + '卫';
+         content += '</div>';
          return content;
        }},
-       { "targets": 6, "render": function(data, type, row) {
+       { 'targets': 6, 'render': function(data, type, row) {
          var content = to_date_hm(data.createTime);
          return content;
        }},
@@ -439,62 +467,107 @@
           cell.innerHTML = i + 1;
         });
     }).draw();
-		queryBuildingName("buildingName", "buildingUnit", "districtsValue", "townsValue");
+		queryBuildingName('buildingName', 'buildingUnit', 'districtsValue', 'townsValue');
+		queryBuildingName("buildingNameAdd", "buildingUnitAdd", "districtsAddValue", "townsAddValue");
 
-		$("#btnHouseSearch").click(function() {
-      d = dialog({
-        title: '房源载入中...'
-      });
-      d.showModal();
-      var search = "?random=" + Math.random();
-      var townsValue = $("#townsValue").val();
-      if (townsValue && townsValue != "0") {
-        search += "&townId=" + townsValue;
-      } else {
-        var districtsValue = $("#districtsValue").val();
-        if (districtsValue && districtsValue != "0") {
-          search += "&districtId=" + districtsValue;
-        }
-      }
-      tableHouse.ajax.url("${ctx}/home/house/query" + search).load();
-      d.close();
+    $('#btnHouseSearch').click(function() {
+    	queryHouses();
     });
-	});
-	function queryRegions(regionId, name, _this, fieldIds) {
-		addActivedName(fieldIds[0], regionId, name, _this);
-    var $towns = $("#" + fieldIds[1]);
-    var $townsPane = $("#" + fieldIds[2]);
+    $('#btnSaveHouse').click(function() {
+    	var buildingUnitId = $('#buildingUnitAdd').val();
+      var card = $('#cardAdd').val();
+      var room = $('#roomAdd').val();
+      var saloon = $('#saloonAdd').val();
+      var toilet = $('#toiletAdd').val();
+      var area = $('#areaAdd').val();
+      var face = $('#faceAdd').val();
+      var floor = $('#floorAdd').val();
+      var code = $('#codeAdd').val();
+      var url = '${ctx}/home/house/save?random='+ Math.random();
+      var params = {
+    		  buildingUnitId: buildingUnitId,
+    		  card: card,
+    		  room: room,
+    		  saloon: saloon,
+    		  toilet: toilet,
+    		  area: area,
+    		  face: face,
+    		  floor: floor,
+    		  code: code
+      };
+      $.post(url, params, function(result) {
+        $('#modal-form').modal('hide');
+        dialog({
+         title: '消息',
+         content: result.message,
+         okValue: '确定',
+         ok: function () {
+        	 queryHouses();
+           return true;
+         }
+       }).width(100).showModal();
+      }, 'json');
+    });
+  });
+	function queryHouses() {
+		d = dialog({
+      title: '房源载入中...'
+    });
+    d.showModal();
+    var search = '?random=' + Math.random();
+    var townsValue = $('#townsValue').val();
+    if (townsValue && townsValue != '0') {
+      search += '&townId=' + townsValue;
+    } else {
+      var districtsValue = $('#districtsValue').val();
+      if (districtsValue && districtsValue != '0') {
+        search += '&districtId=' + districtsValue;
+      }
+    }
+    search += '&buildingName=' + $('#buildingName').val();
+    var buildingUnitId = $('#buildingUnit').val();
+    if (buildingUnitId && buildingUnitId != '0') {
+      search += '&buildingUnitId=' + buildingUnitId;
+    }
+    
+    tableHouse.ajax.url('${ctx}/home/house/query' + search).load();
+    d.close();
+	}
+  function queryRegions(regionId, name, _this, fieldIds) {
+    addActivedName(fieldIds[0], regionId, name, _this);
+    var $towns = $('#' + fieldIds[1]);
+    var $townsPane = $('#' + fieldIds[2]);
     $towns.children().remove();
-    if (regionId != "0") {
-      var url = "${ctx}/home/region/list?random="+ Math.random();
+    if (regionId != '0') {
+      var url = '${ctx}/home/region/list?random='+ Math.random();
       var params = {
         parentId: regionId
       };
-      var $htmlLi = $("<li><button type=\"button\" class=\"btn btn-danger btn-xs\" onclick=\"addActivedName('" + fieldIds[1] + "', '0', '', this);\">不限</button></li>");
-      $towns.append($htmlLi).append("\n");
+      var $htmlLi = $('<li><button type="button" class="btn btn-danger btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'0\', \'\', this);">不限</button></li>');
+      $towns.append($htmlLi).append('\n');
       
       $.post(url, params, function(result) {
         if (result.status) {
           for (var i=0; i<result.data.length; i++) {
-            $htmlLi = $("<li><button type=\"button\" class=\"btn btn-link btn-xs\" onclick=\"addActivedName('" + fieldIds[1] + "', '" + result.data[i].id + "', '" + result.data[i].name + "', this);\">" + result.data[i].name + "</button></li>");
-            $towns.append($htmlLi).append("\n");
+            $htmlLi = $('<li><button type="button" class="btn btn-link btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'' + result.data[i].id + '\', \'' + result.data[i].name + '\', this);">' + result.data[i].name + '</button></li>');
+            $towns.append($htmlLi).append('\n');
           }
           $townsPane.show();
         }
-      }, "json");
+      }, 'json');
     } else {
-    	$townsPane.hide();
+      $townsPane.hide();
     }
   }
-	function addActivedName(fieldId, val, name, _this) {
-    $("#" + fieldId + " li>button.btn-danger").removeClass("btn-danger").addClass("btn-link");
+  function addActivedName(fieldId, val, name, _this) {
+    $('#' + fieldId + ' li>button.btn-danger').removeClass('btn-danger').addClass('btn-link');
     if (_this) {
-      $(_this).removeClass("btn-link").addClass("btn-danger");
+      $(_this).removeClass('btn-link').addClass('btn-danger');
     }
-    $("#" + fieldId + "Value").val(val);
-	}
+    $('#' + fieldId + 'Value').val(val);
+  }
 	function queryBuildingName(buildingName, buildingUnit, districts, towns) {
-		$("#" + buildingName).autocompleter({
+		$('#' + buildingName).autocompleter({
       // marker for autocomplete matches
       highlightMatches: true,
       // object to local or url to remote search
@@ -508,15 +581,15 @@
       // max results
       //limit: 1,
       combine: function() {
-        var districtId = $("#" + districts).val();
-        var townId = $("#" + towns).val();
+        var districtId = $('#' + districts).val();
+        var townId = $('#' + towns).val();
         if (townId) {
-          districtId = "";
+          districtId = '';
         } else {
-          townId = "";
+          townId = '';
         }
         return {
-          buildingName: $("#" + buildingName).val(),
+          buildingName: $('#' + buildingName).val(),
           districtId: districtId,
           townId: townId
         };
@@ -525,19 +598,19 @@
         if (selected) {
           var buildingId = selected.buildingId;
           if (buildingId) {
-            var url = "${ctx}/home/buildingUnit/select?random="+ Math.random();
+            var url = '${ctx}/home/buildingUnit/select?random=' + Math.random();
             var params = {
                 buildingId: buildingId
             };
             $.post(url, params, function(result) {
               if (result.status) {
-                var $buildingUnit = $("#" + buildingUnit);
+                var $buildingUnit = $('#' + buildingUnit);
                 $buildingUnit.children().not(':first').remove();
                 for(var i=0; i<result.data.length; i++) {
-                  $buildingUnit.append("<option value=\"" + result.data[i].id + "\">" + result.data[i].name + "</option>");
+                  $buildingUnit.append('<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>');
                 }
               }
-            }, "json");
+            }, 'json');
           }
         }
       }

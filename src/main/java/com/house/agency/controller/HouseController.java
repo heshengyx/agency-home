@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.house.agency.data.HouseListData;
+import com.house.agency.data.manage.HouseManageData;
 import com.house.agency.entity.House;
 import com.house.agency.page.IPage;
 import com.house.agency.param.HouseQueryParam;
+import com.house.agency.param.manage.HouseManageQueryParam;
 import com.house.agency.service.IHouseService;
 import com.house.agency.service.IRegionService;
 import com.myself.common.exception.ServiceException;
@@ -84,6 +86,26 @@ public class HouseController extends BaseController {
 		return jResult;
 	}
 	
+	@RequestMapping("/save")
+	@ResponseBody
+	public Object save(House param) {
+		JsonMessage jMessage = new JsonMessage();
+		try {
+			houseService.save(param);
+			jMessage.setStatus(JsonMessage.TRUE);
+			jMessage.setMessage("保存成功");
+		} catch (Exception e) {
+			jMessage.setStatus(JsonMessage.FALSE);
+			if (e instanceof ServiceException) {
+				jMessage.setMessage(e.getMessage());
+			} else {
+				jMessage.setMessage("系统异常");
+			}
+			logger.error(jMessage.getMessage(), e);
+		}
+		return jMessage;
+	}
+	
 	@RequestMapping("")
 	public String pageHouse(Model model) {
 		setModel(model, regionService);
@@ -92,14 +114,14 @@ public class HouseController extends BaseController {
 	
 	@RequestMapping("/query")
 	@ResponseBody
-	public Object query(HouseQueryParam param) {
-		IPage<House> datas = houseService.query(param, param.getPage(),
+	public Object query(HouseManageQueryParam param) {
+		IPage<HouseManageData> datas = houseService.queryManageData(param, param.getPage(),
 				param.getLength());
-		JsonResult<House> jResult = new JsonResult<House>();
+		JsonResult<HouseManageData> jResult = new JsonResult<HouseManageData>();
 		jResult.setDraw(param.getDraw());
 		jResult.setRecordsTotal(datas.getTotalRecord());
 		jResult.setRecordsFiltered(datas.getTotalRecord());
-		jResult.setData((List<House>) datas.getData());
+		jResult.setData((List<HouseManageData>) datas.getData());
 		return jResult;
 	}
 }
