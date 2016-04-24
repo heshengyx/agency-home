@@ -9,9 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.house.agency.data.manage.BuildingUnitManageData;
 import com.house.agency.entity.BuildingUnit;
 import com.house.agency.page.IPage;
-import com.house.agency.param.BuildingUnitQueryParam;
+import com.house.agency.param.manage.BuildingUnitManageQueryParam;
 import com.house.agency.service.IBuildingUnitService;
 import com.myself.common.exception.ServiceException;
 import com.myself.common.message.JsonMessage;
@@ -27,16 +28,16 @@ public class BuildingUnitController extends BaseController {
 	@Autowired
 	private IBuildingUnitService buildingUnitService;
 	
-	@RequestMapping("/query")
+	@RequestMapping("/queryManageData")
 	@ResponseBody
-	public Object query(BuildingUnitQueryParam param) {
-		IPage<BuildingUnit> datas = buildingUnitService.query(param, param.getPage(),
+	public Object queryManageData(BuildingUnitManageQueryParam param) {
+		IPage<BuildingUnitManageData> datas = buildingUnitService.queryManageData(param, param.getPage(),
 				param.getLength());
-		JsonResult<BuildingUnit> jResult = new JsonResult<BuildingUnit>();
+		JsonResult<BuildingUnitManageData> jResult = new JsonResult<BuildingUnitManageData>();
 		jResult.setDraw(param.getDraw());
 		jResult.setRecordsTotal(datas.getTotalRecord());
 		jResult.setRecordsFiltered(datas.getTotalRecord());
-		jResult.setData((List<BuildingUnit>) datas.getData());
+		jResult.setData((List<BuildingUnitManageData>) datas.getData());
 		return jResult;
 	}
 	

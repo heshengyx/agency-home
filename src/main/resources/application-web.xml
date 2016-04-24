@@ -19,7 +19,6 @@
       <value>com.house.agency.service.IUserService</value>  
     </property>
   </bean>
-  
   <bean id="roleService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
     <property name="serviceUrl">  
       <value>http://localhost:8088/agency-core/hessian/roleService</value>   
@@ -28,7 +27,6 @@
       <value>com.house.agency.service.IRoleService</value>  
     </property>
   </bean>
-  
   <bean id="permissionService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
     <property name="serviceUrl">  
       <value>http://localhost:8088/agency-core/hessian/permissionService</value>   
@@ -37,7 +35,6 @@
       <value>com.house.agency.service.IPermissionService</value>  
     </property>
   </bean>
-  
   <bean id="regionService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
     <property name="serviceUrl">  
       <value>http://localhost:8088/agency-core/hessian/regionService</value>   
@@ -46,7 +43,6 @@
       <value>com.house.agency.service.IRegionService</value>  
     </property>
   </bean>
-  
   <bean id="buildingService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
     <property name="serviceUrl">  
       <value>http://localhost:8088/agency-core/hessian/buildingService</value>   
@@ -55,7 +51,6 @@
       <value>com.house.agency.service.IBuildingService</value>  
     </property>
   </bean>
-  
   <bean id="buildingUnitService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
     <property name="serviceUrl">  
       <value>http://localhost:8088/agency-core/hessian/buildingUnitService</value>   
@@ -64,7 +59,6 @@
       <value>com.house.agency.service.IBuildingUnitService</value>  
     </property>
   </bean>
-  
   <bean id="houseService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
     <property name="serviceUrl">  
       <value>http://localhost:8088/agency-core/hessian/houseService</value>   
@@ -73,13 +67,20 @@
       <value>com.house.agency.service.IHouseService</value>  
     </property>
   </bean>
-  
   <bean id="imageService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
     <property name="serviceUrl">  
       <value>http://localhost:8088/agency-core/hessian/imageService</value>   
     </property>   
     <property name="serviceInterface">  
       <value>com.house.agency.service.IImageService</value>  
+    </property>
+  </bean>
+  <bean id="tradeService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    <property name="serviceUrl">  
+      <value>http://localhost:8088/agency-core/hessian/tradeService</value>   
+    </property>   
+    <property name="serviceInterface">  
+      <value>com.house.agency.service.ITradeService</value>  
     </property>
   </bean>
   

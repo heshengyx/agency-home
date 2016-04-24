@@ -43,6 +43,17 @@
   .modal-body-content {padding-top: 5px;}
   
   .ace-thumbnails>li {margin-left: 20px;} 
+  
+  .date-picker {width: 110px;}
+  
+  .dropzone .dz-preview, 
+  .dropzone-previews .dz-preview {margin-left: 27px;}
+  .dropzone .dz-preview .error-message-tip, 
+  .dropzone-previews .dz-preview .error-message-tip {
+    top: 0;
+    left: 0;
+    min-width: 0;
+  }
   </style>
   </css>
 </head>
@@ -84,7 +95,7 @@
                         <label class="col-md-1 control-label no-padding-right">区域：</label>
                         <div class="col-md-11">
                           <ul class="list-inline" id="districts">
-                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('0', '', this, ['districts', 'towns', 'townsPane']);">不限</button></li>
+                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['districts', 'towns', 'townsPane']);">不限</button></li>
                             <c:forEach var="data" items="${regions}">
                             <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['districts', 'towns', 'townsPane']);">${data.name}</button></li>
                             </c:forEach> 
@@ -110,12 +121,12 @@
                         <label class="col-md-1 control-label no-padding-right">时间：</label>
                         <div class="col-md-5">
                           <span class="input-icon input-icon-right">
-                            <input class="date-picker" style="width:110px" id="dateBegin" type="text" data-date-format="yyyy-mm-dd" placeholder="开始时间">
+                            <input class="date-picker" id="dateBegin" type="text" data-date-format="yyyy-mm-dd" placeholder="开始时间">
                             <i class="icon-calendar"></i>
                           </span>
                           <small>~</small>
                           <span class="input-icon input-icon-right">
-                            <input class="date-picker" style="width:110px" id="dateEnd" type="text" data-date-format="yyyy-mm-dd" placeholder="结束时间">
+                            <input class="date-picker" id="dateEnd" type="text" data-date-format="yyyy-mm-dd" placeholder="结束时间">
                             <i class="icon-calendar"></i>
                           </span>
                         </div>
@@ -181,7 +192,7 @@
 			                <th>楼盘地址</th>
 			                <th class="text-center" width="70">类型</th>
 			                <th width="130"><i class="icon-time hidden-480"></i>创建时间</th>
-			                <th class="text-center hidden-480" width="50">状态</th>
+			                <th class="text-center hidden-480">状态</th>
 			                <th class="text-center" width="140">操作</th>
 			              </tr>
 			            </thead>
@@ -214,7 +225,7 @@
 					                        <label class="col-md-2 control-label no-padding-right">区域：</label>
 					                        <div class="col-md-10">
 					                          <ul class="list-inline" id="districtsAdd">
-					                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('0', '', this, ['districtsAdd', 'townsAdd', 'townsPaneAdd']);">不限</button></li>
+					                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['districtsAdd', 'townsAdd', 'townsPaneAdd']);">不限</button></li>
 					                            <c:forEach var="data" items="${regions}">
 					                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['districtsAdd', 'townsAdd', 'townsPaneAdd']);">${data.name}</button></li>
 					                            </c:forEach> 
@@ -437,7 +448,7 @@
                       <div id="profile" class="tab-pane">
                         <div class="alert alert-info">
                           <i class="icon-hand-right"></i>
-                          Please note that demo server is not configured to save uploaded files, therefore you may get an error message.
+                                                                    楼盘图片上传格式为：.jpg、.gif、.png
                           <button class="close" data-dismiss="alert">
                             <i class="icon-remove"></i>
                           </button>
@@ -455,6 +466,22 @@
             </div>
           </div>
           <!-- modal-image -->
+          
+          <!--  -->
+          <div id="preview-template" style="display: none;">
+	          <div class="dz-preview dz-file-preview">
+						  <div class="dz-details">
+						    <div class="dz-filename"><span data-dz-name></span></div>
+						    <div class="dz-size" data-dz-size></div>
+						    <img data-dz-thumbnail />
+						  </div>
+						  <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+						  <div class="dz-success-mark"><span>✔</span></div>
+						  <div class="dz-error-mark"><span>✘</span></div>
+						  <div class="dz-error-message"><span data-dz-errormessage></span></div>
+						</div>
+					</div>
+          <!--  -->
 	        <!-- PAGE CONTENT ENDS -->
 	      </div><!-- /.col -->
 	    </div><!-- /.row -->
@@ -525,7 +552,7 @@
         dictDefaultMessage :'<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> 选择图片</span> 上传 \<span class="smaller-80 grey">(或者点击下面图标)</span> <br /> \<i class="upload-icon icon-cloud-upload blue icon-3x"></i>',
         dictResponseError: 'Error while uploading file!',
         //change the previewTemplate to use Bootstrap progress bars
-        previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
+        previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message error-message-tip\"><span data-dz-errormessage></span></div>\n</div>"
       });
     } catch(e) {
       alert('Dropzone.js does not support older browsers!');
@@ -552,7 +579,7 @@
       'serverSide': true, //开启服务器模式
       //'deferRender': true, //开启延迟渲染
       'ajax': {
-        'url': '${ctx}/home/building/query',
+        'url': '${ctx}/home/building/queryManageData',
         'type': 'POST',
         'data': function ( d ) { //添加额外的参数发送到服务器
           //d.tag = 'release';
@@ -570,7 +597,7 @@
         }},
         { 'orderable': false, 'targets': 2, 'render': function(data, type, row) {
           var content = '';
-          content += data.buildingName + '<small>（福田-）</small>';
+          content += data.buildingName + '<small>（' + data.districtName + '-' + data.townName + '）</small>';
           return content;
         }},
         { 'orderable': false, 'targets': 3, 'render': function(data, type, row) {
@@ -595,8 +622,8 @@
         { 'orderable': false, 'targets': 7, 'render': function(data, type, row) {
         	var content = '<div class="text-center">';
           content += '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
-          content += '  <a class="blue" href="#modal-table" role="button" data-toggle="modal" data-building="' + data.id + '" title="栋座"><i class="icon-building bigger-130"></i></a>';
-          content += '  <a class="blue" href="#modal-image" role="button" data-toggle="modal" data-building="' + data.id + '" title="图片"><i class="icon-picture bigger-130"></i></a><br>';
+          content += '  <a class="blue" href="#modal-table" role="button" data-toggle="modal" data-building="' + data.buildingId + '" title="栋座"><i class="icon-building bigger-130"></i></a>';
+          content += '  <a class="blue" href="#modal-image" role="button" data-toggle="modal" data-building="' + data.buildingId + '" title="图片"><i class="icon-picture bigger-130"></i></a><br>';
           content += '  <a class="blue" href="#" title="详情"><i class="icon-zoom-in bigger-130"></i></a>';
           content += '  <a class="green" href="#" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
           content += '  <a class="red" href="#" title="删除"><i class="icon-trash bigger-130"></i></a>';
@@ -675,7 +702,7 @@
       'serverSide': true, //开启服务器模式
       //'deferRender': true, //开启延迟渲染
       'ajax': {
-        'url': '${ctx}/home/buildingUnit/query',
+        'url': '${ctx}/home/buildingUnit/queryManageData',
         'type': 'POST',
         'data': function ( d ) { //添加额外的参数发送到服务器
           d.buildingId = $('#buildingId').val();
@@ -920,15 +947,19 @@
         search += '&districtId=' + districtsValue;
       }
     }
+    var buildingNameValue = $('#buildingName').val();
+    if (buildingNameValue) {
+    	search += '&buildingName=' + buildingNameValue;
+    }
     var dateBeginValue = $('#dateBegin').val();
     if (dateBeginValue) {
-      search += '&releaseDateBegin=' + dateBeginValue;
+      search += '&createDateBegin=' + dateBeginValue;
     }
     var dateEndValue = $('#dateEnd').val();
     if (dateEndValue) {
-      search += '&releaseDateEnd=' + dateEndValue;
+      search += '&createDateEnd=' + dateEndValue;
     }
-    tableBuilding.ajax.url('${ctx}/home/building/query' + search).load();
+    tableBuilding.ajax.url('${ctx}/home/building/queryManageData' + search).load();
     d.close();
 	}
 	function queryBuildingUnits() {
@@ -942,12 +973,12 @@
 		var $towns = $('#' + fieldIds[1]);
 	    var $townsPane = $('#' + fieldIds[2]);
 	    $towns.children().remove();
-	    if (regionId != '0') {
+	    if (regionId) {
 	      var url = '${ctx}/home/region/list?random='+ Math.random();
 	      var params = {
 	        parentId: regionId
 	      };
-	      var $htmlLi = $('<li><button type="button" class="btn btn-danger btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'0\', \'\', this);">不限</button></li>');
+	      var $htmlLi = $('<li><button type="button" class="btn btn-danger btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'\', \'\', this);">不限</button></li>');
 	      $towns.append($htmlLi).append('\n');
 	      
 	      $.post(url, params, function(result) {
@@ -968,9 +999,7 @@
     if (_this) {
       $(_this).removeClass('btn-link').addClass('btn-danger');
     }
-    if (name) {
-       $('#' + fieldId + 'Value').val(val);
-    }
+    $('#' + fieldId + 'Value').val(val);
 	}
 	function queryBuildingName(buildingName, buildingUnit, districts, towns) {
 		$('#' + buildingName).autocompleter({
@@ -1039,16 +1068,115 @@
 		  $(".dropzone").dropzone({
 		    url: '${ctx}/home/file/upload' + params,
 		    paramName: 'file', // The name that will be used to transfer the file
+		    acceptedFiles: 'image/*',
 		    maxFilesize: 0.5, // MB
 		    addRemoveLinks : true,
+		    dictDefaultMessage: '<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> 选择图片</span> 上传 \<span class="smaller-80 grey">(或者点击下面图标)</span> <br /> \<i class="upload-icon icon-cloud-upload blue icon-3x"></i>',
+		    dictResponseError: '上传失败',
+		    //dictInvalidFileType: '你不能上传该类型文件,文件类型只能是*.xls',
+		    dictRemoveFile: '删除文件',
+		    dictCancelUpload: '取消上传',
+        dictCancelUploadConfirmation: '你确定要取消上传吗?',
+		    previewTemplate: '<div class="dz-preview dz-file-preview">\n  <div class="dz-details">\n    <div class="dz-filename"><span data-dz-name></span></div>\n    <div class="dz-size" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class="progress progress-small progress-striped active"><div class="progress-bar progress-bar-success" data-dz-uploadprogress></div></div>\n  <div class="dz-success-mark"><span></span></div>\n  <div class="dz-error-mark"><span></span></div>\n  <div class="dz-error-message error-message-tip"><span data-dz-errormessage></span></div>\n</div>',
 		    params: {
-		    	foreignId: buildingId,
-		    	type: type
-		    },
-		    dictDefaultMessage :'<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> 选择图片</span> 上传 \<span class="smaller-80 grey">(或者点击下面图标)</span> <br /> \<i class="upload-icon icon-cloud-upload blue icon-3x"></i>',
-		    dictResponseError: 'Error while uploading file!',
-		    //change the previewTemplate to use Bootstrap progress bars
-		    previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
+          foreignId: buildingId,
+          type: type
+        },
+        init: function() {
+        	this.on("success", function(file, result) {
+        		console.log("success");
+            console.log(file);
+            console.log(result);
+            if (file.status == 'success') {
+              if (!result.status) {
+            	  $('.dz-preview').removeClass('dz-success').addClass('dz-error');
+            	  $('.dz-error-message span').html('上传失败');
+              }
+            }
+          });
+        	this.on("complete", function(file) {
+            console.log("complete");
+            console.log(file);
+            if (file.status == 'error') {
+            	$('.dz-error-message span').html('上传失败');
+            }
+          });
+          /* this.on("removedfile", function(file) {
+        	  console.log(file);
+        	  if (file.status == 'success') {
+              //$('.dz-error-message span').html('上传失败');
+        		  var result = JSON.parse(file.xhr.response);
+              console.log(result);
+              dialog({
+                title: '消息',
+                content: '确定要删除吗?',
+                okValue: '确定',
+                ok: function () {
+                  var that = this;
+                  this.title('删除中…');
+                  var url = '${ctx}/home/buildingUnit/trash?random='+ Math.random();
+                  var params = {
+                      id: buildingUnitId
+                  };
+                  $.post(url, params, function(result) {
+                    dialog({
+                      title: '消息',
+                      content: result.message,
+                      okValue: '确定',
+                      ok: function () {
+                        tableBuildingUnit.ajax.reload();
+                        return true;
+                      }
+                    }).width(100).showModal();
+                  }, 'json');
+                  var _ref;
+                  return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+                },
+                cancelValue: '取消',
+                cancel: function () {}
+              }).width(100).showModal();
+            }
+          }); */
+        },
+        removedfile: function(file) {
+          if (file.status == 'success') {
+            var result = JSON.parse(file.xhr.response);
+            if (result.status) {
+            	dialog({
+                title: '消息',
+                content: '确定要删除吗?',
+                okValue: '确定',
+                ok: function () {
+                  var that = this;
+                  this.title('删除中…');
+                  var url = '${ctx}/home/file/trash?random='+ Math.random();
+                  var params = {
+                      id: result.data.id
+                  };
+                  $.post(url, params, function(results) {
+                    dialog({
+                      title: '消息',
+                      content: results.message,
+                      okValue: '确定',
+                      ok: function () {
+                    	  if (results.status) {
+                    		  var _ref;
+                          return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+                    	  }
+                        return true;
+                      }
+                    }).width(100).showModal();
+                  }, 'json');
+                },
+                cancelValue: '取消',
+                cancel: function () {}
+              }).width(100).showModal();
+            } else {
+            	var _ref;
+              return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+            }
+          }
+        }
 		  });
 		} catch(e) {
 		  //alert('Dropzone.js does not support older browsers!');

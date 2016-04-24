@@ -6,6 +6,7 @@
   <link href="${ctx}/css/jquery.autocompleter.css" rel="stylesheet">
   <link href="${ctx}/css/autocompleter.css" rel="stylesheet">
   <link href="${ctx}/css/datepicker.css" rel="stylesheet">
+  <css>
   <style>
   .hr-line {
     margin-top: 0;
@@ -38,7 +39,10 @@
   .action-close:hover {color: #ffd9d5;}
   
   .modal-body-content {padding-top: 5px;}
+  
+  .date-picker {width: 110px;}
   </style>
+  </css>
 </head>
 <body>
 	<div class="main-content">
@@ -102,11 +106,11 @@
 		                    <label class="col-md-1 control-label no-padding-right">栋座：</label>
 		                    <div class="col-md-4">
 	                        <select class="input-select" id="buildingUnit">
-                            <option value="0">选择栋座</option>
+                            <option value="">选择栋座</option>
                           </select>
                           <small>~</small>
                           <select class="input-select" id="house">
-                            <option value="0">选择房号</option>
+                            <option value="">选择房号</option>
                           </select>
 		                    </div>
 		                  </div>
@@ -161,12 +165,12 @@
                         <label class="col-md-1 control-label no-padding-right">时间：</label>
                         <div class="col-md-5">
                           <span class="input-icon input-icon-right">
-                            <input class="date-picker" style="width:110px" id="dateBegin" type="text" data-date-format="yyyy-mm-dd" placeholder="开始时间">
+                            <input class="date-picker" id="dateBegin" type="text" data-date-format="yyyy-mm-dd" placeholder="开始时间">
                             <i class="icon-calendar"></i>
                           </span>
                           <small>~</small>
                           <span class="input-icon input-icon-right">
-                            <input class="date-picker" style="width:110px" id="dateEnd" type="text" data-date-format="yyyy-mm-dd" placeholder="结束时间">
+                            <input class="date-picker" id="dateEnd" type="text" data-date-format="yyyy-mm-dd" placeholder="结束时间">
                             <i class="icon-calendar"></i>
                           </span>
                         </div>
@@ -175,9 +179,9 @@
                         <div class="col-md-3 col-md-offset-1">
                           <div class="input-group">
                             <span class="input-group-btn">
-                              <button type="button" class="btn btn-info btn-sm input-text" id="btnSearch">搜索<i class="icon-search icon-on-right"></i></button>
-                              &nbsp;&nbsp;
-                              <button type="reset" class="btn btn-sm input-text">重置<i class="icon-undo icon-on-right"></i></button>
+                              <button type="button" class="btn btn-info btn-xs" id="btnHouseSearch">搜索<i class="icon-search icon-on-right"></i></button>
+                              &nbsp;
+                              <button type="reset" class="btn btn-xs">重置<i class="icon-undo icon-on-right"></i></button>
                             </span>
                           </div>
                         </div>  
@@ -195,6 +199,7 @@
       <input id="townsValue" type="hidden">
       <input id="districtsAddValue" type="hidden">
       <input id="townsAddValue" type="hidden">
+      <input id="houseId" type="hidden">
       
 	    <div class="row">
 	      <div class="col-xs-12 widget-container-span">
@@ -210,7 +215,7 @@
 		        <div class="widget-header header-color-blue">
 		          <h5><i class="icon-table"></i>新房出售</h5>
 	            <div class="widget-toolbar">
-	              <button class="btn btn-minier btn-purple" data-toggle="modal" data-target="#modal-form">新增<i class="icon-edit align-top icon-on-right"></i>
+	              <button class="btn btn-minier btn-purple" data-toggle="modal" data-target="#modal-add">新增<i class="icon-edit align-top icon-on-right"></i>
                 </button>
 	              <button class="btn btn-minier">导出<i class="icon-print align-top icon-on-right"></i>
 								</button>
@@ -222,7 +227,7 @@
 
 		        <div class="widget-body widget-none">
 			        <div class="table-responsive">
-			          <table id="tableData" class="table table-striped table-bordered table-hover" width="100%">
+			          <table id="tableHouse" class="table table-striped table-bordered table-hover" width="100%">
 			            <thead>
 			              <tr>
 			                <th></th>
@@ -241,7 +246,8 @@
 		        </div>
 	        </div>
 	        
-	        <div id="modal-form" class="modal" tabindex="-1">
+	        <!-- model-add -->
+	        <div id="modal-add" class="modal" tabindex="-1">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-body overflow-visible modal-body-content">
@@ -264,16 +270,14 @@
 					                        <label class="col-md-2 control-label no-padding-right">区域：</label>
 					                        <div class="col-md-10">
 					                          <ul class="list-inline" id="districtsAdd">
-					                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('0', '', this, ['districtsAdd', 'townsAdd', 'townsPaneAdd']);">不限</button></li>
+					                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['districtsAdd', 'townsAdd', 'townsPaneAdd']);">请选择</button></li>
 					                            <c:forEach var="data" items="${regions}">
 					                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['districtsAdd', 'townsAdd', 'townsPaneAdd']);">${data.name}</button></li>
 					                            </c:forEach> 
 					                          </ul>
 					                          <div id="townsPaneAdd">
 					                            <hr class="hr-line">
-					                            <ul class="list-inline" id="townsAdd">
-					                              <li><button type="button" class="btn btn-danger btn-xs">不限</button></li>
-					                            </ul>
+					                            <ul class="list-inline" id="townsAdd"></ul>
 					                          </div>
 					                        </div>
 					                      </div>
@@ -290,22 +294,22 @@
 					                        <label class="col-md-2 control-label no-padding-right">栋座：</label>
 					                        <div class="col-md-8">
 					                          <select class="input-select" id="buildingUnitAdd">
-					                            <option value="0">选择栋座</option>
+					                            <option value="">选择栋座</option>
 					                          </select>
 					                          <small>~</small>
 					                          <select class="input-select" id="houseAdd">
-					                            <option value="0">选择房号</option>
+					                            <option value="">选择房号</option>
 					                          </select>
 					                        </div>
 					                      </div>
 					                      <div class="form-group form-row">
                                   <label class="col-md-2 control-label no-padding-right">面积：</label>
                                   <div class="col-md-8">
-                                    <input class="input-text" type="text" id="areaAdd" value="300" disabled="disabled">
+                                    <input class="input-text" type="text" id="areaAdd" disabled="disabled">
                                     <small>~</small>
-                                    <input class="input-text" type="text" id="pAdd" value="3室2厅1卫" disabled="disabled">      
+                                    <input class="input-text" type="text" id="patternAdd" disabled="disabled">      
                                     <small>~</small>
-                                    <input class="input-text" type="text" id="faceAdd" value="东南" disabled="disabled">
+                                    <input class="input-text" type="text" id="faceAdd" disabled="disabled">
                                   </div>
                                 </div>
 					                    </form>
@@ -350,16 +354,13 @@
                 </div>
 
                 <div class="modal-footer">
-                  <button class="btn btn-sm" data-dismiss="modal">
-                    <i class="icon-remove"></i>关闭
-                  </button>
-                  <button class="btn btn-sm btn-primary">
-                    <i class="icon-ok"></i>保存
-                  </button>
+                  <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i>关闭</button>
+                  <button class="btn btn-sm btn-primary" id="btnHouseSave"><i class="icon-ok"></i>保存</button>
                 </div>
               </div>
             </div>
           </div>
+          <!-- model-add -->
 	        <!-- PAGE CONTENT ENDS -->
 	      </div><!-- /.col -->
 	    </div><!-- /.row -->
@@ -375,17 +376,18 @@
   <script src="${ctx}/js/bootstrap-wysiwyg.min.js"></script>
 	<script>
 	var d = null;
-	var table = null;
+	var tableHouse = null;
 	$(document).ready(function() {
 		//http://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTegdm0LZdjqr5-oayXSOefg.woff2
 		$("#townsPane").hide();
 		$("#townsPaneAdd").hide();
-		table = $('#tableData').DataTable({
+		tableHouse = $('#tableHouse').DataTable({
 			 "language": {
 	       "processing":  "处理中...",
 	       "lengthMenu":  "每页 _MENU_ 条记录",
 	       "zeroRecords": "没有找到记录",
 	       "infoEmpty":   "无记录",
+	       'info':        '当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录',
 	       "paginate": {
 	         "first":     "首页",
 	         "previous":  "上页 ",
@@ -399,7 +401,7 @@
       "serverSide": true, //开启服务器模式
       //"deferRender": true, //开启延迟渲染
       "ajax": {
-        "url": "${ctx}/home/house/queryData",
+        "url": "${ctx}/home/house/queryHomeData",
         "type": "POST",
         "data": function ( d ) { //添加额外的参数发送到服务器
           //d.tag = "release";
@@ -417,8 +419,9 @@
         }},
         { "orderable": false, "targets": 2, "render": function(data, type, row) {
           var content = "";
-          content += data.buildingName + "<small>（福田-" + data.townName + "）</small><br>";
-          content += "A栋，105房<br>";
+          content += "<h4>" + data.title + "</h4>";
+          content += data.buildingName + "<small>（" + data.districtName + "-" + data.townName + "）</small>，";
+          content += data.floorName + "，" + data.card + "<br>";
           content += "<span class=\"text-muted hidden-480\"><small>" + data.buildingAddress + "</small></span>";
           return content;
         }},
@@ -455,7 +458,7 @@
           content += "<div class=\"visible-md visible-lg hidden-sm hidden-xs action-buttons\">";
           content += "  <a class=\"blue\" href=\"#\" title=\"详情\"><i class=\"icon-zoom-in bigger-130\"></i></a>";
           content += "  <a class=\"green\" href=\"#\" title=\"编辑\"><i class=\"icon-pencil bigger-130\"></i></a>";
-          content += "  <a class=\"red\" href=\"#\" title=\"删除\"><i class=\"icon-trash bigger-130\"></i></a>";
+          content += "  <a class=\"red\" href=\"#\" onclick=\"houseTrash('" + data.tradeId + "');\"  title=\"删除\"><i class=\"icon-trash bigger-130\"></i></a>";
           content += "</div>";
           content += "<div class=\"visible-xs visible-sm hidden-md hidden-lg\">";
           content += "  <div class=\"inline position-relative\">";
@@ -506,18 +509,18 @@
       $(this).prev().focus();
     });
 		
-		$("#btnSearch").click(function() {
+		$("#btnHouseSearch").click(function() {
 			d = dialog({
 	      title: '房源载入中...'
 	    });
 	    d.showModal();
 	    var search = "?random=" + Math.random();
 	    var townsValue = $("#townsValue").val();
-      if (townsValue && townsValue != "0") {
+      if (townsValue) {
         search += "&townId=" + townsValue;
       } else {
         var districtsValue = $("#districtsValue").val();
-        if (districtsValue && districtsValue != "0") {
+        if (districtsValue) {
           search += "&districtId=" + districtsValue;
         }
       }
@@ -562,8 +565,32 @@
       if (dateEndValue) {
         search += "&releaseDateEnd=" + dateEndValue;
       }
-	    table.ajax.url("${ctx}/home/house/queryData" + search).load();
+      tableHouse.ajax.url("${ctx}/home/house/queryHomeData" + search).load();
 	    d.close();
+		});
+		
+		$('#btnHouseSave').click(function() {
+			var houseId = $('#houseId').val();
+      var title = $('#titleAdd').val();
+      var price = $('#priceAdd').val();
+      var url = '${ctx}/home/trade/save?random='+ Math.random();
+      var params = {
+    		  houseId: houseId,
+    		  title: title,
+    		  price: price
+      };
+      $.post(url, params, function(result) {
+    	  $('#modal-add').modal('hide');
+        dialog({
+         title: '消息',
+         content: result.message,
+         okValue: '确定',
+         ok: function () {
+        	 tableHouse.ajax.reload();
+           return true;
+         }
+       }).width(100).showModal();
+      }, 'json');
 		});
 		
 		$('#editor1').ace_wysiwyg({
@@ -602,6 +629,17 @@
 	      fileUploadError: showErrorAlert
 	    }
 	  }).prev().addClass('wysiwyg-style2');
+		
+		$('#houseAdd').change(function() {
+			var value = $(this).val();
+			if(value) {
+				var values = value.split(',');
+				$('#houseId').val(values[0]);
+				$('#areaAdd').val(jmoney(values[1]) + '㎡');
+				$('#patternAdd').val(values[2] + '室' + values[3] + '厅' + values[4] + '卫');
+				$('#faceAdd').val(values[5]);
+			}
+		});
 	});
 	function showErrorAlert(reason, detail) {
     var msg='';
@@ -617,12 +655,12 @@
     var $towns = $("#" + fieldIds[1]);
     var $townsPane = $("#" + fieldIds[2]);
     $towns.children().remove();
-    if (regionId != "0") {
+    if (regionId) {
       var url = "${ctx}/home/region/list?random="+ Math.random();
       var params = {
         parentId: regionId
       };
-      var $htmlLi = $("<li><button type=\"button\" class=\"btn btn-danger btn-xs\" onclick=\"addActivedName('" + fieldIds[1] + "', '0', '', this);\">不限</button></li>");
+      var $htmlLi = $("<li><button type=\"button\" class=\"btn btn-danger btn-xs\" onclick=\"addActivedName('" + fieldIds[1] + "', '', '', this);\">请选择</button></li>");
       $towns.append($htmlLi).append("\n");
       
       $.post(url, params, function(result) {
@@ -643,9 +681,7 @@
     if (_this) {
       $(_this).removeClass("btn-link").addClass("btn-danger");
     }
-    if (name) {
-       $("#" + fieldId + "Value").val(val);
-    }
+    $("#" + fieldId + "Value").val(val);
 	}
 	function queryBuildingName(buildingName, buildingUnit, districts, towns) {
 		$("#" + buildingName).autocompleter({
@@ -700,7 +736,7 @@
 	function changeBuildingUnit(buildingUnit, house) {
 		$("#" + buildingUnit).change(function() {
 	    var buildingUnitId = $(this).val();
-	    if (buildingUnitId != "0") {
+	    if (buildingUnitId) {
 	      var url = "${ctx}/home/house/select?random="+ Math.random();
 	      var params = {
 	          buildingUnitId: buildingUnitId
@@ -711,10 +747,12 @@
 	          $house.children().not(':first').remove();
 	          var items = [];
 	          for(var i=0; i<result.data.length; i++) {
+	        	  items.push(result.data[i].houseId);
 	        	  items.push(result.data[i].area);
 	        	  items.push(result.data[i].room);
 	        	  items.push(result.data[i].saloon);
 	        	  items.push(result.data[i].toilet);
+	        	  items.push(result.data[i].faceName);
 	            $house.append("<option value=\"" + items.join() + "\">" + result.data[i].card + "</option>");
 	            items.length = 0;
 	          }
@@ -723,14 +761,34 @@
 	    }
 	  });
 	}
-	function changeHouse(house) {
-		$("#" + house).change(function() {
-			var houseId = $(this).val();
-			if (houseId != "0") {
-				
-			}
-		});
-	}
+	function houseTrash(tradeId) {
+	    dialog({
+	      title: '消息',
+	      content: '确定要删除吗?',
+	      okValue: '确定',
+	      ok: function () {
+	        var that = this;
+	        this.title('删除中…');
+	        var url = '${ctx}/home/trade/trash?random='+ Math.random();
+	        var params = {
+	            id: tradeId
+	        };
+	        $.post(url, params, function(result) {
+	          dialog({
+	            title: '消息',
+	            content: result.message,
+	            okValue: '确定',
+	            ok: function () {
+	              tableHouse.ajax.reload();
+	              return true;
+	            }
+	          }).width(100).showModal();
+	        }, 'json');
+	      },
+	      cancelValue: '取消',
+	      cancel: function () {}
+	    }).width(100).showModal();
+	  }
 	</script>
 	</jscript>
 </body>

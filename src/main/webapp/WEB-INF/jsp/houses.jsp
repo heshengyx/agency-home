@@ -80,7 +80,7 @@
                         <label class="col-md-1 control-label no-padding-right">区域：</label>
                         <div class="col-md-11">
                           <ul class="list-inline" id="districts">
-                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('0', '', this, ['districts', 'towns', 'townsPane']);">不限</button></li>
+                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['districts', 'towns', 'townsPane']);">不限</button></li>
                             <c:forEach var="data" items="${regions}">
                             <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['districts', 'towns', 'townsPane']);">${data.name}</button></li>
                             </c:forEach> 
@@ -104,7 +104,7 @@
 		                    <label class="col-md-1 control-label no-padding-right">栋座：</label>
 		                    <div class="col-md-4">
 	                        <select class="input-select" id="buildingUnit">
-                            <option value="0">选择栋座</option>
+                            <option value="">选择栋座</option>
                           </select>
 		                    </div>
 		                  </div>
@@ -201,7 +201,7 @@
 					                        <label class="col-md-2 control-label no-padding-right">区域：</label>
 					                        <div class="col-md-10">
 					                          <ul class="list-inline" id="districtsAdd">
-					                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('0', '', this, ['districtsAdd', 'townsAdd', 'townsPaneAdd']);">不限</button></li>
+					                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['districtsAdd', 'townsAdd', 'townsPaneAdd']);">不限</button></li>
 					                            <c:forEach var="data" items="${regions}">
 					                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['districtsAdd', 'townsAdd', 'townsPaneAdd']);">${data.name}</button></li>
 					                            </c:forEach> 
@@ -227,7 +227,7 @@
 					                        <label class="col-md-2 control-label no-padding-right">栋座：</label>
 					                        <div class="col-md-8">
 					                          <select class="input-select" id="buildingUnitAdd">
-					                            <option value="0">选择栋座</option>
+					                            <option value="">选择栋座</option>
 					                          </select>          
 					                        </div>
 					                      </div>
@@ -363,7 +363,7 @@
       'serverSide': true, //开启服务器模式
       //'deferRender': true, //开启延迟渲染
       'ajax': {
-        'url': '${ctx}/home/house/query',
+        'url': '${ctx}/home/house/queryManage',
         'type': 'POST',
         'data': function ( d ) { //添加额外的参数发送到服务器
           //d.tag = 'release';
@@ -516,21 +516,21 @@
     d.showModal();
     var search = '?random=' + Math.random();
     var townsValue = $('#townsValue').val();
-    if (townsValue && townsValue != '0') {
+    if (townsValue) {
       search += '&townId=' + townsValue;
     } else {
       var districtsValue = $('#districtsValue').val();
-      if (districtsValue && districtsValue != '0') {
+      if (districtsValue) {
         search += '&districtId=' + districtsValue;
       }
     }
     search += '&buildingName=' + $('#buildingName').val();
     var buildingUnitId = $('#buildingUnit').val();
-    if (buildingUnitId && buildingUnitId != '0') {
+    if (buildingUnitId) {
       search += '&buildingUnitId=' + buildingUnitId;
     }
     
-    tableHouse.ajax.url('${ctx}/home/house/query' + search).load();
+    tableHouse.ajax.url('${ctx}/home/house/queryManage' + search).load();
     d.close();
 	}
   function queryRegions(regionId, name, _this, fieldIds) {
@@ -538,12 +538,12 @@
     var $towns = $('#' + fieldIds[1]);
     var $townsPane = $('#' + fieldIds[2]);
     $towns.children().remove();
-    if (regionId != '0') {
+    if (regionId) {
       var url = '${ctx}/home/region/list?random='+ Math.random();
       var params = {
         parentId: regionId
       };
-      var $htmlLi = $('<li><button type="button" class="btn btn-danger btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'0\', \'\', this);">不限</button></li>');
+      var $htmlLi = $('<li><button type="button" class="btn btn-danger btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'\', \'\', this);">不限</button></li>');
       $towns.append($htmlLi).append('\n');
       
       $.post(url, params, function(result) {

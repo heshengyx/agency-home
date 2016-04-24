@@ -10,9 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.house.agency.data.manage.BuildingManageData;
 import com.house.agency.entity.Building;
 import com.house.agency.page.IPage;
 import com.house.agency.param.BuildingQueryParam;
+import com.house.agency.param.manage.BuildingManageQueryParam;
 import com.house.agency.service.IBuildingService;
 import com.house.agency.service.IRegionService;
 import com.myself.common.exception.ServiceException;
@@ -38,16 +40,16 @@ public class BuildingController extends BaseController {
 		return "building";
 	}
 	
-	@RequestMapping("/query")
+	@RequestMapping("/queryManageData")
 	@ResponseBody
-	public Object query(BuildingQueryParam param) {
-		IPage<Building> datas = buildingService.query(param, param.getPage(),
+	public Object queryManageData(BuildingManageQueryParam param) {
+		IPage<BuildingManageData> datas = buildingService.queryManageData(param, param.getPage(),
 				param.getLength());
-		JsonResult<Building> jResult = new JsonResult<Building>();
+		JsonResult<BuildingManageData> jResult = new JsonResult<BuildingManageData>();
 		jResult.setDraw(param.getDraw());
 		jResult.setRecordsTotal(datas.getTotalRecord());
 		jResult.setRecordsFiltered(datas.getTotalRecord());
-		jResult.setData((List<Building>) datas.getData());
+		jResult.setData((List<BuildingManageData>) datas.getData());
 		return jResult;
 	}
 	

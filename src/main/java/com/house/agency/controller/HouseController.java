@@ -10,11 +10,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.house.agency.data.HouseListData;
+import com.house.agency.data.home.HouseHomeData;
+import com.house.agency.data.home.HouseHomeDescData;
 import com.house.agency.data.manage.HouseManageData;
 import com.house.agency.entity.House;
 import com.house.agency.page.IPage;
-import com.house.agency.param.HouseQueryParam;
+import com.house.agency.param.home.HouseHomeQueryParam;
 import com.house.agency.param.manage.HouseManageQueryParam;
 import com.house.agency.service.IHouseService;
 import com.house.agency.service.IRegionService;
@@ -56,7 +57,7 @@ public class HouseController extends BaseController {
 	@ResponseBody
 	public Object select(String buildingUnitId) {
 		JsonMessage jMessage = new JsonMessage();
-		List<House> datas = null;
+		List<HouseHomeDescData> datas = null;
 		try {
 			datas = houseService.queryByBuildingUnitId(buildingUnitId);
 			jMessage.setStatus(JsonMessage.TRUE);
@@ -72,20 +73,7 @@ public class HouseController extends BaseController {
 		}
 		return jMessage;
 	}
-	
-	@RequestMapping("/queryData")
-	@ResponseBody
-	public Object queryData(HouseQueryParam param) {
-		IPage<HouseListData> datas = houseService.queryData(param, param.getPage(),
-				param.getLength());
-		JsonResult<HouseListData> jResult = new JsonResult<HouseListData>();
-		jResult.setDraw(param.getDraw());
-		jResult.setRecordsTotal(datas.getTotalRecord());
-		jResult.setRecordsFiltered(datas.getTotalRecord());
-		jResult.setData((List<HouseListData>) datas.getData());
-		return jResult;
-	}
-	
+
 	@RequestMapping("/save")
 	@ResponseBody
 	public Object save(House param) {
@@ -112,9 +100,22 @@ public class HouseController extends BaseController {
 		return "houses";
 	}
 	
-	@RequestMapping("/query")
+	@RequestMapping("/queryHomeData")
 	@ResponseBody
-	public Object query(HouseManageQueryParam param) {
+	public Object queryHomeData(HouseHomeQueryParam param) {
+		IPage<HouseHomeData> datas = houseService.queryHomeData(param, param.getPage(),
+				param.getLength());
+		JsonResult<HouseHomeData> jResult = new JsonResult<HouseHomeData>();
+		jResult.setDraw(param.getDraw());
+		jResult.setRecordsTotal(datas.getTotalRecord());
+		jResult.setRecordsFiltered(datas.getTotalRecord());
+		jResult.setData((List<HouseHomeData>) datas.getData());
+		return jResult;
+	}
+	
+	@RequestMapping("/queryManageData")
+	@ResponseBody
+	public Object queryManageData(HouseManageQueryParam param) {
 		IPage<HouseManageData> datas = houseService.queryManageData(param, param.getPage(),
 				param.getLength());
 		JsonResult<HouseManageData> jResult = new JsonResult<HouseManageData>();

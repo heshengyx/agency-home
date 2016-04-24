@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.house.agency.entity.Image;
 import com.house.agency.file.FileHandler;
 import com.house.agency.param.ImageParam;
 import com.house.agency.service.IImageService;
@@ -36,16 +37,39 @@ public class FileUploadController extends BaseController {
 	public Object upload(@RequestParam("file") MultipartFile multipartFile,
 			HttpServletRequest request, ImageParam param) {
 		JsonMessage jMessage = new JsonMessage();
-		String temps = request.getSession().getServletContext()
+		String tempFolder = request.getSession().getServletContext()
 				.getRealPath(FileUtil.TEMP_FOLDER);
-		String uploads = request.getSession().getServletContext()
+		String uploadFolder = request.getSession().getServletContext()
 				.getRealPath(FileUtil.UPLOAD_FOLDER);
 		param.setFolder(FileUtil.UPLOAD_FOLDER);
 		try {
-			Map<String, File> map = FileHandler.upload(multipartFile, temps);
-			imageService.upload(param, map, uploads);
+			Map<String, File> map = FileHandler.upload(multipartFile, tempFolder);
+			Image data = imageService.upload(param, map, uploadFolder);
+			jMessage.setData(data);
 			jMessage.setStatus(JsonMessage.TRUE);
 			jMessage.setMessage("文件上传成功");
+		} catch (Exception e) {
+			jMessage.setStatus(JsonMessage.FALSE);
+			if (e instanceof ServiceException) {
+				jMessage.setMessage(e.getMessage());
+			} else {
+				jMessage.setMessage("系统异常");
+			}
+			logger.error(jMessage.getMessage(), e);
+		}
+		return jMessage;
+	}
+	
+	@RequestMapping("/trash")
+	@ResponseBody
+	public Object trash(String id, HttpServletRequest request) {
+		JsonMessage jMessage = new JsonMessage();
+		String path = request.getSession().getServletContext()
+				.getRealPath("/");
+		try {
+			imageService.trash(id, path);
+			jMessage.setStatus(JsonMessage.TRUE);
+			jMessage.setMessage("删除成功");
 		} catch (Exception e) {
 			jMessage.setStatus(JsonMessage.FALSE);
 			if (e instanceof ServiceException) {
