@@ -40,7 +40,7 @@
   .action-close {color: #e09e96;}
   .action-close:hover {color: #ffd9d5;}
   
-  .modal-body-content {padding-top: 5px;}
+  .modal-body-content {padding: 5px 0 0 0;}
   
   .ace-thumbnails>li {margin-left: 20px;} 
   
@@ -91,8 +91,8 @@
                 <tr>
                   <td>
                     <form class="form-horizontal">
-                      <c:if test="${type != '1'}">
-                      <c:if test="${type == '2' || type == '3' || type == '4' || type == '5'}">
+                      <c:if test="${level != '1'}">
+                      <c:if test="${level == '2' || level == '3' || level == '4' || level == '5'}">
                       <div class="form-group form-row">
                         <label class="col-md-1 control-label no-padding-right">国家：</label>
                         <div class="col-md-11">
@@ -105,7 +105,7 @@
                         </div>
                       </div>
                       </c:if>
-                      <c:if test="${type == '3' || type == '4' || type == '5'}">
+                      <c:if test="${level == '3' || level == '4' || level == '5'}">
                       <div class="form-group form-row">
                         <label class="col-md-1 control-label no-padding-right">省份：</label>
                         <div class="col-md-11">
@@ -118,7 +118,7 @@
                         </div>
                       </div>
                       </c:if>
-                      <c:if test="${type == '4' || type == '5'}">
+                      <c:if test="${level == '4' || level == '5'}">
                       <div class="form-group form-row">
                         <label class="col-md-1 control-label no-padding-right">市县：</label>
                         <div class="col-md-11">
@@ -131,7 +131,7 @@
                         </div>
                       </div>
                       </c:if>
-                      <c:if test="${type == '5'}">
+                      <c:if test="${level == '5'}">
                       <div class="form-group form-row">
                         <label class="col-md-1 control-label no-padding-right">城区：</label>
                         <div class="col-md-11">
@@ -180,6 +180,9 @@
       <input id="districtsAddValue" type="hidden">
       <input id="townsAddValue" type="hidden">
       
+      <input id="parentId" type="hidden">
+      <input id="level" type="hidden" value="${level}">
+      
 	    <div class="row">
 	      <div class="col-xs-12 widget-container-span">
 	        <!-- PAGE CONTENT BEGINS -->
@@ -196,15 +199,15 @@
 
 		        <div class="widget-body widget-none">
 			        <div class="table-responsive">
-			          <table id="tableBuilding" class="table table-striped table-bordered table-hover" width="100%">
+			          <table id="tableRegion" class="table table-striped table-bordered table-hover" width="100%">
 			            <thead>
 			              <tr>
-			                <th></th>
+			                <th width="50"></th>
 			                <th class="text-center" width="50"><label><input type="checkbox" class="ace" /><span class="lbl"></span></label></th>
 			                <th>${name}名称</th>
 			                <th>${name}编码</th>
 			                <th width="130"><i class="icon-time hidden-480"></i>创建时间</th>
-			                <th class="text-center hidden-480">状态</th>
+			                <th class="text-center hidden-480" width="80">状态</th>
 			                <th class="text-center" width="140">操作</th>
 			              </tr>
 			            </thead>
@@ -226,18 +229,23 @@
                     <div class="form-group form-row">
                       <label class="col-md-2 control-label no-padding-right">${name}名称：</label>
                       <div class="col-md-8">
-                        <input class="input-text" type="text" id="nameAdd" placeholder="${name}名称">
+                        <input type="text" id="nameAdd" placeholder="${name}名称">
                       </div>
                     </div>
                     <div class="form-group form-row">
                       <label class="col-md-2 control-label no-padding-right">${name}编码：</label>
                       <div class="col-md-8">
-                        <input class="input-text" type="text" id="codeAdd" placeholder="${name}编码">
+                        <input type="text" id="codeAdd" placeholder="${name}编码">
+                      </div>
+                    </div>
+                    <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">排序序号：</label>
+                      <div class="col-md-8">
+                        <input type="text" id="seqAdd" placeholder="排序序号">
                       </div>
                     </div>
                   </form>
                 </div>
-
                 <div class="modal-footer">
                   <button class="btn btn-xs" data-dismiss="modal"><i class="icon-remove"></i>关闭</button>
                   <button class="btn btn-xs btn-primary" id="btnRegionSave"><i class="icon-ok"></i>保存</button>
@@ -265,12 +273,12 @@
   <script src="${ctx}/js/jquery.colorbox-min.js"></script>
 	<script>
 	var d = null;
-	var tableBuilding = null;
-	var tableBuildingUnit = null;
+	var tableRegion = null;
+	var tableRegionUnit = null;
 	$(document).ready(function() {
 		$('#townsPane').hide();
 		$('#townsPaneAdd').hide();
-		tableBuilding = $('#tableBuilding1').DataTable({
+		tableRegion = $('#tableRegion').DataTable({
 			'language': {
          'processing':  '处理中...',
          'lengthMenu':  '每页 _MENU_ 条记录',
@@ -289,7 +297,7 @@
       'serverSide': true, //开启服务器模式
       //'deferRender': true, //开启延迟渲染
       'ajax': {
-        'url': '${ctx}/home/building/queryManageData',
+        'url': '${ctx}/home/region/queryManageData',
         'type': 'POST',
         'data': function ( d ) { //添加额外的参数发送到服务器
           //d.tag = 'release';
@@ -306,34 +314,24 @@
           return content;
         }},
         { 'orderable': false, 'targets': 2, 'render': function(data, type, row) {
-          var content = '';
-          content += data.buildingName + '<small>（' + data.districtName + '-' + data.townName + '）</small>';
-          return content;
+          return data.name;
         }},
         { 'orderable': false, 'targets': 3, 'render': function(data, type, row) {
-          return data.buildingAddress;
+          return data.code;
         }},
-        { 'orderable': false, 'targets': 4, 'render': function(data, type, row) {
-          var content = '<div class="text-center">';
-          content += '<small>住宅</small>';
-          content += '</div>';
-          return content;
-        }},
-        { 'targets': 5, 'render': function(data, type, row) {
+        { 'targets': 4, 'render': function(data, type, row) {
           var content = to_date_hm(data.createTime);
           return content;
         }},
-        { 'orderable': false, 'targets': 6, 'render': function(data, type, row) {
+        { 'orderable': false, 'targets': 5, 'render': function(data, type, row) {
           var content = '<div class="text-center">';
           content += '<span class="label label-sm label-warning">有效</span>';
           content += '</div>';
           return content;
         }},
-        { 'orderable': false, 'targets': 7, 'render': function(data, type, row) {
+        { 'orderable': false, 'targets': 6, 'render': function(data, type, row) {
         	var content = '<div class="text-center">';
           content += '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
-          content += '  <a class="blue" href="#modal-table" role="button" data-toggle="modal" data-building="' + data.buildingId + '" title="栋座"><i class="icon-building bigger-130"></i></a>';
-          content += '  <a class="blue" href="#modal-image" role="button" data-toggle="modal" data-building="' + data.buildingId + '" title="图片"><i class="icon-picture bigger-130"></i></a><br>';
           content += '  <a class="blue" href="#" title="详情"><i class="icon-zoom-in bigger-130"></i></a>';
           content += '  <a class="green" href="#" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
           content += '  <a class="red" href="#" title="删除"><i class="icon-trash bigger-130"></i></a>';
@@ -376,24 +374,21 @@
         { 'data': null },
         { 'data': null },
         { 'data': null },
-        { 'data': null },
         { 'data': null }
       ],
       initComplete: function () {
     	  
       }
 		});
-		tableBuilding.on('order.dt search.dt',
+		tableRegion.on('order.dt search.dt',
       function () {
-			  tableBuilding.column(0, {
+			  tableRegion.column(0, {
           search: 'applied',
           order: 'applied'
         }).nodes().each(function (cell, i) {
           cell.innerHTML = i + 1;
         });
     }).draw();
-		
-		queryBuildingName('buildingName', 'buildingUnit', 'districtsValue', 'townsValue');
 		
 		$('.date-picker').datepicker({autoclose:true}).next().on(ace.click_event, function(){
       $(this).prev().focus();
@@ -403,20 +398,17 @@
 			queryBuildings();
 		});
 		
-		$('#btnBuildingSave').click(function() {
-			var townId = $('#townsAddValue').val();
-      var buildingName = $('#buildingNameAdd').val();
-      var buildingAddress = $('#buildingAddressAdd').val();
-      var buildingYear = $('#buildingYearAdd').val();
-      var type = $('#typeAdd').val();
-      var remarks = $('#editor1').html();
-      var url = '${ctx}/home/building/save?random='+ Math.random();
+		$('#btnRegionSave').click(function() {
+      var name = $('#nameAdd').val();
+      var code = $('#codeAdd').val();
+      var level = $('#level').val();
+      var parentId = $('#parentId').val();
+      var url = '${ctx}/home/region/save?random='+ Math.random();
       var params = {
-    		  townId: townId,
-    		  buildingName: buildingName,
-    		  buildingAddress: buildingAddress,
-    		  buildingYear: buildingYear,
-    		  type: type
+    		  name: name,
+    		  code: code,
+    		  level: level,
+    		  parentId: parentId
       };
       $.post(url, params, function(result) {
     	  $('#modal-add').modal('hide');
@@ -425,127 +417,14 @@
 	       content: result.message,
 	       okValue: '确定',
 	       ok: function () {
-	    	   queryBuildings();
+	    	   //queryBuildings();
 	    	   return true;
 	       }
 	     }).width(100).showModal();
       }, 'json');
 		});
 		
-		$('#btnBuildingUnitSave').click(function() {
-			var buildingId = $('#buildingId').val();
-      var buildingUnitName = $('#buildingUnitNameAdd').val();
-      var buildingFloor = $('#buildingFloorAdd').val();
-      var url = '${ctx}/home/buildingUnit/save?random='+ Math.random();
-      var params = {
-    		  buildingId: buildingId,
-    		  name: buildingUnitName,
-    		  floor: buildingFloor
-      };
-      $.post(url, params, function(result) {
-        //$('#modal-table').modal('hide');
-        dialog({
-         title: '消息',
-         content: result.message,
-         okValue: '确定',
-         ok: function () {
-        	 tableBuildingUnit.ajax.reload();
-           return true;
-         }
-       }).width(100).showModal();
-      }, 'json');
-    });
-		
-		$('#modal-table').on('show.bs.modal', function (event) {
-			var button = $(event.relatedTarget);
-			var buildingId = button.data('building');
-			$('#buildingId').val(buildingId);
-			var url = "${ctx}/home/building/getData?random="+ Math.random();
-      var params = {
-          id: buildingId
-      };
-      $.post(url, params, function(result) {
-        if (result.status) {
-        	var data = result.data;
-        	$('#buildingNameText').text(data.buildingName);
-        	$('#buildingAddressText').text(data.buildingAddress);
-        	
-        	//tableBuildingUnit.search(buildingId).draw();
-        	tableBuildingUnit.ajax.reload();
-        	//var args = tableBuildingUnit.ajax.params();
-          //console.log("额外传到后台的参数值extra_search为："+args.buildingId);
-        }
-      }, 'json');
-		});
-		
-		$('#modal-image').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget);
-      var buildingId = button.data('building');
-      $('#buildingId').val(buildingId);
-      var url = "${ctx}/home/building/getData?random="+ Math.random();
-      var params = {
-          id: buildingId
-      };
-      $.post(url, params, function(result) {
-        if (result.status) {
-          var data = result.data;
-          $('#buildingNameImageText').text(data.buildingName);
-          $('#buildingAddressImageText').text(data.buildingAddress);
-          
-          dropzoneImage(buildingId, '2');
-        }
-      }, 'json');
-    });
-		$('#modal-image').on('hidden.bs.modal', function (event) {
-		  //alert(1);
-		})
-		
-		$('#editor1').ace_wysiwyg({
-	    toolbar:
-	    [
-	      'font',
-	      null,
-	      'fontSize',
-	      null,
-	      {name:'bold', className:'btn-info'},
-	      {name:'italic', className:'btn-info'},
-	      {name:'strikethrough', className:'btn-info'},
-	      {name:'underline', className:'btn-info'},
-	      null,
-	      {name:'insertunorderedlist', className:'btn-success'},
-	      {name:'insertorderedlist', className:'btn-success'},
-	      {name:'outdent', className:'btn-purple'},
-	      {name:'indent', className:'btn-purple'},
-	      null,
-	      {name:'justifyleft', className:'btn-primary'},
-	      {name:'justifycenter', className:'btn-primary'},
-	      {name:'justifyright', className:'btn-primary'},
-	      {name:'justifyfull', className:'btn-inverse'},
-	      null,
-	      {name:'createLink', className:'btn-pink'},
-	      {name:'unlink', className:'btn-pink'},
-	      null,
-	      {name:'insertImage', className:'btn-success'},
-	      null,
-	      'foreColor',
-	      null,
-	      {name:'undo', className:'btn-grey'},
-	      {name:'redo', className:'btn-grey'}
-	    ],
-	    'wysiwyg': {
-	      fileUploadError: showErrorAlert
-	    }
-	  }).prev().addClass('wysiwyg-style2');
 	});
-	function showErrorAlert(reason, detail) {
-    var msg='';
-    if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
-    else {
-      console.log("error uploading file", reason, detail);
-    }
-    $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+ 
-     '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
-  }
 	function queryBuildings() {
 		d = dialog({
       title: '楼盘载入中...'
@@ -573,7 +452,7 @@
     if (dateEndValue) {
       search += '&createDateEnd=' + dateEndValue;
     }
-    tableBuilding.ajax.url('${ctx}/home/building/queryManageData' + search).load();
+    tableRegion.ajax.url('${ctx}/home/building/queryManageData' + search).load();
     d.close();
 	}
 	function queryBuildingUnits() {
@@ -615,36 +494,6 @@
     }
     $('#' + fieldId + 'Value').val(val);
 	}
-	function queryBuildingName(buildingName, buildingUnit, districts, towns) {
-		$('#' + buildingName).autocompleter({
-      // marker for autocomplete matches
-      highlightMatches: true,
-      // object to local or url to remote search
-      source: '${ctx}/home/building/search',
-      // custom template
-      template: '{{ label }} <span>({{ districtName }}-{{ townName }})</span>',
-      // show hint
-      hint: true,
-      // abort source if empty field
-      empty: false,
-      // max results
-      //limit: 1,
-      combine: function() {
-        var districtId = $('#' + districts).val();
-        var townId = $('#' + towns).val();
-        if (townId) {
-          districtId = '';
-        } else {
-          townId = '';
-        }
-        return {
-          buildingName: $('#' + buildingName).val(),
-          districtId: districtId,
-          townId: townId
-        };
-      }
-    });
-	}
 	function buildingUnitTrash(buildingUnitId) {
 		dialog({
       title: '消息',
@@ -663,7 +512,7 @@
             content: result.message,
             okValue: '确定',
             ok: function () {
-              tableBuildingUnit.ajax.reload();
+              tableRegionUnit.ajax.reload();
               return true;
             }
           }).width(100).showModal();
@@ -672,129 +521,6 @@
       cancelValue: '取消',
       cancel: function () {}
     }).width(100).showModal();
-	}
-	
-	function dropzoneImage(buildingId, type) {
-		var params = '?random=' + Math.random();
-		//params += '&foreignId=' + buildingId;
-		//params += '&type=' + type;
-		try {
-		  $(".dropzone").dropzone({
-		    url: '${ctx}/home/file/upload' + params,
-		    paramName: 'file', // The name that will be used to transfer the file
-		    acceptedFiles: 'image/*',
-		    maxFilesize: 0.5, // MB
-		    addRemoveLinks : true,
-		    dictDefaultMessage: '<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> 选择图片</span> 上传 \<span class="smaller-80 grey">(或者点击下面图标)</span> <br /> \<i class="upload-icon icon-cloud-upload blue icon-3x"></i>',
-		    dictResponseError: '上传失败',
-		    //dictInvalidFileType: '你不能上传该类型文件,文件类型只能是*.xls',
-		    dictRemoveFile: '删除文件',
-		    dictCancelUpload: '取消上传',
-        dictCancelUploadConfirmation: '你确定要取消上传吗?',
-		    previewTemplate: '<div class="dz-preview dz-file-preview">\n  <div class="dz-details">\n    <div class="dz-filename"><span data-dz-name></span></div>\n    <div class="dz-size" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class="progress progress-small progress-striped active"><div class="progress-bar progress-bar-success" data-dz-uploadprogress></div></div>\n  <div class="dz-success-mark"><span></span></div>\n  <div class="dz-error-mark"><span></span></div>\n  <div class="dz-error-message error-message-tip"><span data-dz-errormessage></span></div>\n</div>',
-		    params: {
-          foreignId: buildingId,
-          type: type
-        },
-        init: function() {
-        	this.on("success", function(file, result) {
-        		console.log("success");
-            console.log(file);
-            console.log(result);
-            if (file.status == 'success') {
-              if (!result.status) {
-            	  $('.dz-preview').removeClass('dz-success').addClass('dz-error');
-            	  $('.dz-error-message span').html('上传失败');
-              }
-            }
-          });
-        	this.on("complete", function(file) {
-            console.log("complete");
-            console.log(file);
-            if (file.status == 'error') {
-            	$('.dz-error-message span').html('上传失败');
-            }
-          });
-          /* this.on("removedfile", function(file) {
-        	  console.log(file);
-        	  if (file.status == 'success') {
-              //$('.dz-error-message span').html('上传失败');
-        		  var result = JSON.parse(file.xhr.response);
-              console.log(result);
-              dialog({
-                title: '消息',
-                content: '确定要删除吗?',
-                okValue: '确定',
-                ok: function () {
-                  var that = this;
-                  this.title('删除中…');
-                  var url = '${ctx}/home/buildingUnit/trash?random='+ Math.random();
-                  var params = {
-                      id: buildingUnitId
-                  };
-                  $.post(url, params, function(result) {
-                    dialog({
-                      title: '消息',
-                      content: result.message,
-                      okValue: '确定',
-                      ok: function () {
-                        tableBuildingUnit.ajax.reload();
-                        return true;
-                      }
-                    }).width(100).showModal();
-                  }, 'json');
-                  var _ref;
-                  return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
-                },
-                cancelValue: '取消',
-                cancel: function () {}
-              }).width(100).showModal();
-            }
-          }); */
-        },
-        removedfile: function(file) {
-          if (file.status == 'success') {
-            var result = JSON.parse(file.xhr.response);
-            if (result.status) {
-            	dialog({
-                title: '消息',
-                content: '确定要删除吗?',
-                okValue: '确定',
-                ok: function () {
-                  var that = this;
-                  this.title('删除中…');
-                  var url = '${ctx}/home/file/trash?random='+ Math.random();
-                  var params = {
-                      id: result.data.id
-                  };
-                  $.post(url, params, function(results) {
-                    dialog({
-                      title: '消息',
-                      content: results.message,
-                      okValue: '确定',
-                      ok: function () {
-                    	  if (results.status) {
-                    		  var _ref;
-                          return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
-                    	  }
-                        return true;
-                      }
-                    }).width(100).showModal();
-                  }, 'json');
-                },
-                cancelValue: '取消',
-                cancel: function () {}
-              }).width(100).showModal();
-            } else {
-            	var _ref;
-              return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
-            }
-          }
-        }
-		  });
-		} catch(e) {
-		  //alert('Dropzone.js does not support older browsers!');
-		}
 	}
 	</script>
 	</jscript>
