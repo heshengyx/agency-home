@@ -8,6 +8,12 @@
 	<mapping path="/home/building" decorator="/WEB-INF/layout/mainLayout.jsp"/>
 	<mapping path="/home/house" decorator="/WEB-INF/layout/mainLayout.jsp"/>
 	
+	<mapping path="/home/region/country" decorator="/WEB-INF/layout/mainLayout.jsp"/>
+	<mapping path="/home/region/province" decorator="/WEB-INF/layout/mainLayout.jsp"/>
+	<mapping path="/home/region/city" decorator="/WEB-INF/layout/mainLayout.jsp"/>
+	<mapping path="/home/region/district" decorator="/WEB-INF/layout/mainLayout.jsp"/>
+	<mapping path="/home/region/town" decorator="/WEB-INF/layout/mainLayout.jsp"/>
+	
 	<!-- 排除，不进行装饰的路径 -->
 	<mapping path="/avatars/*" exclude="true"/>
 	<mapping path="/images/*" exclude="true"/>

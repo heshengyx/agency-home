@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -24,6 +25,41 @@ public class RegionController extends BaseController {
 	
 	@Autowired
 	private IRegionService regionService;
+	
+	@RequestMapping("country")
+	public String pageCountry(Model model) {
+		model.addAttribute("name", "国家");
+		model.addAttribute("type", "1");
+		return "region";
+	}
+	
+	@RequestMapping("province")
+	public String pageProvince(Model model) {
+		model.addAttribute("name", "省份");
+		model.addAttribute("type", "2");
+		return "region";
+	}
+	
+	@RequestMapping("city")
+	public String pageCity(Model model) {
+		model.addAttribute("name", "市县");
+		model.addAttribute("type", "3");
+		return "region";
+	}
+	
+	@RequestMapping("district")
+	public String pageDistrict(Model model) {
+		model.addAttribute("name", "城区");
+		model.addAttribute("type", "4");
+		return "region";
+	}
+	
+	@RequestMapping("town")
+	public String pageTown(Model model) {
+		model.addAttribute("name", "乡镇");
+		model.addAttribute("type", "5");
+		return "region";
+	}
 	
 	@RequestMapping("/list")
 	@ResponseBody

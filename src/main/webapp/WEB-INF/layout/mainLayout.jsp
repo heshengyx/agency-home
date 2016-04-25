@@ -386,18 +386,30 @@
                 </li>
               </ul>
             </li>
-						<%-- <li>
-							<a href="${ctx}/manage/houseImage">
-								<i class="icon-text-width"></i>
-								<span class="menu-text"> 房源图片 </span>
-							</a>
-						</li>
 						<li>
-							<a href="typography.html">
-								<i class="icon-text-width"></i>
-								<span class="menu-text"> 文字排版 </span>
-							</a>
-						</li> --%>
+              <a href="#" class="dropdown-toggle">
+                <i class="icon-table"></i>
+                <span class="menu-text"> 地区 </span>
+                <b class="arrow icon-angle-down"></b>
+              </a>
+              <ul class="submenu">
+                <li>
+                  <a href="${ctx}/home/region/country"><i class="icon-double-angle-right"></i>国家</a>
+                </li>
+                <li>
+                  <a href="${ctx}/home/region/province"><i class="icon-double-angle-right"></i>省份</a>
+                </li>
+                <li>
+                  <a href="${ctx}/home/region/city"><i class="icon-double-angle-right"></i>市县</a>
+                </li>
+                <li>
+                  <a href="${ctx}/home/region/district"><i class="icon-double-angle-right"></i>城区</a>
+                </li>
+                <li>
+                  <a href="${ctx}/home/region/town"><i class="icon-double-angle-right"></i>乡镇</a>
+                </li>
+              </ul>
+            </li>
 					</ul><!-- /.nav-list -->
 
 					<div class="sidebar-collapse" id="sidebar-collapse">
