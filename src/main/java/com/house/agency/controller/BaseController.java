@@ -16,4 +16,10 @@ public abstract class BaseController {
 		List<Region> regions = regionService.list(param);
 		model.addAttribute("regions", regions);
 	}
+
+	protected void setModel(Model model, IRegionService regionService,
+			RegionQueryParam param) {
+		List<Region> regions = regionService.list(param);
+		model.addAttribute("regions", regions);
+	}
 }

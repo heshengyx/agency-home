@@ -96,10 +96,10 @@
                       <div class="form-group form-row">
                         <label class="col-md-1 control-label no-padding-right">国家：</label>
                         <div class="col-md-11">
-                          <ul class="list-inline" id="districts">
-                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['districts', 'towns', 'townsPane']);">不限</button></li>
+                          <ul class="list-inline" id="countrys">
+                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['parentId', 'provinces']);">不限</button></li>
                             <c:forEach var="data" items="${regions}">
-                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['districts', 'towns', 'townsPane']);">${data.name}</button></li>
+                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['parentId', 'provinces']);">${data.name}</button></li>
                             </c:forEach> 
                           </ul>
                         </div>
@@ -109,11 +109,8 @@
                       <div class="form-group form-row">
                         <label class="col-md-1 control-label no-padding-right">省份：</label>
                         <div class="col-md-11">
-                          <ul class="list-inline" id="districts">
-                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['districts', 'towns', 'townsPane']);">不限</button></li>
-                            <c:forEach var="data" items="${regions}">
-                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['districts', 'towns', 'townsPane']);">${data.name}</button></li>
-                            </c:forEach> 
+                          <ul class="list-inline" id="provinces">
+                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['parentId', 'towns', '']);">不限</button></li>
                           </ul>
                         </div>
                       </div>
@@ -122,11 +119,8 @@
                       <div class="form-group form-row">
                         <label class="col-md-1 control-label no-padding-right">市县：</label>
                         <div class="col-md-11">
-                          <ul class="list-inline" id="districts">
-                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['districts', 'towns', 'townsPane']);">不限</button></li>
-                            <c:forEach var="data" items="${regions}">
-                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['districts', 'towns', 'townsPane']);">${data.name}</button></li>
-                            </c:forEach> 
+                          <ul class="list-inline" id="citys">
+                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['parentId', 'towns', '']);">不限</button></li>
                           </ul>
                         </div>
                       </div>
@@ -136,10 +130,7 @@
                         <label class="col-md-1 control-label no-padding-right">城区：</label>
                         <div class="col-md-11">
                           <ul class="list-inline" id="districts">
-                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['districts', 'towns', 'townsPane']);">不限</button></li>
-                            <c:forEach var="data" items="${regions}">
-                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['districts', 'towns', 'townsPane']);">${data.name}</button></li>
-                            </c:forEach> 
+                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['parentId', 'towns', '']);">不限</button></li>
                           </ul>
                         </div>
                       </div>
@@ -159,7 +150,7 @@
                         <div class="col-md-3 col-md-offset-1">
                           <div class="input-group">
                             <span class="input-group-btn">
-                              <button type="button" class="btn btn-info btn-xs" id="btnBuildingSearch">搜索<i class="icon-search icon-on-right"></i></button>
+                              <button type="button" class="btn btn-info btn-xs" id="btnRegionSearch">搜索<i class="icon-search icon-on-right"></i></button>
                               &nbsp;
                               <button type="reset" class="btn btn-xs">重置<i class="icon-undo icon-on-right"></i></button>
                             </span>
@@ -175,13 +166,9 @@
         </div>
       </div><!-- /.page-header -->
       
-      <input id="districtsValue" type="hidden">
-      <input id="townsValue" type="hidden">
-      <input id="districtsAddValue" type="hidden">
-      <input id="townsAddValue" type="hidden">
-      
-      <input id="parentId" type="hidden">
-      <input id="level" type="hidden" value="${level}">
+      <input id="parentIdValue" type="hidden">
+      <input id="parentIdAddValue" type="hidden">
+      <input id="levelValue" type="hidden" value="${level}">
       
 	    <div class="row">
 	      <div class="col-xs-12 widget-container-span">
@@ -226,22 +213,47 @@
                 </div>
                 <div class="modal-body overflow-visible modal-body-content">                  
                   <form class="form-horizontal">
+                    <c:if test="${level != '1'}">
+                    <c:if test="${level == '2' || level == '3' || level == '4' || level == '5'}">
+                    <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">国家：</label>
+                      <div class="col-md-8">
+                        <ul class="list-inline" id="countrysAdd">
+                          <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['parentIdAdd', 'provincesAdd']);">不限</button></li>
+                          <c:forEach var="data" items="${regions}">
+                          <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['parentIdAdd', 'provincesAdd']);">${data.name}</button></li>
+                          </c:forEach> 
+                        </ul>
+                      </div>
+                    </div>
+                    </c:if>
+                    <c:if test="${level == '3' || level == '4' || level == '5'}">
+                    <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">省份：</label>
+                      <div class="col-md-8">
+                        <ul class="list-inline" id="provincesAdd">
+                          <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['parentIdAdd', 'citysAdd']);">不限</button></li>
+                        </ul>
+                      </div>
+                    </div>
+                    </c:if>
+                    </c:if>
                     <div class="form-group form-row">
                       <label class="col-md-2 control-label no-padding-right">${name}名称：</label>
                       <div class="col-md-8">
-                        <input type="text" id="nameAdd" placeholder="${name}名称">
+                        <input class="input-text" type="text" id="nameAdd" placeholder="${name}名称">
                       </div>
                     </div>
                     <div class="form-group form-row">
                       <label class="col-md-2 control-label no-padding-right">${name}编码：</label>
                       <div class="col-md-8">
-                        <input type="text" id="codeAdd" placeholder="${name}编码">
+                        <input class="input-text" type="text" id="codeAdd" placeholder="${name}编码">
                       </div>
                     </div>
                     <div class="form-group form-row">
                       <label class="col-md-2 control-label no-padding-right">排序序号：</label>
                       <div class="col-md-8">
-                        <input type="text" id="seqAdd" placeholder="排序序号">
+                        <input class="input-text" type="text" id="seqAdd" placeholder="排序序号">
                       </div>
                     </div>
                   </form>
@@ -302,6 +314,7 @@
         'data': function ( d ) { //添加额外的参数发送到服务器
           //d.tag = 'release';
           //d.sort = $('#sort').val();
+          d.level = '${level}';
         }
       },
 			'columnDefs': [
@@ -394,20 +407,22 @@
       $(this).prev().focus();
     });
 		
-		$('#btnBuildingSearch').click(function() {
-			queryBuildings();
+		$('#btnRegionSearch').click(function() {
+			queryRegionDatas();
 		});
 		
 		$('#btnRegionSave').click(function() {
       var name = $('#nameAdd').val();
       var code = $('#codeAdd').val();
-      var level = $('#level').val();
-      var parentId = $('#parentId').val();
+      var level = $('#levelValue').val();
+      var seq = $('#seqAdd').val();
+      var parentId = $('#parentIdAddValue').val();
       var url = '${ctx}/home/region/save?random='+ Math.random();
       var params = {
     		  name: name,
     		  code: code,
     		  level: level,
+    		  seq: seq,
     		  parentId: parentId
       };
       $.post(url, params, function(result) {
@@ -417,7 +432,7 @@
 	       content: result.message,
 	       okValue: '确定',
 	       ok: function () {
-	    	   //queryBuildings();
+	    	   queryRegionDatas();
 	    	   return true;
 	       }
 	     }).width(100).showModal();
@@ -425,72 +440,54 @@
 		});
 		
 	});
-	function queryBuildings() {
+	function queryRegionDatas() {
 		d = dialog({
-      title: '楼盘载入中...'
+      title: '${name}载入中...'
     });
     d.showModal();
     var search = '?random=' + Math.random();
-    var townsValue = $('#townsValue').val();
-    if (townsValue && townsValue != '0') {
-      search += '&townId=' + townsValue;
-    } else {
-      var districtsValue = $('#districtsValue').val();
-      if (districtsValue && districtsValue != '0') {
-        search += '&districtId=' + districtsValue;
-      }
+    var nameValue = $('#name').val();
+    if (nameValue) {
+    	search += '&name=' + nameValue;
     }
-    var buildingNameValue = $('#buildingName').val();
-    if (buildingNameValue) {
-    	search += '&buildingName=' + buildingNameValue;
+    var codeValue = $('#code').val();
+    if (codeValue) {
+      search += '&code=' + codeValue;
     }
-    var dateBeginValue = $('#dateBegin').val();
-    if (dateBeginValue) {
-      search += '&createDateBegin=' + dateBeginValue;
+    var parentIdValue = $('#parentIdValue').val();
+    if (parentIdValue) {
+      search += '&parentId=' + parentIdValue;
     }
-    var dateEndValue = $('#dateEnd').val();
-    if (dateEndValue) {
-      search += '&createDateEnd=' + dateEndValue;
-    }
-    tableRegion.ajax.url('${ctx}/home/building/queryManageData' + search).load();
+    tableRegion.ajax.url('${ctx}/home/region/queryManageData' + search).load();
     d.close();
 	}
-	function queryBuildingUnits() {
-		d = dialog({
-      title: '栋座载入中...'
-    });
-    d.showModal();
-	}
-	function queryRegions(regionId, name, _this, fieldIds) {
-		addActivedName(fieldIds[0], regionId, name, _this);
-		var $towns = $('#' + fieldIds[1]);
-	    var $townsPane = $('#' + fieldIds[2]);
-	    $towns.children().remove();
-	    if (regionId) {
-	      var url = '${ctx}/home/region/list?random='+ Math.random();
-	      var params = {
-	        parentId: regionId
-	      };
-	      var $htmlLi = $('<li><button type="button" class="btn btn-danger btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'\', \'\', this);">不限</button></li>');
-	      $towns.append($htmlLi).append('\n');
-	      
-	      $.post(url, params, function(result) {
-	        if (result.status) {
-	          for (var i=0; i<result.data.length; i++) {
-	            $htmlLi = $('<li><button type="button" class="btn btn-link btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'' + result.data[i].id + '\', \'' + result.data[i].name + '\', this);">' + result.data[i].name + '</button></li>');
-	            $towns.append($htmlLi).append('\n');
-	          }
-	          $townsPane.show();
-	        }
-	      }, 'json');
-	    } else {
-	      $townsPane.hide();
-	    }
+	function queryRegions(regionId, name, that, fieldIds) {
+		addActivedName(regionId, name, that, fieldIds[0]);
+		<c:if test="${level == '3' || level == '4' || level == '5'}">
+		var $children = $('#' + fieldIds[1]);
+    $children.children().not(':first').remove();
+    if (regionId) {
+      var url = '${ctx}/home/region/list?random='+ Math.random();
+      var params = {
+        parentId: regionId
+      };
+
+      $.post(url, params, function(result) {
+        if (result.status) {
+          for (var i=0; i<result.data.length; i++) {
+            //$htmlLi = $('<li><button type="button" class="btn btn-link btn-xs" onclick="addActivedName(\'parentId\', \'' + result.data[i].id + '\', \'' + result.data[i].name + '\', this);">' + result.data[i].name + '</button></li>');
+            $htmlLi = $('<li><button type="button" class="btn btn-link btn-xs" onclick="addActivedName(\'parentId\', \'' + result.data[i].id + '\', \'' + result.data[i].name + '\', this);">' + result.data[i].name + '</button></li>');
+            $children.append($htmlLi).append('\n');
+          }
+        }
+      }, 'json');
+    }</c:if>
   }
-	function addActivedName(fieldId, val, name, _this) {
-		$('#' + fieldId + ' li>button.btn-danger').removeClass('btn-danger').addClass('btn-link');
-    if (_this) {
-      $(_this).removeClass('btn-link').addClass('btn-danger');
+	function addActivedName(val, name, that, fieldId) {
+		$(that).parent().parent().find('li>button.btn-danger').removeClass('btn-danger').addClass('btn-link');
+		//$('#' + fieldId + ' li>button.btn-danger').removeClass('btn-danger').addClass('btn-link');
+    if (that) {
+      $(that).removeClass('btn-link').addClass('btn-danger');
     }
     $('#' + fieldId + 'Value').val(val);
 	}
