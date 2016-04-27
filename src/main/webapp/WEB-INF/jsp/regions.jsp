@@ -91,33 +91,56 @@
                 <tr>
                   <td>
                     <form class="form-horizontal">
+                      <c:if test="${level != '1'}">
+                      <c:if test="${level == '2' || level == '3' || level == '4' || level == '5'}">
                       <div class="form-group form-row">
-                        <label class="col-md-1 control-label no-padding-right">地区：</label>
+                        <label class="col-md-1 control-label no-padding-right">国家：</label>
                         <div class="col-md-11">
-                          <select class="input-select" id="countrys" disabled>
-                            <option value="">选择国家</option>
+                          <ul class="list-inline" id="countrys">
+                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['parentId', 'provinces']);">不限</button></li>
                             <c:forEach var="data" items="${regions}">
-                            <option value="${data.id}">${data.name}</option>
-                            </c:forEach>
-                          </select>
-                          <select class="input-select" id="provinces" disabled>
-                            <option value="">选择省份</option>
-                          </select>
-                          <select class="input-select" id="citys" disabled>
-                            <option value="">选择市县</option>
-                          </select>
-                          <select class="input-select" id="districts" disabled>
-                            <option value="">选择城区</option>
-                          </select>
+                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['parentId', 'provinces', 'citys', 'districts'], 1);">${data.name}</button></li>
+                            </c:forEach> 
+                          </ul>
                         </div>
                       </div>
+                      </c:if>
+                      <c:if test="${level == '3' || level == '4' || level == '5'}">
+                      <div class="form-group form-row">
+                        <label class="col-md-1 control-label no-padding-right">省份：</label>
+                        <div class="col-md-11">
+                          <ul class="list-inline" id="provinces">
+                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['parentId', 'provinces', 'citys', 'districts']);">不限</button></li>
+                          </ul>
+                        </div>
+                      </div>
+                      </c:if>
+                      <c:if test="${level == '4' || level == '5'}">
+                      <div class="form-group form-row">
+                        <label class="col-md-1 control-label no-padding-right">市县：</label>
+                        <div class="col-md-11">
+                          <ul class="list-inline" id="citys">
+                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['parentId', 'provinces', 'citys', 'districts']);">不限</button></li>
+                          </ul>
+                        </div>
+                      </div>
+                      </c:if>
+                      <c:if test="${level == '5'}">
+                      <div class="form-group form-row">
+                        <label class="col-md-1 control-label no-padding-right">城区：</label>
+                        <div class="col-md-11">
+                          <ul class="list-inline" id="districts">
+                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['parentId', 'provinces', 'citys', 'districts']);">不限</button></li>
+                          </ul>
+                        </div>
+                      </div>
+                      </c:if>
+                      </c:if>
                       <div class="form-group form-row">
                         <label class="col-md-1 control-label no-padding-right">名称：</label>
                         <div class="col-md-2">
                           <input class="input-text" type="text" id="name" placeholder="${name}名称">
                         </div>
-                      </div>
-                      <div class="form-group form-row">
                         <label class="col-md-1 control-label no-padding-right">编码：</label>
                         <div class="col-md-2">
                           <input class="input-text" type="text" id="code" placeholder="${name}编码">
@@ -190,40 +213,65 @@
                 </div>
                 <div class="modal-body overflow-visible modal-body-content">                  
                   <form class="form-horizontal">
+                    <c:if test="${level != '1'}">
+                    <c:if test="${level == '2' || level == '3' || level == '4' || level == '5'}">
                     <div class="form-group form-row">
-                      <label class="col-md-2 control-label no-padding-right">地区：</label>
+                      <label class="col-md-2 control-label no-padding-right">国家：</label>
                       <div class="col-md-8">
-                        <select class="input-select" id="countrysAdd" disabled>
-                          <option value="">选择国家</option>
+                        <ul class="list-inline" id="countrysAdd">
+                          <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['parentIdAdd', 'provincesAdd']);">不限</button></li>
                           <c:forEach var="data" items="${regions}">
-                          <option value="${data.id}">${data.name}</option>
-                          </c:forEach>
-                        </select>
-                        <select class="input-select" id="provincesAdd" disabled>
-                          <option value="">选择省份</option>
-                        </select>
-                        <select class="input-select" id="citysAdd" disabled>
-                          <option value="">选择市县</option>
-                        </select>
-                        <select class="input-select" id="districtsAdd" disabled>
-                          <option value="">选择城区</option>
-                        </select>
+                          <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['parentIdAdd', 'provincesAdd', 'citysAdd', 'districtsAdd'], 1);">${data.name}</button></li>
+                          </c:forEach> 
+                        </ul>
                       </div>
                     </div>
+                    </c:if>
+                    <c:if test="${level == '3' || level == '4' || level == '5'}">
                     <div class="form-group form-row">
-                      <label class="col-md-2 control-label no-padding-right">名称：</label>
+                      <label class="col-md-2 control-label no-padding-right">省份：</label>
+                      <div class="col-md-8">
+                        <ul class="list-inline" id="provincesAdd">
+                          <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['parentIdAdd', 'provincesAdd', 'citysAdd', 'districtsAdd'], 0);">不限</button></li>
+                        </ul>
+                      </div>
+                    </div>
+                    </c:if>
+                    <c:if test="${level == '4' || level == '5'}">
+                    <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">市县：</label>
+                      <div class="col-md-8">
+                        <ul class="list-inline" id="citysAdd">
+                          <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['parentIdAdd', 'provincesAdd', 'citysAdd', 'districtsAdd'], 0);">不限</button></li>
+                        </ul>
+                      </div>
+                    </div>
+                    </c:if>
+                    <c:if test="${level == '5'}">
+                    <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">城区：</label>
+                      <div class="col-md-8">
+                        <ul class="list-inline" id="districtsAdd">
+                          <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['parentIdAdd', 'provincesAdd', 'citysAdd', 'districtsAdd'], 0);">不限</button></li>
+                        </ul>
+                      </div>
+                    </div>
+                    </c:if>
+                    </c:if>
+                    <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">${name}名称：</label>
                       <div class="col-md-8">
                         <input class="input-text" type="text" id="nameAdd" placeholder="${name}名称">
                       </div>
                     </div>
                     <div class="form-group form-row">
-                      <label class="col-md-2 control-label no-padding-right">编码：</label>
+                      <label class="col-md-2 control-label no-padding-right">${name}编码：</label>
                       <div class="col-md-8">
                         <input class="input-text" type="text" id="codeAdd" placeholder="${name}编码">
                       </div>
                     </div>
                     <div class="form-group form-row">
-                      <label class="col-md-2 control-label no-padding-right">序号：</label>
+                      <label class="col-md-2 control-label no-padding-right">排序序号：</label>
                       <div class="col-md-8">
                         <input class="input-text" type="text" id="seqAdd" placeholder="排序序号">
                       </div>
@@ -260,40 +308,8 @@
 	var tableRegion = null;
 	var tableRegionUnit = null;
 	$(document).ready(function() {
-		<c:if test="${level == '2' || level == '3' || level == '4' || level == '5'}">
-		$('#countrys').removeAttr("disabled");
-		$('#countrysAdd').removeAttr("disabled");
-		<c:if test="${level == '3' || level == '4' || level == '5'}">
-		$('#provinces').removeAttr("disabled");
-		$('#countrys').change(function() {
-			changeRegion($(this).val(), 'provinces', ['citys', 'districts']);
-    });
-		$('#provincesAdd').removeAttr("disabled");
-    $('#countrysAdd').change(function() {
-      changeRegion($(this).val(), 'provincesAdd', ['citysAdd', 'districtsAdd']);
-    });
-		</c:if>
-		<c:if test="${level == '4' || level == '5'}">
-    $('#citys').removeAttr("disabled");
-    $('#provinces').change(function() {
-      changeRegion($(this).val(), 'citys', ['districts']);
-    });
-    $('#citysAdd').removeAttr("disabled");
-    $('#provincesAdd').change(function() {
-      changeRegion($(this).val(), 'citysAdd', ['districtsAdd']);
-    });
-    </c:if>
-    <c:if test="${level == '5'}">
-    $('#districts').removeAttr("disabled");
-    $('#citys').change(function() {
-      changeRegion($(this).val(), 'districts', []);
-    });
-    $('#districtsAdd').removeAttr("disabled");
-    $('#citysAdd').change(function() {
-      changeRegion($(this).val(), 'districtsAdd', []);
-    });
-    </c:if>
-		</c:if>
+		$('#townsPane').hide();
+		$('#townsPaneAdd').hide();
 		tableRegion = $('#tableRegion').DataTable({
 			'language': {
          'processing':  '处理中...',
@@ -458,13 +474,6 @@
     if (codeValue) {
       search += '&code=' + codeValue;
     }
-    var countryValue = $('#countrys').val();
-    var provinceValue = $('#provinces').val();
-    var districtValue = $('#districts').val();
-    var districtValue = $('#districts').val();
-    if (districtValue) {
-      search += '&parentId=' + districtValue;
-    }
     var parentIdValue = $('#parentIdValue').val();
     if (parentIdValue) {
       search += '&parentId=' + parentIdValue;
@@ -472,34 +481,42 @@
     tableRegion.ajax.url('${ctx}/home/region/queryManageData' + search).load();
     d.close();
 	}
-	function resetRegion(fieldId) {
-		var $children = $('#' + fieldId);
-	  $children.children().not(':first').remove();
-	}
-	function changeRegion(regionId, fieldId, childrens) {
-		var $children = $('#' + fieldId);
-	  $children.children().not(':first').remove();
-		if (regionId) {
-      var url = '${ctx}/home/region/list?random='+ Math.random();
-      var params = {
-        parentId: regionId
-      };
+	function queryRegions(regionId, name, that, fieldIds, index) {
+		addActivedName(regionId, name, that, fieldIds[0]);
+		<c:if test="${level == '3' || level == '4' || level == '5'}">
+		var $children = $('#' + fieldIds[index]);
+		var fieldTexts = "['" + fieldIds[0] + "','" + fieldIds[1] + "','" + fieldIds[2] + "','" + fieldIds[3] + "']";
+		console.log(fieldTexts);
+		if ($children.length) {
+			$children.children().not(':first').remove();
+	    if (regionId) {
+	      var url = '${ctx}/home/region/list?random='+ Math.random();
+	      var params = {
+	        parentId: regionId
+	      };
 
-      $.post(url, params, function(result) {
-        if (result.status) {
-          for (var i=0; i<result.data.length; i++) {
-            $htmlOpt = $('<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>');
-            $children.append($htmlOpt);
-          }
-        }
-      }, 'json');
-    }
-		for (var i=0; i<childrens.length; i++) {
-			var children = childrens[i];
-			resetRegion(children);
+	      $.post(url, params, function(result) {
+	        if (result.status) {
+	          for (var i=0; i<result.data.length; i++) {
+	            //$htmlLi = $('<li><button type="button" class="btn btn-link btn-xs" onclick="addActivedName(\'parentId\', \'' + result.data[i].id + '\', \'' + result.data[i].name + '\', this);">' + result.data[i].name + '</button></li>');
+	            $htmlLi = $('<li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions(\'' + result.data[i].id + '\', \'' + result.data[i].name + '\', this, ' + fieldTexts + ', '+ (index+1) +');">' + result.data[i].name + '</button></li>');
+	            $children.append($htmlLi).append('\n');
+	          }
+	        }
+	      }, 'json');
+	    }
 		}
+    </c:if>
+  }
+	function addActivedName(val, name, that, fieldId) {
+		$(that).parent().parent().find('li>button.btn-danger').removeClass('btn-danger').addClass('btn-link');
+		//$('#' + fieldId + ' li>button.btn-danger').removeClass('btn-danger').addClass('btn-link');
+    if (that) {
+      $(that).removeClass('btn-link').addClass('btn-danger');
+    }
+    $('#' + fieldId + 'Value').val(val);
 	}
-	function trashBuildingUnit(buildingUnitId) {
+	function buildingUnitTrash(buildingUnitId) {
 		dialog({
       title: '消息',
       content: '确定要删除吗?',

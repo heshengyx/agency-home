@@ -63,6 +63,10 @@ public class RegionController extends BaseController {
 	public String pageDistrict(Model model) {
 		model.addAttribute("name", "城区");
 		model.addAttribute("level", "4");
+		
+		RegionQueryParam param = new RegionQueryParam();
+		param.setLevel("1");
+		setModel(model, regionService, param);
 		return "region";
 	}
 	
@@ -70,6 +74,10 @@ public class RegionController extends BaseController {
 	public String pageTown(Model model) {
 		model.addAttribute("name", "乡镇");
 		model.addAttribute("level", "5");
+		
+		RegionQueryParam param = new RegionQueryParam();
+		param.setLevel("1");
+		setModel(model, regionService, param);
 		return "region";
 	}
 	
