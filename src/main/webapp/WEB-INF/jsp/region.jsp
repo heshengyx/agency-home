@@ -420,7 +420,20 @@
       var code = $('#codeAdd').val();
       var level = $('#levelValue').val();
       var seq = $('#seqAdd').val();
-      var parentId = $('#parentIdAddValue').val();
+      var countryValue = $('#countrysAdd').val();
+      var provinceValue = $('#provincesAdd').val();
+      var cityValue = $('#citysAdd').val();
+      var districtValue = $('#districtsAdd').val();
+      var parentId = "";
+      if (districtValue) {
+    	  parentId = districtValue;
+      } else if (cityValue) {
+    	  parentId = cityValue;
+      } else if (provinceValue) {
+    	  parentId = provinceValue;
+      } else {
+    	  parentId = countryValue;
+      }
       var url = '${ctx}/home/region/save?random='+ Math.random();
       var params = {
     		  name: name,
@@ -460,14 +473,16 @@
     }
     var countryValue = $('#countrys').val();
     var provinceValue = $('#provinces').val();
-    var districtValue = $('#districts').val();
+    var cityValue = $('#citys').val();
     var districtValue = $('#districts').val();
     if (districtValue) {
       search += '&parentId=' + districtValue;
-    }
-    var parentIdValue = $('#parentIdValue').val();
-    if (parentIdValue) {
-      search += '&parentId=' + parentIdValue;
+    } else if (cityValue) {
+    	search += '&parentId=' + cityValue;
+    } else if (provinceValue) {
+      search += '&parentId=' + provinceValue;
+    } else {
+    	search += '&parentId=' + countryValue;
     }
     tableRegion.ajax.url('${ctx}/home/region/queryManageData' + search).load();
     d.close();

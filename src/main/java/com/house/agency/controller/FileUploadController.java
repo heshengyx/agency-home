@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.house.agency.entity.Image;
 import com.house.agency.file.FileHandler;
 import com.house.agency.param.ImageParam;
+import com.house.agency.service.IConfigureService;
 import com.house.agency.service.IImageService;
 import com.myself.common.exception.ServiceException;
 import com.myself.common.message.JsonMessage;
@@ -32,15 +33,20 @@ public class FileUploadController extends BaseController {
 	@Autowired
 	private IImageService imageService;
 	
+	@Autowired
+	private IConfigureService configureService;
+	
 	@RequestMapping("/upload")
 	@ResponseBody
 	public Object upload(@RequestParam("file") MultipartFile multipartFile,
 			HttpServletRequest request, ImageParam param) {
 		JsonMessage jMessage = new JsonMessage();
-		String tempFolder = request.getSession().getServletContext()
+		/*String tempFolder = request.getSession().getServletContext()
 				.getRealPath(FileUtil.TEMP_FOLDER);
 		String uploadFolder = request.getSession().getServletContext()
-				.getRealPath(FileUtil.UPLOAD_FOLDER);
+				.getRealPath(FileUtil.UPLOAD_FOLDER);*/
+		String tempFolder = configureService.getValueByKey("temp_folder");
+		String uploadFolder = configureService.getValueByKey("upload_folder");
 		param.setFolder(FileUtil.UPLOAD_FOLDER);
 		try {
 			Map<String, File> map = FileHandler.upload(multipartFile, tempFolder);

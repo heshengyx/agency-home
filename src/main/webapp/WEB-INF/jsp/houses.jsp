@@ -363,7 +363,7 @@
       'serverSide': true, //开启服务器模式
       //'deferRender': true, //开启延迟渲染
       'ajax': {
-        'url': '${ctx}/home/house/queryManage',
+        'url': '${ctx}/home/house/queryManageData',
         'type': 'POST',
         'data': function ( d ) { //添加额外的参数发送到服务器
           //d.tag = 'release';
@@ -490,7 +490,7 @@
     		  room: room,
     		  saloon: saloon,
     		  toilet: toilet,
-    		  area: area,
+    		  area: area * 100,
     		  face: face,
     		  floor: floor,
     		  code: code
@@ -530,7 +530,7 @@
       search += '&buildingUnitId=' + buildingUnitId;
     }
     
-    tableHouse.ajax.url('${ctx}/home/house/queryManage' + search).load();
+    tableHouse.ajax.url('${ctx}/home/house/queryManageData' + search).load();
     d.close();
 	}
   function queryRegions(regionId, name, _this, fieldIds) {

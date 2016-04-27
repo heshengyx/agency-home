@@ -971,28 +971,26 @@
 	function queryRegions(regionId, name, _this, fieldIds) {
 		addActivedName(fieldIds[0], regionId, name, _this);
 		var $towns = $('#' + fieldIds[1]);
-	    var $townsPane = $('#' + fieldIds[2]);
-	    $towns.children().remove();
-	    if (regionId) {
-	      var url = '${ctx}/home/region/list?random='+ Math.random();
-	      var params = {
-	        parentId: regionId
-	      };
-	      var $htmlLi = $('<li><button type="button" class="btn btn-danger btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'\', \'\', this);">不限</button></li>');
-	      $towns.append($htmlLi).append('\n');
-	      
-	      $.post(url, params, function(result) {
-	        if (result.status) {
-	          for (var i=0; i<result.data.length; i++) {
-	            $htmlLi = $('<li><button type="button" class="btn btn-link btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'' + result.data[i].id + '\', \'' + result.data[i].name + '\', this);">' + result.data[i].name + '</button></li>');
-	            $towns.append($htmlLi).append('\n');
-	          }
-	          $townsPane.show();
-	        }
-	      }, 'json');
-	    } else {
-	      $townsPane.hide();
-	    }
+    var $townsPane = $('#' + fieldIds[2]);
+    $towns.children().not(':first').remove();
+    if (regionId) {
+      var url = '${ctx}/home/region/list?random='+ Math.random();
+      var params = {
+        parentId: regionId
+      };
+      $.post(url, params, function(result) {
+        if (result.status) {
+          for (var i=0; i<result.data.length; i++) {
+            $htmlLi = $('<li><button type="button" class="btn btn-link btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'' + result.data[i].id + '\', \'' + result.data[i].name + '\', this);">' + result.data[i].name + '</button></li>');
+            $towns.append($htmlLi).append('\n');
+          }
+          $townsPane.show();
+        }
+      }, 'json');
+    } else {
+      $townsPane.hide();
+      $towns.children(':first').children().removeClass('btn-link').addClass('btn-danger');
+    }
   }
 	function addActivedName(fieldId, val, name, _this) {
 		$('#' + fieldId + ' li>button.btn-danger').removeClass('btn-danger').addClass('btn-link');

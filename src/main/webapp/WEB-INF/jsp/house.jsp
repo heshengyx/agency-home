@@ -82,7 +82,7 @@
                         <label class="col-md-1 control-label no-padding-right">区域：</label>
                         <div class="col-md-11">
                           <ul class="list-inline" id="districts">
-                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('0', '', this, ['districts', 'towns', 'townsPane']);">不限</button></li>
+                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['districts', 'towns', 'townsPane']);">不限</button></li>
                             <c:forEach var="data" items="${regions}">
                             <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['districts', 'towns', 'townsPane']);">${data.name}</button></li>
                             </c:forEach> 
@@ -277,7 +277,9 @@
 					                          </ul>
 					                          <div id="townsPaneAdd">
 					                            <hr class="hr-line">
-					                            <ul class="list-inline" id="townsAdd"></ul>
+					                            <ul class="list-inline" id="townsAdd">
+					                              <li><button type="button" class="btn btn-danger btn-xs">请选择</button></li>
+					                            </ul>
 					                          </div>
 					                        </div>
 					                      </div>
@@ -379,195 +381,194 @@
 	var tableHouse = null;
 	$(document).ready(function() {
 		//http://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTegdm0LZdjqr5-oayXSOefg.woff2
-		$("#townsPane").hide();
-		$("#townsPaneAdd").hide();
+		$('#townsPane').hide();
+		$('#townsPaneAdd').hide();
 		tableHouse = $('#tableHouse').DataTable({
-			 "language": {
-	       "processing":  "处理中...",
-	       "lengthMenu":  "每页 _MENU_ 条记录",
-	       "zeroRecords": "没有找到记录",
-	       "infoEmpty":   "无记录",
-	       'info':        '当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录',
-	       "paginate": {
-	         "first":     "首页",
-	         "previous":  "上页 ",
-	         "next":      "下页 ",
-	         "last":      "末页 "
-	       }
-	    },
-			//"dom": "<'row'<'col-xs-12'>>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
-			"dom": "t<'row'<'col-xs-6'i><'col-xs-6'p>>",
-			"processing": true,
-      "serverSide": true, //开启服务器模式
-      //"deferRender": true, //开启延迟渲染
-      "ajax": {
-        "url": "${ctx}/home/house/queryHomeData",
-        "type": "POST",
-        "data": function ( d ) { //添加额外的参数发送到服务器
-          //d.tag = "release";
-          //d.sort = $("#sort").val();
+			'language': {
+        'processing':  '处理中...',
+        'lengthMenu':  '每页 _MENU_ 条记录',
+        'zeroRecords': '没有找到记录',
+        'infoEmpty':   '无记录',
+        'info':        '当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录',
+        'paginate': {
+          'first':     '首页',
+          'previous':  '上页',
+          'next':      '下页',
+          'last':      '末页'
         }
       },
-			"columnDefs": [
-        { "visible": false, "targets": 0},
-        { "orderable": false, "targets": 1, "render": function(data, type, row) {
-          var content = "<div class=\"text-center\"><label>";
-          content += "<input type=\"checkbox\" class=\"ace\" />";
-          content += "<span class=\"lbl\"></span>";
-          content += "</label></div>";
+      'dom': 't<"row"<"col-xs-6"i><"col-xs-6"p>>',
+      'processing': true,
+      'serverSide': true, //开启服务器模式
+      //'deferRender': true, //开启延迟渲染
+      'ajax': {
+        'url': '${ctx}/home/house/queryHomeData',
+        'type': 'POST',
+        'data': function ( d ) { //添加额外的参数发送到服务器
+          //d.tag = 'release';
+          //d.sort = $('#sort').val();
+        }
+      },
+			'columnDefs': [
+        { 'visible': false, 'targets': 0},
+        { 'orderable': false, 'targets': 1, 'render': function(data, type, row) {
+          var content = '<div class="text-center"><label>';
+          content += '<input type="checkbox" class="ace" />';
+          content += '<span class="lbl"></span>';
+          content += '</label></div>';
           return content;
         }},
-        { "orderable": false, "targets": 2, "render": function(data, type, row) {
-          var content = "";
-          content += "<h4>" + data.title + "</h4>";
-          content += data.buildingName + "<small>（" + data.districtName + "-" + data.townName + "）</small>，";
-          content += data.floorName + "，" + data.card + "<br>";
-          content += "<span class=\"text-muted hidden-480\"><small>" + data.buildingAddress + "</small></span>";
+        { 'orderable': false, 'targets': 2, 'render': function(data, type, row) {
+          var content = '';
+          content += '<h4>' + data.title + '</h4>';
+          content += data.buildingName + '<small>（' + data.districtName + '-' + data.townName + '）</small>，';
+          content += data.floorName + '，' + data.card + '<br>';
+          content += '<span class="text-muted hidden-480"><small>' + data.buildingAddress + '</small></span>';
           return content;
         }},
-        { "orderable": false, "targets": 3, "render": function(data, type, row) {
-          var content = "<div class=\"text-right\">";
-          content += data.room + "室" + data.saloon + "厅" + data.toilet + "卫";
-          content += "</div>";
+        { 'orderable': false, 'targets': 3, 'render': function(data, type, row) {
+          var content = '<div class="text-right">';
+          content += data.room + '室' + data.saloon + '厅' + data.toilet + '卫';
+          content += '</div>';
           return content;
         }},
-        { "targets": 4, "render": function(data, type, row) {
-        	var content = "<div class=\"text-right\">";
+        { 'targets': 4, 'render': function(data, type, row) {
+          var content = '<div class="text-right">';
           content += jmoney(data.price);
-          content += "</div>";
+          content += '</div>';
           return content;
         }},
-        { "targets": 5, "render": function(data, type, row) {
-          var content = "<div class=\"text-right\">";
+        { 'targets': 5, 'render': function(data, type, row) {
+          var content = '<div class="text-right">';
           content += jmoney(data.area);
-          content += "</div>";
+          content += '</div>';
           return content;
         }},
-        { "targets": 6, "render": function(data, type, row) {
+        { 'targets': 6, 'render': function(data, type, row) {
           var content = to_date_hm(data.releaseTime);
           return content;
         }},
-        { "orderable": false, "targets": 7, "render": function(data, type, row) {
-        	var content = "<div class=\"text-center\">";
-          content += "<span class=\"label label-sm label-warning\">有效</span>";
-          content += "</div>";
+        { 'orderable': false, 'targets': 7, 'render': function(data, type, row) {
+          var content = '<div class="text-center">';
+          content += '<span class="label label-sm label-warning">有效</span>';
+          content += '</div>';
           return content;
         }},
-        { "orderable": false, "targets": 8, "render": function(data, type, row) {
-          var content = "<div class=\"text-center\">";
-          content += "<div class=\"visible-md visible-lg hidden-sm hidden-xs action-buttons\">";
-          content += "  <a class=\"blue\" href=\"#\" title=\"详情\"><i class=\"icon-zoom-in bigger-130\"></i></a>";
-          content += "  <a class=\"green\" href=\"#\" title=\"编辑\"><i class=\"icon-pencil bigger-130\"></i></a>";
-          content += "  <a class=\"red\" href=\"#\" onclick=\"houseTrash('" + data.tradeId + "');\"  title=\"删除\"><i class=\"icon-trash bigger-130\"></i></a>";
-          content += "</div>";
-          content += "<div class=\"visible-xs visible-sm hidden-md hidden-lg\">";
-          content += "  <div class=\"inline position-relative\">";
-          content += "    <button class=\"btn btn-minier btn-yellow dropdown-toggle\" data-toggle=\"dropdown\">";
-          content += "      <i class=\"icon-caret-down icon-only bigger-120\"></i>";
-          content += "    </button>";
-          content += "    <ul class=\"dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close\">";
-          content += "      <li>";
-          content += "        <a href=\"#\" class=\"tooltip-info\" data-rel=\"tooltip\" title=\"View\">";
-          content += "          <span class=\"blue\"><i class=\"icon-zoom-in bigger-120\"></i></span>";
-          content += "        </a>";
-          content += "      </li>";
-          content += "      <li>";
-          content += "        <a href=\"#\" class=\"tooltip-success\" data-rel=\"tooltip\" title=\"Edit\">";
-          content += "          <span class=\"green\"><i class=\"icon-edit bigger-120\"></i></span>";
-          content += "        </a>";
-          content += "      </li>";
-          content += "      <li>";
-          content += "        <a href=\"#\" class=\"tooltip-error\" data-rel=\"tooltip\" title=\"Delete\">";
-          content += "          <span class=\"red\"><i class=\"icon-trash bigger-120\"></i></span>";
-          content += "        </a>";
-          content += "      </li>";
-          content += "    </ul>";
-          content += "  </div>";
-          content += "</div>";
-          content += "</div>";
+        { 'orderable': false, "targets": 8, "render": function(data, type, row) {
+        	var content = '<div class="text-center">';
+          content += '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
+          content += '  <a class="blue" href="#" title="详情"><i class="icon-zoom-in bigger-130"></i></a>';
+          content += '  <a class="green" href="#" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
+          content += '  <a class="red" href="#" onclick="trashHouse(\'' + data.tradeId + '\');"  title="删除"><i class="icon-trash bigger-130"></i></a>';
+          content += '</div>';
+          content += '<div class="visible-xs visible-sm hidden-md hidden-lg">';
+          content += '  <div class="inline position-relative">';
+          content += '    <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown">';
+          content += '      <i class="icon-caret-down icon-only bigger-120"></i>';
+          content += '    </button>';
+          content += '    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">';
+          content += '      <li>';
+          content += '        <a href="#" class="tooltip-info" data-rel="tooltip" title="View">';
+          content += '          <span class="blue"><i class="icon-zoom-in bigger-120"></i></span>';
+          content += '        </a>';
+          content += '      </li>';
+          content += '      <li>';
+          content += '        <a href="#" class="tooltip-success" data-rel="tooltip" title="Edit">';
+          content += '          <span class="green"><i class="icon-edit bigger-120"></i></span>';
+          content += '        </a>';
+          content += '      </li>';
+          content += '      <li>';
+          content += '        <a href="#" class="tooltip-error" data-rel="tooltip" title="Delete">';
+          content += '          <span class="red"><i class="icon-trash bigger-120"></i></span>';
+          content += '        </a>';
+          content += '      </li>';
+          content += '    </ul>';
+          content += '  </div>';
+          content += '</div>';
+          content += '</div>';
           return content;
         }}
 			],
-			"columns": [
-        { "data": null },
-        { "data": null },
-        { "data": null },
-        { "data": null },
-        { "data": null },
-        { "data": null },
-        { "data": null },
-        { "data": null },
-        { "data": null }
+			'columns': [
+        { 'data': null },
+        { 'data': null },
+        { 'data': null },
+        { 'data': null },
+        { 'data': null },
+        { 'data': null },
+        { 'data': null },
+        { 'data': null },
+        { 'data': null }
       ]
 		});
-		queryBuildingName("buildingName", "buildingUnit", "districtsValue", "townsValue");
-		queryBuildingName("buildingNameAdd", "buildingUnitAdd", "districtsAddValue", "townsAddValue");
-		changeBuildingUnit("buildingUnit", "house");
-		changeBuildingUnit("buildingUnitAdd", "houseAdd");
+		queryBuildingName('buildingName', 'buildingUnit', 'districtsValue', 'townsValue');
+    queryBuildingName('buildingNameAdd', 'buildingUnitAdd', 'districtsAddValue', 'townsAddValue');
+    changeBuildingUnit('buildingUnit', 'house');
+    changeBuildingUnit('buildingUnitAdd', 'houseAdd');
 		
-		$(".date-picker").datepicker({autoclose:true}).next().on(ace.click_event, function(){
-      $(this).prev().focus();
-    });
-		
-		$("#btnHouseSearch").click(function() {
-			d = dialog({
-	      title: '房源载入中...'
-	    });
-	    d.showModal();
-	    var search = "?random=" + Math.random();
-	    var townsValue = $("#townsValue").val();
+    $('.date-picker').datepicker({autoclose:true}).next().on(ace.click_event, function(){
+        $(this).prev().focus();
+      });
+      
+    $('#btnHouseSearch').click(function() {
+      d = dialog({
+        title: '房源载入中...'
+      });
+      d.showModal();
+      var search = '?random=' + Math.random();
+      var townsValue = $('#townsValue').val();
       if (townsValue) {
-        search += "&townId=" + townsValue;
+        search += '&townId=' + townsValue;
       } else {
-        var districtsValue = $("#districtsValue").val();
+        var districtsValue = $('#districtsValue').val();
         if (districtsValue) {
-          search += "&districtId=" + districtsValue;
+          search += '&districtId=' + districtsValue;
         }
       }
-      var priceBeginValue = $("#priceBegin").val();
-      if (priceBeginValue && priceBeginValue != "0") {
-        search += "&priceBegin=" + (Number(priceBeginValue)*100);
+      var priceBeginValue = $('#priceBegin').val();
+      if (priceBeginValue && priceBeginValue != '0') {
+        search += '&priceBegin=' + (Number(priceBeginValue)*100);
       }
-      var priceEndValue = $("#priceEnd").val();
-      if (priceEndValue && priceEndValue != "0") {
-        search += "&priceEnd=" + (Number(priceEndValue)*100);
+      var priceEndValue = $('#priceEnd').val();
+      if (priceEndValue && priceEndValue != '0') {
+        search += '&priceEnd=' + (Number(priceEndValue)*100);
       }
-      var areaBeginValue = $("#areaBegin").val();
-      if (areaBeginValue && areaBeginValue != "0") {
-        search += "&areaBegin=" + (Number(areaBeginValue)*100);
+      var areaBeginValue = $('#areaBegin').val();
+      if (areaBeginValue && areaBeginValue != '0') {
+        search += '&areaBegin=' + (Number(areaBeginValue)*100);
       }
-      var areaEndValue = $("#areaEnd").val();
-      if (areaEndValue && areaEndValue != "0") {
-        search += "&areaEnd=" + (Number(areaEndValue)*100);
+      var areaEndValue = $('#areaEnd').val();
+      if (areaEndValue && areaEndValue != '0') {
+        search += '&areaEnd=' + (Number(areaEndValue)*100);
       }
-      var roomValue = $("#room").val();
-      if (roomValue && roomValue != "0") {
-        var values = roomValue.split(":");
+      var roomValue = $('#room').val();
+      if (roomValue && roomValue != '0') {
+        var values = roomValue.split(':');
         if (values.length > 1) {
-          search += "&symbol=" + values[1];
+          search += '&symbol=' + values[1];
         }
-        search += "&room=" + values[0];
+        search += '&room=' + values[0];
       }
-      var saloonValue = $("#saloon").val();
-      if (saloonValue && saloonValue != "0") {
-    	  search += "&saloon=" + saloonValue;
+      var saloonValue = $('#saloon').val();
+      if (saloonValue && saloonValue != '0') {
+        search += '&saloon=' + saloonValue;
       }
-      var toiletValue = $("#toilet").val();
-      if (toiletValue && toiletValue != "0") {
-        search += "&toilet=" + toiletValue;
+      var toiletValue = $('#toilet').val();
+      if (toiletValue && toiletValue != '0') {
+        search += '&toilet=' + toiletValue;
       }
       
-      var dateBeginValue = $("#dateBegin").val();
+      var dateBeginValue = $('#dateBegin').val();
       if (dateBeginValue) {
-        search += "&releaseDateBegin=" + dateBeginValue;
+        search += '&releaseDateBegin=' + dateBeginValue;
       }
-      var dateEndValue = $("#dateEnd").val();
+      var dateEndValue = $('#dateEnd').val();
       if (dateEndValue) {
-        search += "&releaseDateEnd=" + dateEndValue;
+        search += '&releaseDateEnd=' + dateEndValue;
       }
-      tableHouse.ajax.url("${ctx}/home/house/queryHomeData" + search).load();
-	    d.close();
-		});
+      tableHouse.ajax.url('${ctx}/home/house/queryHomeData' + search).load();
+      d.close();
+    });
 		
 		$('#btnHouseSave').click(function() {
 			var houseId = $('#houseId').val();
@@ -651,40 +652,38 @@
      '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
   }
 	function queryRegions(regionId, name, _this, fieldIds) {
-		addActivedName(fieldIds[0], regionId, name, _this);
-    var $towns = $("#" + fieldIds[1]);
-    var $townsPane = $("#" + fieldIds[2]);
-    $towns.children().remove();
+    addActivedName(fieldIds[0], regionId, name, _this);
+    var $towns = $('#' + fieldIds[1]);
+    var $townsPane = $('#' + fieldIds[2]);
+    $towns.children().not(':first').remove();
     if (regionId) {
-      var url = "${ctx}/home/region/list?random="+ Math.random();
+      var url = '${ctx}/home/region/list?random='+ Math.random();
       var params = {
         parentId: regionId
       };
-      var $htmlLi = $("<li><button type=\"button\" class=\"btn btn-danger btn-xs\" onclick=\"addActivedName('" + fieldIds[1] + "', '', '', this);\">请选择</button></li>");
-      $towns.append($htmlLi).append("\n");
-      
       $.post(url, params, function(result) {
         if (result.status) {
           for (var i=0; i<result.data.length; i++) {
-            $htmlLi = $("<li><button type=\"button\" class=\"btn btn-link btn-xs\" onclick=\"addActivedName('" + fieldIds[1] + "', '" + result.data[i].id + "', '" + result.data[i].name + "', this);\">" + result.data[i].name + "</button></li>");
-            $towns.append($htmlLi).append("\n");
+            $htmlLi = $('<li><button type="button" class="btn btn-link btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'' + result.data[i].id + '\', \'' + result.data[i].name + '\', this);">' + result.data[i].name + '</button></li>');
+            $towns.append($htmlLi).append('\n');
           }
           $townsPane.show();
         }
-      }, "json");
+      }, 'json');
     } else {
-    	$townsPane.hide();
+      $townsPane.hide();
+      $towns.children(':first').children().removeClass('btn-link').addClass('btn-danger');
     }
   }
 	function addActivedName(fieldId, val, name, _this) {
-    $("#" + fieldId + " li>button.btn-danger").removeClass("btn-danger").addClass("btn-link");
+    $('#' + fieldId + ' li>button.btn-danger').removeClass('btn-danger').addClass('btn-link');
     if (_this) {
-      $(_this).removeClass("btn-link").addClass("btn-danger");
+      $(_this).removeClass('btn-link').addClass('btn-danger');
     }
-    $("#" + fieldId + "Value").val(val);
-	}
+    $('#' + fieldId + 'Value').val(val);
+  }
 	function queryBuildingName(buildingName, buildingUnit, districts, towns) {
-		$("#" + buildingName).autocompleter({
+    $('#' + buildingName).autocompleter({
       // marker for autocomplete matches
       highlightMatches: true,
       // object to local or url to remote search
@@ -698,15 +697,15 @@
       // max results
       //limit: 1,
       combine: function() {
-        var districtId = $("#" + districts).val();
-        var townId = $("#" + towns).val();
+        var districtId = $('#' + districts).val();
+        var townId = $('#' + towns).val();
         if (townId) {
-          districtId = "";
+          districtId = '';
         } else {
-          townId = "";
+          townId = '';
         }
         return {
-          buildingName: $("#" + buildingName).val(),
+          buildingName: $('#' + buildingName).val(),
           districtId: districtId,
           townId: townId
         };
@@ -715,53 +714,53 @@
         if (selected) {
           var buildingId = selected.buildingId;
           if (buildingId) {
-            var url = "${ctx}/home/buildingUnit/select?random="+ Math.random();
+            var url = '${ctx}/home/buildingUnit/select?random='+ Math.random();
             var params = {
                 buildingId: buildingId
             };
             $.post(url, params, function(result) {
               if (result.status) {
-                var $buildingUnit = $("#" + buildingUnit);
+                var $buildingUnit = $('#' + buildingUnit);
                 $buildingUnit.children().not(':first').remove();
                 for(var i=0; i<result.data.length; i++) {
-                  $buildingUnit.append("<option value=\"" + result.data[i].id + "\">" + result.data[i].name + "</option>");
+                  $buildingUnit.append('<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>');
                 }
               }
-            }, "json");
+            }, 'json');
           }
         }
       }
     });
-	}
+  }
 	function changeBuildingUnit(buildingUnit, house) {
-		$("#" + buildingUnit).change(function() {
+	  $('#' + buildingUnit).change(function() {
 	    var buildingUnitId = $(this).val();
 	    if (buildingUnitId) {
-	      var url = "${ctx}/home/house/select?random="+ Math.random();
+	      var url = '${ctx}/home/house/select?random='+ Math.random();
 	      var params = {
 	          buildingUnitId: buildingUnitId
 	      };
 	      $.post(url, params, function(result) {
 	        if (result.status) {
-	        	var $house = $("#" + house);
+	          var $house = $('#' + house);
 	          $house.children().not(':first').remove();
 	          var items = [];
 	          for(var i=0; i<result.data.length; i++) {
-	        	  items.push(result.data[i].houseId);
-	        	  items.push(result.data[i].area);
-	        	  items.push(result.data[i].room);
-	        	  items.push(result.data[i].saloon);
-	        	  items.push(result.data[i].toilet);
-	        	  items.push(result.data[i].faceName);
-	            $house.append("<option value=\"" + items.join() + "\">" + result.data[i].card + "</option>");
+	            items.push(result.data[i].houseId);
+	            items.push(result.data[i].area);
+	            items.push(result.data[i].room);
+	            items.push(result.data[i].saloon);
+	            items.push(result.data[i].toilet);
+	            items.push(result.data[i].faceName);
+	            $house.append('<option value="' + items.join() + '">' + result.data[i].card + '</option>');
 	            items.length = 0;
 	          }
 	        }
-	      }, "json");
+	      }, 'json');
 	    }
 	  });
 	}
-	function houseTrash(tradeId) {
+	function trashHouse(tradeId) {
 	    dialog({
 	      title: '消息',
 	      content: '确定要删除吗?',
