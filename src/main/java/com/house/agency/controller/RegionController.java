@@ -137,4 +137,24 @@ public class RegionController extends BaseController {
 		}
 		return jMessage;
 	}
+	
+	@RequestMapping("/trash")
+	@ResponseBody
+	public Object trash(String id) {
+		JsonMessage jMessage = new JsonMessage();
+		try {
+			regionService.deleteById(id);
+			jMessage.setStatus(JsonMessage.TRUE);
+			jMessage.setMessage("删除成功");
+		} catch (Exception e) {
+			jMessage.setStatus(JsonMessage.FALSE);
+			if (e instanceof ServiceException) {
+				jMessage.setMessage(e.getMessage());
+			} else {
+				jMessage.setMessage("系统异常");
+			}
+			logger.error(jMessage.getMessage(), e);
+		}
+		return jMessage;
+	}
 }

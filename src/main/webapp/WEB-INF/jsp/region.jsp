@@ -6,7 +6,6 @@
   <link href="${ctx}/css/jquery.autocompleter.css" rel="stylesheet">
   <link href="${ctx}/css/autocompleter.css" rel="stylesheet">
   <link href="${ctx}/css/datepicker.css" rel="stylesheet">
-  <link href="${ctx}/css/dropzone.css" rel="stylesheet">
   <link href="${ctx}/css/colorbox.css" rel="stylesheet">
   <css>
   <style>
@@ -43,17 +42,6 @@
   .modal-body-content {padding: 5px 0 0 0;}
   
   .ace-thumbnails>li {margin-left: 20px;} 
-  
-  .date-picker {width: 110px;}
-  
-  .dropzone .dz-preview, 
-  .dropzone-previews .dz-preview {margin-left: 27px;}
-  .dropzone .dz-preview .error-message-tip, 
-  .dropzone-previews .dz-preview .error-message-tip {
-    top: 0;
-    left: 0;
-    min-width: 0;
-  }
   </style>
   </css>
 </head>
@@ -253,7 +241,6 @@
   <script src="${ctx}/js/bootbox.min.js"></script>
   <script src="${ctx}/js/jquery.hotkeys.min.js"></script>
   <script src="${ctx}/js/bootstrap-wysiwyg.min.js"></script>
-  <script src="${ctx}/js/dropzone.min.js"></script>
   <script src="${ctx}/js/jquery.colorbox-min.js"></script>
 	<script>
 	var d = null;
@@ -350,8 +337,8 @@
         	var content = '<div class="text-center">';
           content += '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
           content += '  <a class="blue" href="#" title="详情"><i class="icon-zoom-in bigger-130"></i></a>';
-          content += '  <a class="green" href="#" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
-          content += '  <a class="red" href="#" title="删除"><i class="icon-trash bigger-130"></i></a>';
+          content += '  <a class="green" href="#" onclick="editRegion(\'' + data.id + '\');" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
+          content += '  <a class="red" href="#" onclick="trashRegion(\'' + data.id + '\');" title="删除" ><i class="icon-trash bigger-130"></i></a>';
           content += '</div>';
           content += '<div class="visible-xs visible-sm hidden-md hidden-lg">';
           content += '  <div class="inline position-relative">';
@@ -406,10 +393,6 @@
           cell.innerHTML = i + 1;
         });
     }).draw();
-		
-		$('.date-picker').datepicker({autoclose:true}).next().on(ace.click_event, function(){
-      $(this).prev().focus();
-    });
 		
 		$('#btnRegionSearch').click(function() {
 			queryRegionDatas();
@@ -514,7 +497,10 @@
 			resetRegion(children);
 		}
 	}
-	function trashBuildingUnit(buildingUnitId) {
+	function editRegion(regionId) {
+		
+	}
+	function trashRegion(regionId) {
 		dialog({
       title: '消息',
       content: '确定要删除吗?',
@@ -522,9 +508,9 @@
       ok: function () {
         var that = this;
         this.title('删除中…');
-        var url = '${ctx}/home/buildingUnit/trash?random='+ Math.random();
+        var url = '${ctx}/home/region/trash?random='+ Math.random();
         var params = {
-            id: buildingUnitId
+            id: regionId
         };
         $.post(url, params, function(result) {
           dialog({
@@ -532,7 +518,7 @@
             content: result.message,
             okValue: '确定',
             ok: function () {
-              tableRegionUnit.ajax.reload();
+              tableRegion.ajax.reload();
               return true;
             }
           }).width(100).showModal();
