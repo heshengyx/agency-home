@@ -1,13 +1,17 @@
 package com.house.agency.controller;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.house.agency.data.manage.RegionManageData;
@@ -116,6 +120,17 @@ public class RegionController extends BaseController {
 			logger.error(jMessage.getMessage(), e);
 		}
 		return jMessage;
+	}
+	
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+	public String edit(@PathVariable String id, Model model) {
+		RegionQueryParam param = new RegionQueryParam();
+		param.setLevel("1");
+		setModel(model, regionService, param);
+		
+		Map<String, List<Region>> regions = new LinkedHashMap<String, List<Region>>();
+		regionService.getRegionById(id, regions);
+		return "region";
 	}
 	
 	@RequestMapping("/save")
