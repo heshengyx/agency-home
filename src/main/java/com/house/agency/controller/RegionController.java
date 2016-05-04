@@ -9,9 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.house.agency.data.manage.RegionManageData;
@@ -122,23 +120,33 @@ public class RegionController extends BaseController {
 		return jMessage;
 	}
 	
-	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public String edit(@PathVariable String id, Model model) {
-		RegionQueryParam param = new RegionQueryParam();
-		param.setLevel("1");
-		setModel(model, regionService, param);
-		
+	@RequestMapping("/edit")
+	@ResponseBody
+	public Object edit(String id) {
+		JsonMessage jMessage = new JsonMessage();
 		Map<String, List<Region>> regions = new LinkedHashMap<String, List<Region>>();
-		regionService.getRegionById(id, regions);
-		return "region";
+		try {
+			regions = regionService.getRegionById(id, regions);
+			jMessage.setStatus(JsonMessage.TRUE);
+			jMessage.setData(regions);
+		} catch (Exception e) {
+			jMessage.setStatus(JsonMessage.FALSE);
+			if (e instanceof ServiceException) {
+				jMessage.setMessage(e.getMessage());
+			} else {
+				jMessage.setMessage("系统异常");
+			}
+			logger.error(jMessage.getMessage(), e);
+		}
+		return jMessage;
 	}
 	
-	@RequestMapping("/save")
+	@RequestMapping("/saveOrUpdate")
 	@ResponseBody
-	public Object save(Region param) {
+	public Object saveOrUpdate(Region param) {
 		JsonMessage jMessage = new JsonMessage();
 		try {
-			regionService.save(param);
+			regionService.saveOrUpdate(param);
 			jMessage.setStatus(JsonMessage.TRUE);
 			jMessage.setMessage("保存成功");
 		} catch (Exception e) {
