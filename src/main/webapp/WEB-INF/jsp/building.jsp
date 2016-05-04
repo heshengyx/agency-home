@@ -189,10 +189,9 @@
 			                <th></th>
 			                <th class="text-center" width="50"><label><input type="checkbox" class="ace" /><span class="lbl"></span></label></th>
 			                <th>楼盘名称</th>
-			                <th>楼盘地址</th>
 			                <th class="text-center" width="70">类型</th>
 			                <th width="130"><i class="icon-time hidden-480"></i>创建时间</th>
-			                <th class="text-center hidden-480">状态</th>
+			                <th class="text-center hidden-480" width="80">状态</th>
 			                <th class="text-center" width="140">操作</th>
 			              </tr>
 			            </thead>
@@ -392,7 +391,7 @@
 
                     <div class="tab-content">
                       <div id="buildingImages" class="tab-pane in active">
-                        <ul class="ace-thumbnails">
+                        <ul class="ace-thumbnails" id="imageThumbnails">
                           <li>
                             <a href="${ctx}/images/gallery/image-4.jpg" data-rel="colorbox">
                               <img alt="150x150" src="${ctx}/images/gallery/thumb-4.jpg" />
@@ -597,29 +596,27 @@
         }},
         { 'orderable': false, 'targets': 2, 'render': function(data, type, row) {
           var content = '';
-          content += data.buildingName + '<small>（' + data.districtName + '-' + data.townName + '）</small>';
+          content += data.buildingName + '<small>（' + data.districtName + '-' + data.townName + '）</small><br>';
+          content += '<small class="text-muted">' + data.buildingAddress + '</small>'
           return content;
         }},
         { 'orderable': false, 'targets': 3, 'render': function(data, type, row) {
-          return data.buildingAddress;
-        }},
-        { 'orderable': false, 'targets': 4, 'render': function(data, type, row) {
           var content = '<div class="text-center">';
           content += '<small>住宅</small>';
           content += '</div>';
           return content;
         }},
-        { 'targets': 5, 'render': function(data, type, row) {
+        { 'targets': 4, 'render': function(data, type, row) {
           var content = to_date_hm(data.createTime);
           return content;
         }},
-        { 'orderable': false, 'targets': 6, 'render': function(data, type, row) {
+        { 'orderable': false, 'targets': 5, 'render': function(data, type, row) {
           var content = '<div class="text-center">';
           content += '<span class="label label-sm label-warning">有效</span>';
           content += '</div>';
           return content;
         }},
-        { 'orderable': false, 'targets': 7, 'render': function(data, type, row) {
+        { 'orderable': false, 'targets': 6, 'render': function(data, type, row) {
         	var content = '<div class="text-center">';
           content += '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
           content += '  <a class="blue" href="#modal-table" role="button" data-toggle="modal" data-building="' + data.buildingId + '" title="栋座"><i class="icon-building bigger-130"></i></a>';
@@ -660,7 +657,6 @@
         [0, null]
       ],
       'columns': [
-        { 'data': null },
         { 'data': null },
         { 'data': null },
         { 'data': null },
@@ -878,6 +874,25 @@
           $('#buildingNameImageText').text(data.buildingName);
           $('#buildingAddressImageText').text(data.buildingAddress);
           
+          var $imageThumbnails = $('#imageThumbnails');
+          var content = '';
+          content += '<li>';
+          content += '  <a href="${ctx}/images/gallery/image-4.jpg" data-rel="colorbox">';
+        	content += '    <img alt="150x150" src="${ctx}/images/gallery/thumb-4.jpg" />';
+        	content += '  </a>';
+        	content += '  <div class="tags">';
+        	content += '       <span class="label-holder">';
+        	content += '      <span class="label label-info arrowed">客厅</span>';
+        	content += '    </span>';
+        	content += '  </div>';
+        	content += '  <div class="tools tools-top">';
+        	content += '    <a href="#"><i class="icon-link"></i></a>';
+        	content += '    <a href="#"><i class="icon-paper-clip"></i></a>';
+        	content += '    <a href="#"><i class="icon-pencil"></i></a>';
+        	content += '    <a href="#"><i class="icon-remove red"></i></a>';
+        	content += '  </div>';
+        	content += '</li>';
+        	$imageThumbnails.append(content);
           dropzoneImage(buildingId, '2');
         }
       }, 'json');

@@ -77,6 +77,7 @@
                             <span class="block input-icon input-icon-right">
                               <input type="text" class="form-control" name="username" placeholder="手机/账号/邮箱" />
                               <i class="icon-user"></i>
+                              <span id="usernameMessage"></span>
                             </span>
                           </label>
 
@@ -84,6 +85,7 @@
                             <span class="block input-icon input-icon-right">
                               <input type="password" class="form-control" name="password" placeholder="密码" />
                               <i class="icon-lock"></i>
+                              <span id="passwordMessage"></span>
                             </span>
                           </label>
 
@@ -296,13 +298,15 @@
 			  },
 			  fields: {
 			    username: {
+			    	container: '#usernameMessage',
             validators: {
               notEmpty: {
-            	  message: '用户名不能为空'
+            	  message: '账号不能为空'
               }
             }
           },
           password: {
+        	  container: '#passwordMessage',
             validators: {
               notEmpty: {
             	  message: '密码不能为空'

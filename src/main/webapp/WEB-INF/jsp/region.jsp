@@ -145,7 +145,7 @@
 		        <div class="widget-header header-color-blue">
 		          <h5><i class="icon-table"></i>${name}列表</h5>
 	            <div class="widget-toolbar">
-	              <button class="btn btn-minier btn-purple" data-toggle="modal" data-target="#modal-add">新增<i class="icon-edit align-top icon-on-right"></i>
+	              <button class="btn btn-minier btn-purple" data-toggle="modal" data-target="#modal-add" data-whatever="add">新增<i class="icon-edit align-top icon-on-right"></i>
                 </button>
 	              <button class="btn btn-minier">导出<i class="icon-print align-top icon-on-right"></i>
 								</button>
@@ -384,6 +384,7 @@
           content += '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
           content += '  <a class="blue" href="#" title="详情"><i class="icon-zoom-in bigger-130"></i></a>';
           content += '  <a class="green" href="#" onclick="editRegion(\'' + data.id + '\');" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
+          //content += '  <a class="green" href="#modal-add" role="button" data-toggle="modal" data-region="' + data.id + '" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
           content += '  <a class="red" href="#" onclick="trashRegion(\'' + data.id + '\');" title="删除" ><i class="icon-trash bigger-130"></i></a>';
           content += '</div>';
           content += '<div class="visible-xs visible-sm hidden-md hidden-lg">';
@@ -439,6 +440,21 @@
           cell.innerHTML = i + 1;
         });
     }).draw();
+		
+		$('#modal-add').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget);
+		  var whatever = button.data('whatever');
+			$('#dataForm').data('bootstrapValidator').resetForm();
+			if (whatever) {
+				$('#nameAdd').val('');
+				$('#codeAdd').val('');
+				$('#seqAdd').val('');
+				$('#districtsAdd').children().not(':first').remove();
+		    $('#citysAdd').children().not(':first').remove();
+		    $('#provincesAdd').children().not(':first').remove();
+		    $('#countrysAdd').val('');
+			}
+		});
 	});
 	
 	function submitForm() {
@@ -546,13 +562,15 @@
 		}
 	}
 	function editRegion(regionId) {
-		$('#dataForm').data('bootstrapValidator').resetForm();
 		var url = '${ctx}/home/region/edit?random='+ Math.random();
     var params = {
         id: regionId
     };
     $.post(url, params, function(result) {
       if (result.status) {
+    	  $('#districtsAdd').children().not(':first').remove();
+    	  $('#citysAdd').children().not(':first').remove();
+    	  $('#provincesAdd').children().not(':first').remove();
     	  $('#regionId').val(regionId);
     	  var $select = null;
     	  for (var key in result.data) {
@@ -575,6 +593,7 @@
         	  $select = $('#provincesAdd');
         	  $('#countrysAdd').val(keys[2]);
           }
+    		  //$select.children().not(':first').remove();
     		  for (var i=0; i<values.length; i++) {
             $htmlOpt = $('<option value="' + values[i].id + '">' + values[i].name + '</option>');
             $select.append($htmlOpt);
