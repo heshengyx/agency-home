@@ -16,6 +16,7 @@ import com.house.agency.page.IPage;
 import com.house.agency.param.BuildingQueryParam;
 import com.house.agency.param.manage.BuildingManageQueryParam;
 import com.house.agency.service.IBuildingService;
+import com.house.agency.service.IConfigureService;
 import com.house.agency.service.IRegionService;
 import com.myself.common.exception.ServiceException;
 import com.myself.common.message.JsonMessage;
@@ -34,9 +35,15 @@ public class BuildingController extends BaseController {
 	@Autowired
 	private IRegionService regionService;
 	
+	@Autowired
+	private IConfigureService configureService;
+	
 	@RequestMapping("")
 	public String pageBuilding(Model model) {
 		setModel(model, regionService);
+		
+		String imageUrl = configureService.getValueByKey("image_url");
+		model.addAttribute("imageUrl", imageUrl);
 		return "building";
 	}
 	

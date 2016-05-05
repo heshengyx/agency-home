@@ -42,7 +42,11 @@
   
   .modal-body-content {padding-top: 5px;}
   
-  .ace-thumbnails>li {margin-left: 20px;} 
+  .ace-thumbnails>li {
+    width: 150px;
+    margin-left: 20px;
+    text-align: center;
+  } 
   
   .date-picker {width: 110px;}
   
@@ -392,7 +396,7 @@
                     <div class="tab-content">
                       <div id="buildingImages" class="tab-pane in active">
                         <ul class="ace-thumbnails" id="imageThumbnails">
-                          <li>
+                          <%-- <li>
                             <a href="${ctx}/images/gallery/image-4.jpg" data-rel="colorbox">
                               <img alt="150x150" src="${ctx}/images/gallery/thumb-4.jpg" />
                             </a>
@@ -407,39 +411,7 @@
                               <a href="#"><i class="icon-pencil"></i></a>
                               <a href="#"><i class="icon-remove red"></i></a>
                             </div>
-                          </li>
-                          <li>
-                            <a href="${ctx}/images/gallery/image-2.jpg" data-rel="colorbox">
-                              <img alt="150x150" src="${ctx}/images/gallery/thumb-2.jpg" />
-                            </a>
-                            <div class="tags">
-                              <span class="label-holder">
-                                <span class="label label-info arrowed">客厅</span>
-                              </span>
-                            </div>
-                            <div class="tools tools-top">
-                              <a href="#"><i class="icon-link"></i></a>
-                              <a href="#"><i class="icon-paper-clip"></i></a>
-                              <a href="#"><i class="icon-pencil"></i></a>
-                              <a href="#"><i class="icon-remove red"></i></a>
-                            </div>
-                          </li>
-                          <li>
-                            <a href="${ctx}/images/gallery/image-3.jpg" data-rel="colorbox">
-                              <img alt="150x150" src="${ctx}/images/gallery/thumb-3.jpg" />
-                            </a>
-                            <div class="tags">
-                              <span class="label-holder">
-                                <span class="label label-info arrowed">客厅</span>
-                              </span>
-                            </div>
-                            <div class="tools tools-top">
-                              <a href="#"><i class="icon-link"></i></a>
-                              <a href="#"><i class="icon-paper-clip"></i></a>
-                              <a href="#"><i class="icon-pencil"></i></a>
-                              <a href="#"><i class="icon-remove red"></i></a>
-                            </div>
-                          </li>
+                          </li> --%>                         
                         </ul>
                         <div class="clearfix"></div>
                       </div>
@@ -531,7 +503,7 @@
         $.colorbox.resize();
       }
     };
-    $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+    //$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
     $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");
     
     //$(".dropzone").dropzone({});
@@ -874,32 +846,49 @@
           $('#buildingNameImageText').text(data.buildingName);
           $('#buildingAddressImageText').text(data.buildingAddress);
           
-          var $imageThumbnails = $('#imageThumbnails');
-          var content = '';
-          content += '<li>';
-          content += '  <a href="${ctx}/images/gallery/image-4.jpg" data-rel="colorbox">';
-        	content += '    <img alt="150x150" src="${ctx}/images/gallery/thumb-4.jpg" />';
-        	content += '  </a>';
-        	content += '  <div class="tags">';
-        	content += '       <span class="label-holder">';
-        	content += '      <span class="label label-info arrowed">客厅</span>';
-        	content += '    </span>';
-        	content += '  </div>';
-        	content += '  <div class="tools tools-top">';
-        	content += '    <a href="#"><i class="icon-link"></i></a>';
-        	content += '    <a href="#"><i class="icon-paper-clip"></i></a>';
-        	content += '    <a href="#"><i class="icon-pencil"></i></a>';
-        	content += '    <a href="#"><i class="icon-remove red"></i></a>';
-        	content += '  </div>';
-        	content += '</li>';
-        	$imageThumbnails.append(content);
+          url = "${ctx}/home/image/queryData?random="+ Math.random();
+          params = {
+        		foreignId: buildingId
+          };
+          
+          $.post(url, params, function(result) {
+        	  if (result.status) {
+        		  $('.ace-thumbnails [data-rel="colorbox"]').colorbox().remove();
+        		  var $imageThumbnails = $('#imageThumbnails');
+        		  $imageThumbnails.children().remove();
+        		  var data = result.data;
+        		  for (var i=0; i<data.length; i++) {
+        			  var content = '';
+     	          content += '<li>';
+     	          content += '  <a href="${imageUrl}' + data[i].url + '" data-rel="colorbox">';
+     	          content += '    <img alt="150x150" src="${imageUrl}' + data[i].thumb + '" />';
+     	          //content += '  <a href="${ctx}/images/gallery/image-2.jpg" data-rel="colorbox" class="cboxElement">';
+     	        	//content += '     <img alt="150x150" src="${ctx}/images/gallery/thumb-2.jpg" />';
+     	          content += '  </a>';
+     	          content += '  <div class="tags">';
+     	          content += '       <span class="label-holder">';
+     	          content += '      <span class="label label-info arrowed">客厅</span>';
+     	          content += '    </span>';
+     	          content += '  </div>';
+     	          content += '  <div class="tools tools-top">';
+     	          content += '    <a href="#"><i class="icon-link"></i></a>';
+     	          content += '    <a href="#"><i class="icon-paper-clip"></i></a>';
+     	          content += '    <a href="#"><i class="icon-pencil"></i></a>';
+     	          content += '    <a href="#"><i class="icon-remove red"></i></a>';
+     	          content += '  </div>';
+     	          content += '</li>';
+     	          $imageThumbnails.append(content);
+        		  }
+        		  $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+        	  }
+          }, 'json');
           dropzoneImage(buildingId, '2');
         }
       }, 'json');
     });
 		$('#modal-image').on('hidden.bs.modal', function (event) {
 		  //alert(1);
-		})
+		});
 		
 		$('#editor1').ace_wysiwyg({
 	    toolbar:
@@ -1078,7 +1067,7 @@
 		//params += '&foreignId=' + buildingId;
 		//params += '&type=' + type;
 		try {
-		  $(".dropzone").dropzone({
+		  var $dropzone = new Dropzone('.dropzone', {
 		    url: '${ctx}/home/file/upload' + params,
 		    paramName: 'file', // The name that will be used to transfer the file
 		    acceptedFiles: 'image/*',
@@ -1097,9 +1086,6 @@
         },
         init: function() {
         	this.on("success", function(file, result) {
-        		console.log("success");
-            console.log(file);
-            console.log(result);
             if (file.status == 'success') {
               if (!result.status) {
             	  $('.dz-preview').removeClass('dz-success').addClass('dz-error');
@@ -1108,48 +1094,10 @@
             }
           });
         	this.on("complete", function(file) {
-            console.log("complete");
-            console.log(file);
             if (file.status == 'error') {
             	$('.dz-error-message span').html('上传失败');
             }
           });
-          /* this.on("removedfile", function(file) {
-        	  console.log(file);
-        	  if (file.status == 'success') {
-              //$('.dz-error-message span').html('上传失败');
-        		  var result = JSON.parse(file.xhr.response);
-              console.log(result);
-              dialog({
-                title: '消息',
-                content: '确定要删除吗?',
-                okValue: '确定',
-                ok: function () {
-                  var that = this;
-                  this.title('删除中…');
-                  var url = '${ctx}/home/buildingUnit/trash?random='+ Math.random();
-                  var params = {
-                      id: buildingUnitId
-                  };
-                  $.post(url, params, function(result) {
-                    dialog({
-                      title: '消息',
-                      content: result.message,
-                      okValue: '确定',
-                      ok: function () {
-                        tableBuildingUnit.ajax.reload();
-                        return true;
-                      }
-                    }).width(100).showModal();
-                  }, 'json');
-                  var _ref;
-                  return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
-                },
-                cancelValue: '取消',
-                cancel: function () {}
-              }).width(100).showModal();
-            }
-          }); */
         },
         removedfile: function(file) {
           if (file.status == 'success') {
@@ -1191,6 +1139,7 @@
           }
         }
 		  });
+		  //console.log($dropzone);
 		} catch(e) {
 		  //alert('Dropzone.js does not support older browsers!');
 		}
