@@ -3,8 +3,6 @@ package com.house.agency.controller;
 import java.io.File;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +36,7 @@ public class FileUploadController extends BaseController {
 	
 	@RequestMapping("/upload")
 	@ResponseBody
-	public Object upload(@RequestParam("file") MultipartFile multipartFile,
-			HttpServletRequest request, ImageParam param) {
+	public Object upload(@RequestParam("file") MultipartFile multipartFile, ImageParam param) {
 		JsonMessage jMessage = new JsonMessage();
 		/*String tempFolder = request.getSession().getServletContext()
 				.getRealPath(FileUtil.TEMP_FOLDER);
@@ -68,12 +65,11 @@ public class FileUploadController extends BaseController {
 	
 	@RequestMapping("/trash")
 	@ResponseBody
-	public Object trash(String id, HttpServletRequest request) {
+	public Object trash(String id) {
 		JsonMessage jMessage = new JsonMessage();
-		String path = request.getSession().getServletContext()
-				.getRealPath("/");
+		String uploadFolder = configureService.getValueByKey("upload_folder");
 		try {
-			imageService.trash(id, path);
+			imageService.trash(id, uploadFolder);
 			jMessage.setStatus(JsonMessage.TRUE);
 			jMessage.setMessage("删除成功");
 		} catch (Exception e) {

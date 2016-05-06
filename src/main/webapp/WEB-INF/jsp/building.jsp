@@ -44,6 +44,7 @@
   
   .ace-thumbnails>li {
     width: 150px;
+    height: 155px;
     margin-left: 20px;
     text-align: center;
   } 
@@ -379,15 +380,15 @@
                     </div>
                   </form> -->
                   <div class="tabbable">
-                    <ul class="nav nav-tabs" id="myTab">
+                    <ul class="nav nav-tabs" id="buildingTab">
                       <li class="active">
-                        <a data-toggle="tab" href="#buildingImages">
+                        <a href="#buildingImages" data-toggle="tab" aria-controls="buildingImages">
                           <i class="green icon-picture bigger-110"></i>楼盘图片
-                          <span class="badge badge-danger">3</span>
+                          <span class="badge badge-danger" id="imagesNum">0</span>
                         </a>
                       </li>
                       <li>
-                        <a data-toggle="tab" href="#profile">
+                        <a href="#uploadImage" data-toggle="tab" aria-controls="uploadImage">
                           <i class="purple icon-cloud-upload bigger-110"></i>上传图片
                         </a>
                       </li>
@@ -416,7 +417,7 @@
                         <div class="clearfix"></div>
                       </div>
 
-                      <div id="profile" class="tab-pane">
+                      <div id="uploadImage" class="tab-pane">
                         <div class="alert alert-info">
                           <i class="icon-hand-right"></i>
                                                                     楼盘图片上传格式为：.jpg、.gif、.png
@@ -473,6 +474,26 @@
 	var d = null;
 	var tableBuilding = null;
 	var tableBuildingUnit = null;
+	var colorbox_params = {
+    reposition: true,
+    scalePhotos: true,
+    scrolling: false,
+    previous: '<i class="icon-arrow-left"></i>',
+    next: '<i class="icon-arrow-right"></i>',
+    close: '&times;',
+    current: '{current} of {total}',
+    maxWidth: '100%',
+    maxHeight: '100%',
+    onOpen: function(){
+      document.body.style.overflow = 'hidden';
+    },
+    onClosed: function(){
+      document.body.style.overflow = 'auto';
+    },
+    onComplete: function(){
+      $.colorbox.resize();
+    }
+  };
 	$(document).ready(function() {
 		/* $("#bootbox-confirm").on(ace.click_event, function() {
       bootbox.confirm("Are you sure?", function(result) {
@@ -483,28 +504,8 @@
     }); */
     Dropzone.options.myAwesomeDropzone = false;
     Dropzone.autoDiscover = false;
-    var colorbox_params = {
-      reposition: true,
-      scalePhotos: true,
-      scrolling: false,
-      previous: '<i class="icon-arrow-left"></i>',
-      next: '<i class="icon-arrow-right"></i>',
-      close: '&times;',
-      current: '{current} of {total}',
-      maxWidth: '100%',
-      maxHeight: '100%',
-      onOpen: function(){
-        document.body.style.overflow = 'hidden';
-      },
-      onClosed: function(){
-        document.body.style.overflow = 'auto';
-      },
-      onComplete: function(){
-        $.colorbox.resize();
-      }
-    };
     //$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-    $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");
+    //$("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");
     
     //$(".dropzone").dropzone({});
     /* var params = '?random=' + Math.random();
@@ -696,7 +697,7 @@
           content += '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
           content += '  <a class="blue" href="#" title="详情"><i class="icon-zoom-in bigger-130"></i></a>';
           content += '  <a class="green" href="#" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
-          content += '  <a class="red" href="#" onclick="buildingUnitTrash(\'' + data.id + '\');" title="删除"><i class="icon-trash bigger-130"></i></a>';
+          content += '  <a class="red" href="#" onclick="trashBuildingUnit(\'' + data.id + '\');" title="删除"><i class="icon-trash bigger-130"></i></a>';
           content += '</div>';
           content += '<div class="visible-xs visible-sm hidden-md hidden-lg">';
           content += '  <div class="inline position-relative">';
@@ -845,43 +846,7 @@
           var data = result.data;
           $('#buildingNameImageText').text(data.buildingName);
           $('#buildingAddressImageText').text(data.buildingAddress);
-          
-          url = "${ctx}/home/image/queryData?random="+ Math.random();
-          params = {
-        		foreignId: buildingId
-          };
-          
-          $.post(url, params, function(result) {
-        	  if (result.status) {
-        		  $('.ace-thumbnails [data-rel="colorbox"]').colorbox().remove();
-        		  var $imageThumbnails = $('#imageThumbnails');
-        		  $imageThumbnails.children().remove();
-        		  var data = result.data;
-        		  for (var i=0; i<data.length; i++) {
-        			  var content = '';
-     	          content += '<li>';
-     	          content += '  <a href="${imageUrl}' + data[i].url + '" data-rel="colorbox">';
-     	          content += '    <img alt="150x150" src="${imageUrl}' + data[i].thumb + '" />';
-     	          //content += '  <a href="${ctx}/images/gallery/image-2.jpg" data-rel="colorbox" class="cboxElement">';
-     	        	//content += '     <img alt="150x150" src="${ctx}/images/gallery/thumb-2.jpg" />';
-     	          content += '  </a>';
-     	          content += '  <div class="tags">';
-     	          content += '       <span class="label-holder">';
-     	          content += '      <span class="label label-info arrowed">客厅</span>';
-     	          content += '    </span>';
-     	          content += '  </div>';
-     	          content += '  <div class="tools tools-top">';
-     	          content += '    <a href="#"><i class="icon-link"></i></a>';
-     	          content += '    <a href="#"><i class="icon-paper-clip"></i></a>';
-     	          content += '    <a href="#"><i class="icon-pencil"></i></a>';
-     	          content += '    <a href="#"><i class="icon-remove red"></i></a>';
-     	          content += '  </div>';
-     	          content += '</li>';
-     	          $imageThumbnails.append(content);
-        		  }
-        		  $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-        	  }
-          }, 'json');
+          queryBuildingImages();
           dropzoneImage(buildingId, '2');
         }
       }, 'json');
@@ -926,6 +891,15 @@
 	      fileUploadError: showErrorAlert
 	    }
 	  }).prev().addClass('wysiwyg-style2');
+		
+		$('#buildingTab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      //e.target // newly activated tab
+      //e.relatedTarget // previous active tab
+      var target = $(e.target).attr("aria-controls");
+      if (target == 'buildingImages') {
+    	  queryBuildingImages();
+      }
+		});
 	});
 	function showErrorAlert(reason, detail) {
     var msg='';
@@ -971,6 +945,44 @@
       title: '栋座载入中...'
     });
     d.showModal();
+	}
+	function queryBuildingImages() {
+		var url = "${ctx}/home/image/queryData?random="+ Math.random();
+    var params = {
+      foreignId: $('#buildingId').val()
+    };
+    
+    $.post(url, params, function(result) {
+      if (result.status) {
+        $('.ace-thumbnails [data-rel="colorbox"]').colorbox().remove();
+        var $imageThumbnails = $('#imageThumbnails');
+        $imageThumbnails.children().remove();
+        var data = result.data;
+        $('#imagesNum').text(data.length);
+        for (var i=0; i<data.length; i++) {
+          var content = '';
+          content += '<li>';
+          content += '  <a href="${imageUrl}' + data[i].url + '" data-rel="colorbox">';
+          content += '    <img alt="150x150" src="${imageUrl}' + data[i].thumb + '" />';
+          content += '  </a>';
+          content += '  <div class="tags">';
+          content += '    <span class="label-holder">';
+          //content += '      <span class="label label-info arrowed">' + data[i].title + '</span>';
+          content += '      <input type="text" name="" value="'+data[i].title+'">';
+          content += '    </span>';
+          content += '  </div>';
+          content += '  <div class="tools tools-top">';
+          //content += '    <a href="#"><i class="icon-link"></i></a>';
+          //content += '    <a href="#"><i class="icon-paper-clip"></i></a>';
+          //content += '    <a href="#"><i class="icon-pencil"></i></a>';
+          content += '    <a href="#" onclick="trashImage(\'' + data[i].id + '\')"><i class="icon-remove red"></i></a>';
+          content += '  </div>';
+          content += '</li>';
+          $imageThumbnails.append(content);
+        }
+        $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+      }
+    }, 'json');
 	}
 	function queryRegions(regionId, name, _this, fieldIds) {
 		addActivedName(fieldIds[0], regionId, name, _this);
@@ -1033,14 +1045,42 @@
       }
     });
 	}
-	function buildingUnitTrash(buildingUnitId) {
+	function trashImage(imageId) {
+		dialog({
+      title: '消息',
+      content: '确定要删除吗?',
+      okValue: '确定',
+      ok: function () {
+    	  var that = this;
+         that.title('删除中…');
+         var url = '${ctx}/home/file/trash?random='+ Math.random();
+         var params = {
+             id: imageId
+         };
+         $.post(url, params, function(result) {
+           dialog({
+             title: '消息',
+             content: result.message,
+             okValue: '确定',
+             ok: function () {
+            	 queryBuildingImages();
+               return true;
+             }
+           }).width(100).showModal();
+         }, 'json');
+      },
+      cancelValue: '取消',
+      cancel: function () {}
+		}).width(100).showModal();
+	}
+	function trashBuildingUnit(buildingUnitId) {
 		dialog({
       title: '消息',
       content: '确定要删除吗?',
       okValue: '确定',
       ok: function () {
         var that = this;
-        this.title('删除中…');
+        that.title('删除中…');
         var url = '${ctx}/home/buildingUnit/trash?random='+ Math.random();
         var params = {
             id: buildingUnitId
@@ -1067,7 +1107,7 @@
 		//params += '&foreignId=' + buildingId;
 		//params += '&type=' + type;
 		try {
-		  var $dropzone = new Dropzone('.dropzone', {
+			$(".dropzone").dropzone({
 		    url: '${ctx}/home/file/upload' + params,
 		    paramName: 'file', // The name that will be used to transfer the file
 		    acceptedFiles: 'image/*',
