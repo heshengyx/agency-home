@@ -6,6 +6,8 @@
   <link href="${ctx}/css/jquery.autocompleter.css" rel="stylesheet">
   <link href="${ctx}/css/autocompleter.css" rel="stylesheet">
   <link href="${ctx}/css/datepicker.css" rel="stylesheet">
+  <link href="${ctx}/css/dropzone.css" rel="stylesheet">
+  <link href="${ctx}/css/colorbox.css" rel="stylesheet">
   <css>
   <style>
   .hr-line {
@@ -41,6 +43,34 @@
   .modal-body-content {padding-top: 5px;}
   
   .date-picker {width: 110px;}
+  
+  .ace-thumbnails>li {
+    width: 170px;
+    /* height: 155px; */
+    margin-left: 10px; 
+    text-align: center;
+    border: 0;
+  } 
+  .thumbnail>a {
+    display: block;
+    height: 115px;
+    overflow: hidden;
+  }
+  .thumbnail .caption {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  
+  .dropzone .dz-preview, 
+  .dropzone-previews .dz-preview {margin-left: 27px;}
+  .dropzone .dz-preview .error-message-tip, 
+  .dropzone-previews .dz-preview .error-message-tip {
+    top: 0;
+    left: 0;
+    min-width: 0;
+  }
   </style>
   </css>
 </head>
@@ -199,7 +229,9 @@
       <input id="townsValue" type="hidden">
       <input id="districtsAddValue" type="hidden">
       <input id="townsAddValue" type="hidden">
-      <input id="houseId" type="hidden">
+      <input id="tradeId" type="hidden" value="0">
+      <input id="houseId" type="hidden" value="0">
+      <input id="buildingId" type="hidden" value="0">
       
 	    <div class="row">
 	      <div class="col-xs-12 widget-container-span">
@@ -230,14 +262,14 @@
 			          <table id="tableHouse" class="table table-striped table-bordered table-hover" width="100%">
 			            <thead>
 			              <tr>
-			                <th></th>
+			                <th width="50"></th>
 			                <th class="text-center" width="50"><label><input type="checkbox" class="ace" /><span class="lbl"></span></label></th>
 			                <th>楼盘信息</th>
 			                <th class="text-right" width="90">户型</th>
 			                <th width="110">价格（万）</th>
 			                <th width="110">面积（㎡）</th>
 			                <th width="130"><i class="icon-time hidden-480"></i>发布时间</th>
-			                <th class="text-center hidden-480" width="50">状态</th>
+			                <th class="text-center hidden-480" width="80">状态</th>
 			                <th class="text-center" width="110">操作</th>
 			              </tr>
 			            </thead>
@@ -345,7 +377,7 @@
                           <div class="form-group form-row">
                             <label class="col-md-2 control-label no-padding-right">描述：</label>
                             <div class="col-md-10">
-                              <div class="wysiwyg-editor" id="editor1"></div>
+                              <div class="wysiwyg-editor" id="content"></div>
                             </div>
                           </div>
 				                </form>
@@ -356,13 +388,102 @@
                 </div>
 
                 <div class="modal-footer">
-                  <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i>关闭</button>
-                  <button class="btn btn-sm btn-primary" id="btnHouseSave"><i class="icon-ok"></i>保存</button>
+                  <button class="btn btn-xs" data-dismiss="modal"><i class="icon-remove"></i>关闭</button>
+                  <button class="btn btn-xs btn-primary" id="btnHouseSave"><i class="icon-ok"></i>保存</button>
                 </div>
               </div>
             </div>
           </div>
           <!-- model-add -->
+          <!-- modal-image -->
+          <div id="modal-image" class="modal fade modal-pane" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header no-padding">
+                  <div class="table-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                      <span class="white">&times;</span>
+                    </button>
+                    <span id="titleText"></span>
+                  </div>
+                </div>
+
+                <div class="modal-body no-padding">
+                  <div class="tabbable">
+                    <ul class="nav nav-tabs img-tabs">
+                      <li class="active">
+                        <a href="#activeImages" data-toggle="tab" aria-controls="activeImages">
+                          <i class="green icon-picture bigger-110"></i>当前图片
+                          <span class="badge badge-danger" id="activeImagesNum">0</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#buildingImages" data-toggle="tab" aria-controls="buildingImages">
+                          <i class="green icon-picture bigger-110"></i>楼盘图片
+                          <span class="badge badge-danger" id="buildingImagesNum">0</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#houseImages" data-toggle="tab" aria-controls="houseImages">
+                          <i class="green icon-picture bigger-110"></i>房源图片
+                          <span class="badge badge-danger" id="houseImagesNum">0</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#myImages" data-toggle="tab" aria-controls="myImages">
+                          <i class="green icon-picture bigger-110"></i>我的图片
+                          <span class="badge badge-danger" id="myImagesNum">0</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#uploadImage" data-toggle="tab" aria-controls="uploadImage">
+                          <i class="purple icon-cloud-upload bigger-110"></i>上传图片
+                        </a>
+                      </li>
+                    </ul>
+
+                    <div class="tab-content">
+                      <div id="activeImages" class="tab-pane in active">
+                        <ul class="ace-thumbnails" id="activeImageThumbnails">                       
+                        </ul>
+                        <div class="clearfix"></div>
+                      </div>
+                      <div id="buildingImages" class="tab-pane">
+                        <ul class="ace-thumbnails" id="buildingImageThumbnails">                       
+                        </ul>
+                        <div class="clearfix"></div>
+                      </div>
+                      <div id="houseImages" class="tab-pane">
+                        <ul class="ace-thumbnails" id="houseImageThumbnails">                       
+                        </ul>
+                        <div class="clearfix"></div>
+                      </div>
+                      <div id="myImages" class="tab-pane">
+                        <ul class="ace-thumbnails" id="myImageThumbnails">                       
+                        </ul>
+                        <div class="clearfix"></div>
+                      </div>
+                      <div id="uploadImage" class="tab-pane">
+                        <div class="alert alert-info">
+                          <i class="icon-hand-right"></i>
+                                                                    房源图片上传格式为：.jpg、.gif、.png
+                          <button class="close" data-dismiss="alert">
+                            <i class="icon-remove"></i>
+                          </button>
+                        </div>
+                        <form action="//dummy.html" class="dropzone">
+                          <div class="fallback">
+                            <input name="file" type="file" multiple="" />
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <!-- modal-image -->
 	        <!-- PAGE CONTENT ENDS -->
 	      </div><!-- /.col -->
 	    </div><!-- /.row -->
@@ -376,11 +497,35 @@
   <script src="${ctx}/js/date-time/bootstrap-datepicker.min.js"></script>
   <script src="${ctx}/js/jquery.hotkeys.min.js"></script>
   <script src="${ctx}/js/bootstrap-wysiwyg.min.js"></script>
+  <script src="${ctx}/js/dropzone.min.js"></script>
+  <script src="${ctx}/js/jquery.colorbox-min.js"></script>
+  <script src="${ctx}/js/fuelux/fuelux.spinner.min.js"></script>
 	<script>
 	var d = null;
 	var tableHouse = null;
+	var colorbox_params = {
+    reposition: true,
+    scalePhotos: true,
+    scrolling: false,
+    previous: '<i class="icon-arrow-left"></i>',
+    next: '<i class="icon-arrow-right"></i>',
+    close: '&times;',
+    current: '{current} of {total}',
+    maxWidth: '100%',
+    maxHeight: '100%',
+    onOpen: function(){
+      document.body.style.overflow = 'hidden';
+    },
+    onClosed: function(){
+      document.body.style.overflow = 'auto';
+    },
+    onComplete: function(){
+      $.colorbox.resize();
+    }
+  };
 	$(document).ready(function() {
-		//http://fonts.gstatic.com/s/opensans/v13/DXI1ORHCpsQm3Vp6mXoaTegdm0LZdjqr5-oayXSOefg.woff2
+		Dropzone.options.myAwesomeDropzone = false;
+	  Dropzone.autoDiscover = false;
 		$('#townsPane').hide();
 		$('#townsPaneAdd').hide();
 		tableHouse = $('#tableHouse').DataTable({
@@ -455,8 +600,10 @@
           return content;
         }},
         { 'orderable': false, "targets": 8, "render": function(data, type, row) {
+        	var contentData = data.buildingName + '<small>（' + data.districtName + '-' + data.townName + '）' + data.floorName + '，' + data.card + '</small>';
         	var content = '<div class="text-center">';
-          content += '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
+          content += '  <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
+          content += '  <a class="blue" href="#modal-image" role="button" data-toggle="modal" data-title="' + contentData + '" data-trade="' + data.tradeId + '" data-house="' + data.houseId + '" data-building="' + data.buildingId + '" title="图片"><i class="icon-picture bigger-130"></i></a><br>';
           content += '  <a class="blue" href="#" title="详情"><i class="icon-zoom-in bigger-130"></i></a>';
           content += '  <a class="green" href="#" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
           content += '  <a class="red" href="#" onclick="trashHouse(\'' + data.tradeId + '\');"  title="删除"><i class="icon-trash bigger-130"></i></a>';
@@ -505,6 +652,26 @@
     queryBuildingName('buildingNameAdd', 'buildingUnitAdd', 'districtsAddValue', 'townsAddValue');
     changeBuildingUnit('buildingUnit', 'house');
     changeBuildingUnit('buildingUnitAdd', 'houseAdd');
+    
+    $('#modal-image').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var title = button.data('title');
+      $('#titleText').html(title);
+      var tradeId = button.data('trade');
+      $('#tradeId').val(tradeId);
+      var houseId = button.data('house');
+      $('#houseId').val(houseId);
+      var buildingId = button.data('building');
+      $('#buildingId').val(buildingId);
+      queryActiveImages();
+      queryBuildingImages();
+      queryHouseImages();
+      queryMyImages();
+      dropzoneImage(houseId, '1');
+    });
+    $('#modal-image').on('hidden.bs.modal', function (event) {
+      //alert(1);
+    });
 		
     $('.date-picker').datepicker({autoclose:true}).next().on(ace.click_event, function(){
         $(this).prev().focus();
@@ -574,11 +741,14 @@
 			var houseId = $('#houseId').val();
       var title = $('#titleAdd').val();
       var price = $('#priceAdd').val();
+      var content = $('#content').html();
       var url = '${ctx}/home/trade/save?random='+ Math.random();
       var params = {
     		  houseId: houseId,
     		  title: title,
-    		  price: price
+    		  price: price * 100,
+    		  type: '1',
+    		  content: content
       };
       $.post(url, params, function(result) {
     	  $('#modal-add').modal('hide');
@@ -594,7 +764,7 @@
       }, 'json');
 		});
 		
-		$('#editor1').ace_wysiwyg({
+		$('#content').ace_wysiwyg({
 	    toolbar:
 	    [
 	      'font',
@@ -641,6 +811,19 @@
 				$('#faceAdd').val(values[5]);
 			}
 		});
+		
+		$('.img-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      var target = $(e.target).attr("aria-controls");
+      if (target == 'activeImages') {
+    	  queryActiveImages();
+      } else if (target == 'buildingImages') {
+        queryBuildingImages();
+      } else if (target == 'houseImages') {
+    	  queryHouseImages();
+      } else if (target == 'myImages') {
+        queryMyImages();
+      }
+    });
 	});
 	function showErrorAlert(reason, detail) {
     var msg='';
@@ -761,33 +944,446 @@
 	  });
 	}
 	function trashHouse(tradeId) {
-	    dialog({
-	      title: '消息',
-	      content: '确定要删除吗?',
-	      okValue: '确定',
-	      ok: function () {
-	        var that = this;
-	        this.title('删除中…');
-	        var url = '${ctx}/home/trade/trash?random='+ Math.random();
-	        var params = {
-	            id: tradeId
-	        };
-	        $.post(url, params, function(result) {
-	          dialog({
-	            title: '消息',
-	            content: result.message,
-	            okValue: '确定',
-	            ok: function () {
-	              tableHouse.ajax.reload();
-	              return true;
-	            }
-	          }).width(100).showModal();
-	        }, 'json');
-	      },
-	      cancelValue: '取消',
-	      cancel: function () {}
-	    }).width(100).showModal();
-	  }
+    dialog({
+      title: '消息',
+      content: '确定要删除吗?',
+      okValue: '确定',
+      ok: function () {
+        var that = this;
+        this.title('删除中…');
+        var url = '${ctx}/home/trade/trash?random='+ Math.random();
+        var params = {
+            id: tradeId
+        };
+        $.post(url, params, function(result) {
+          dialog({
+            title: '消息',
+            content: result.message,
+            okValue: '确定',
+            ok: function () {
+              tableHouse.ajax.reload();
+              return true;
+            }
+          }).width(100).showModal();
+        }, 'json');
+      },
+      cancelValue: '取消',
+      cancel: function () {}
+    }).width(100).showModal();
+  }
+	function queryActiveImages() {
+    var url = "${ctx}/home/image/queryHomeData?random="+ Math.random();
+    var params = {
+      tradeId: $('#tradeId').val()
+    };
+    
+    $.post(url, params, function(result) {
+      if (result.status) {
+        $('#activeImageThumbnails [data-rel="colorboxActive"]').colorbox().remove();
+        var $imageThumbnails = $('#activeImageThumbnails');
+        $imageThumbnails.children().remove();
+        var data = result.data;
+        $('#activeImagesNum').text(data.length);
+        for (var i=0; i<data.length; i++) {
+          var checked = '';
+          var cover = data[i].cover;
+          if (+cover) {
+            checked = 'checked';
+          }
+          var content = '';
+          content += '<li>';
+          content += ' <div class="thumbnail">';
+          content += '  <a href="${imageUrl}' + data[i].url + '" title="' + data[i].title + '" data-rel="colorboxActive">';
+          content += '   <img src="${imageUrl}' + data[i].thumb + '" alt="...">';
+          content += '  </a>';
+          content += '  <div class="caption">';
+          content += '    <h6><input class="form-control" type="text" id="inputActive_' + data[i].activeId + '" value="' + data[i].title + '" readonly></h6>';
+          content += '    <label class="switch-box">';
+          content += '      <input class="ace ace-switch ace-switch-3" type="checkbox" id="statusActive_' + data[i].activeId + '" onclick="coverImage(this, \'' + data[i].activeId + '\', \'' + data[i].id + '\')" value="' + data[i].activeId + '" ' + checked + '>';
+          content += '      <span class="lbl"></span>';
+          content += '    </label>';
+          content += '    <p><input type="text" id="spinnerActive_' + data[i].activeId + '" /></p>';
+          content += '    <p class="action-buttons"><a class="green" href="#" onclick="saveActiveImage(\'' + data[i].activeId + '\')" title="保存"><i class="icon-save bigger-130"></i></a><a class="red" href="#" onclick="trashActiveImage(\'' + data[i].activeId + '\');" title="删除"><i class="icon-trash bigger-130"></i></a></p>';
+          content += '  </div>';
+          content += ' </div>';
+          content += '</li>';
+          $imageThumbnails.append(content);
+          var sort = data[i].sort;
+          $('#spinnerActive_' + data[i].activeId).ace_spinner({value:sort,min:0,max:200,step:1, btn_up_class:'btn-info' , btn_down_class:'btn-info'})
+          .on('change', function(){
+            //alert(this.value)
+          });
+        }
+        $('#activeImageThumbnails [data-rel="colorboxActive"]').colorbox(colorbox_params);
+      }
+    }, 'json');
+  }
+	function coverImage(_this, activeId, imageId) {
+		var cover = '0';
+		if ($(_this).is(':checked')) {
+			cover = '1';
+		}
+		var url = '${ctx}/home/tradeImage/cover?random='+ Math.random();
+    var params = {
+        id: activeId,
+        tradeId: $('#tradeId').val(),
+        imageId: imageId,
+        cover: cover
+    };
+    $.post(url, params, function(result) {
+      dialog({
+       title: '消息',
+       content: result.message,
+       okValue: '确定',
+       ok: function () {
+    	   if (result.status) {
+    		   queryActiveImages();
+         }
+         return true;
+       }
+     }).width(100).showModal();
+    }, 'json');
+	}
+	function saveActiveImage(activeId) {
+    var url = '${ctx}/home/tradeImage/update?random='+ Math.random();
+    var params = {
+        id: activeId,
+        sort: $('#spinnerActive_' + activeId).val()
+    };
+    $.post(url, params, function(result) {
+      dialog({
+       title: '消息',
+       content: result.message,
+       okValue: '确定',
+       ok: true
+     }).width(100).showModal();
+    }, 'json');
+  }
+	function trashActiveImage(activeId) {
+    dialog({
+      title: '消息',
+      content: '确定要删除吗?',
+      okValue: '确定',
+      ok: function () {
+        var that = this;
+         that.title('删除中…');
+         var url = '${ctx}/home/tradeImage/trash?random='+ Math.random();
+         var params = {
+             id: activeId
+         };
+         $.post(url, params, function(result) {
+           dialog({
+             title: '消息',
+             content: result.message,
+             okValue: '确定',
+             ok: function () {
+            	 if (result.status) {
+            		 queryActiveImages();
+            	 }
+               return true;
+             }
+           }).width(100).showModal();
+         }, 'json');
+      },
+      cancelValue: '取消',
+      cancel: function () {}
+    }).width(100).showModal();
+  }
+	function queryHouseImages() {
+    var url = "${ctx}/home/image/queryData?random="+ Math.random();
+    var params = {
+      foreignId: $('#houseId').val()
+    };
+    
+    $.post(url, params, function(result) {
+      if (result.status) {
+        $('#houseImageThumbnails [data-rel="colorboxHouse"]').colorbox().remove();
+        var $imageThumbnails = $('#houseImageThumbnails');
+        $imageThumbnails.children().remove();
+        var data = result.data;
+        $('#houseImagesNum').text(data.length);
+        for (var i=0; i<data.length; i++) {
+        	var checked = '';
+        	var activeId = data[i].activeId;
+        	if (activeId) {
+        		checked = 'checked';
+        	} else {
+            activeId = '';
+          }
+          var content = '';
+          content += '<li>';
+          content += ' <div class="thumbnail">';
+          content += '  <a href="${imageUrl}' + data[i].url + '" title="' + data[i].title + '" data-rel="colorboxHouse">';
+          content += '   <img src="${imageUrl}' + data[i].thumb + '" alt="...">';
+          content += '  </a>';
+          content += '  <div class="caption">';
+          content += '    <h6><span id="titleHouse_' + data[i].id + '">' + data[i].title + '</span></h6>';
+          content += '    <label class="switch-box">';
+          content += '      <input class="ace ace-switch ace-switch-3" type="checkbox" id="statusHouse_' + data[i].id + '" onclick="switchImage(this, \'' + data[i].id + '\')" value="' + activeId + '" ' + checked + '>';
+          content += '      <span class="lbl"></span>';
+          content += '    </label>';
+          content += '   </div>';
+          content += ' </div>';
+          content += '</li>';
+          $imageThumbnails.append(content);
+        }
+        $('#houseImageThumbnails [data-rel="colorboxHouse"]').colorbox(colorbox_params);
+      }
+    }, 'json');
+  }
+	function queryMyImages() {
+    var url = "${ctx}/home/image/queryMyData?random="+ Math.random();
+    var params = {
+      foreignId: $('#houseId').val()
+    };
+    
+    $.post(url, params, function(result) {
+      if (result.status) {
+        $('#myImageThumbnails [data-rel="colorboxMy"]').colorbox().remove();
+        var $imageThumbnails = $('#myImageThumbnails');
+        $imageThumbnails.children().remove();
+        var data = result.data;
+        $('#myImagesNum').text(data.length);
+        for (var i=0; i<data.length; i++) {
+          var checked = '';
+          var activeId = data[i].activeId;
+          if (activeId) {
+            checked = 'checked';
+          } else {
+            activeId = '';
+          }
+          var content = '';
+          content += '<li>';
+          content += ' <div class="thumbnail">';
+          content += '  <a href="${imageUrl}' + data[i].url + '" title="' + data[i].title + '" data-rel="colorboxMy">';
+          content += '   <img src="${imageUrl}' + data[i].thumb + '" alt="...">';
+          content += '  </a>';
+          content += '  <div class="caption">';
+          content += '    <h6><span id="titleMy_' + data[i].id + '">' + data[i].title + '</span><input class="form-control" type="text" id="inputMy_' + data[i].id + '" value="' + data[i].title + '"></h6>';
+          content += '    <label class="switch-box">';
+          content += '      <input class="ace ace-switch ace-switch-3" type="checkbox" id="statusMy_' + data[i].id + '" onclick="switchImage(this, \'' + data[i].id + '\')" value="' + activeId + '" ' + checked + '>';
+          content += '      <span class="lbl"></span>';
+          content += '    </label>';
+          content += '    <p class="action-buttons"><a class="green" href="#" onclick="saveImage(\'' + data[i].id + '\')" title="保存"><i class="icon-save bigger-130"></i></a><a class="red" href="#" onclick="trashImage(\'' + data[i].id + '\');" title="删除"><i class="icon-trash bigger-130"></i></a></p>';
+          content += '   </div>';
+          content += ' </div>';
+          content += '</li>';
+          $imageThumbnails.append(content);
+          $('#titleMy_' + data[i].id).hide();
+        }
+        $('#myImageThumbnails [data-rel="colorboxMy"]').colorbox(colorbox_params);
+      }
+    }, 'json');
+  }
+	function queryBuildingImages() {
+    var url = "${ctx}/home/image/queryData?random="+ Math.random();
+    var params = {
+      foreignId: $('#buildingId').val()
+    };
+    
+    $.post(url, params, function(result) {
+      if (result.status) {
+        $('#buildingImageThumbnails [data-rel="colorboxBuilding"]').colorbox().remove();
+        var $imageThumbnails = $('#buildingImageThumbnails');
+        $imageThumbnails.children().remove();
+        var data = result.data;
+        $('#buildingImagesNum').text(data.length);
+        for (var i=0; i<data.length; i++) {
+        	var checked = '';
+          var activeId = data[i].activeId;
+          if (activeId) {
+            checked = 'checked';
+          } else {
+        	  activeId = '';
+          }
+          var content = '';
+          content += '<li>';
+          content += ' <div class="thumbnail">';
+          content += '  <a href="${imageUrl}' + data[i].url + '" title="' + data[i].title + '" data-rel="colorboxBuilding">';
+          content += '   <img src="${imageUrl}' + data[i].thumb + '" alt="...">';
+          content += '  </a>';
+          content += '  <div class="caption">';
+          content += '    <h6><span id="titleBuilding_' + data[i].id + '">' + data[i].title + '</span></h6>';
+          content += '    <label class="switch-box">';
+        	content += '      <input class="ace ace-switch ace-switch-3" type="checkbox" id="statusBuilding_' + data[i].id + '" onclick="switchImage(this, \'' + data[i].id + '\')" value="' + activeId + '" ' + checked + '>';
+          content += '      <span class="lbl"></span>';
+          content += '    </label>';
+          content += '   </div>';
+          content += ' </div>';
+          content += '</li>';
+          $imageThumbnails.append(content);
+        }
+        $('#buildingImageThumbnails [data-rel="colorboxBuilding"]').colorbox(colorbox_params);
+      }
+    }, 'json');
+  }
+	function switchImage(_this, imageId) {
+		if ($(_this).is(':checked')) {
+			saveTradeImage(_this, imageId);
+		} else {
+			trashTradeImage(_this);
+		}
+	}
+	function saveTradeImage(_this, imageId) {
+		var url = "${ctx}/home/tradeImage/save?random="+ Math.random();
+    var params = {
+        tradeId: $('#tradeId').val(),
+        imageId: imageId
+    };
+    $.post(url, params, function(result) {
+    	if (result.status) {
+    		$(_this).val(result.data);
+    	}
+    	dialog({
+        title: '消息',
+        content: result.message,
+        okValue: '确定',
+        ok: true
+      }).width(100).showModal();
+    }, 'json');
+	}
+	function trashTradeImage(_this) {
+		var url = "${ctx}/home/tradeImage/trash?random="+ Math.random();
+    var params = {
+        id: $(_this).val()
+    };
+    $.post(url, params, function(result) {
+    	if (result.status) {
+        $(_this).val('');
+      } 
+    	dialog({
+        title: '消息',
+        content: result.message,
+        okValue: '确定',
+        ok: true
+      }).width(100).showModal();
+    }, 'json');
+	}
+	function saveImage(imageId) {
+    var url = '${ctx}/home/image/update?random='+ Math.random();
+    var params = {
+        id: imageId,
+        title: $('#inputMy_' + imageId).val()
+    };
+    $.post(url, params, function(result) {
+      dialog({
+       title: '消息',
+       content: result.message,
+       okValue: '确定',
+       ok: true
+     }).width(100).showModal();
+    }, 'json');
+  }
+	function trashImage(imageId) {
+    dialog({
+      title: '消息',
+      content: '确定要删除吗?',
+      okValue: '确定',
+      ok: function () {
+        var that = this;
+         that.title('删除中…');
+         var url = '${ctx}/home/file/trash?random='+ Math.random();
+         var params = {
+             id: imageId
+         };
+         $.post(url, params, function(result) {
+           dialog({
+             title: '消息',
+             content: result.message,
+             okValue: '确定',
+             ok: function () {
+               if (result.status) {
+                 queryMyImages();
+               }
+               return true;
+             }
+           }).width(100).showModal();
+         }, 'json');
+      },
+      cancelValue: '取消',
+      cancel: function () {}
+    }).width(100).showModal();
+  }
+	function dropzoneImage(foreignId, type) {
+    var params = '?random=' + Math.random();
+    try {
+      $(".dropzone").dropzone({
+        url: '${ctx}/home/file/uploadMy' + params,
+        paramName: 'file', // The name that will be used to transfer the file
+        acceptedFiles: 'image/*',
+        maxFilesize: 0.5, // MB
+        addRemoveLinks : true,
+        dictDefaultMessage: '<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> 选择图片</span> 上传 \<span class="smaller-80 grey">(或者点击下面图标)</span> <br /> \<i class="upload-icon icon-cloud-upload blue icon-3x"></i>',
+        dictResponseError: '上传失败',
+        //dictInvalidFileType: '你不能上传该类型文件,文件类型只能是*.xls',
+        dictRemoveFile: '删除文件',
+        dictCancelUpload: '取消上传',
+        dictCancelUploadConfirmation: '你确定要取消上传吗?',
+        previewTemplate: '<div class="dz-preview dz-file-preview">\n  <div class="dz-details">\n    <div class="dz-filename"><span data-dz-name></span></div>\n    <div class="dz-size" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class="progress progress-small progress-striped active"><div class="progress-bar progress-bar-success" data-dz-uploadprogress></div></div>\n  <div class="dz-success-mark"><span></span></div>\n  <div class="dz-error-mark"><span></span></div>\n  <div class="dz-error-message error-message-tip"><span data-dz-errormessage></span></div>\n</div>',
+        params: {
+          foreignId: foreignId,
+          type: type
+        },
+        init: function() {
+          this.on("success", function(file, result) {
+            if (file.status == 'success') {
+              if (!result.status) {
+                $('.dz-preview').removeClass('dz-success').addClass('dz-error');
+                $('.dz-error-message span').html('上传失败');
+              }
+            }
+          });
+          this.on("complete", function(file) {
+            if (file.status == 'error') {
+              $('.dz-error-message span').html('上传失败');
+            }
+          });
+        },
+        removedfile: function(file) {
+          if (file.status == 'success') {
+            var result = JSON.parse(file.xhr.response);
+            if (result.status) {
+              dialog({
+                title: '消息',
+                content: '确定要删除吗?',
+                okValue: '确定',
+                ok: function () {
+                  var that = this;
+                  this.title('删除中…');
+                  var url = '${ctx}/home/file/trash?random='+ Math.random();
+                  var params = {
+                      id: result.data.id
+                  };
+                  $.post(url, params, function(results) {
+                    dialog({
+                      title: '消息',
+                      content: results.message,
+                      okValue: '确定',
+                      ok: function () {
+                        if (results.status) {
+                          var _ref;
+                          return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+                        }
+                        return true;
+                      }
+                    }).width(100).showModal();
+                  }, 'json');
+                },
+                cancelValue: '取消',
+                cancel: function () {}
+              }).width(100).showModal();
+            } else {
+              var _ref;
+              return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+            }
+          }
+        }
+      });
+      //console.log($dropzone);
+    } catch(e) {
+      //alert('Dropzone.js does not support older browsers!');
+    }
+  }
 	</script>
 	</jscript>
 </body>

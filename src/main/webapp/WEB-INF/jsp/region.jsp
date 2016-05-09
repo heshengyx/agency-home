@@ -374,7 +374,7 @@
           if (+data.status) {
         	  content += '<span class="label label-sm label-success">有效</span>';
           } else {
-        	  content += '<span class="label label-sm label-warning">失效</span>';
+        	  content += '<span class="label label-sm arrowed"><s>失效</s></span>';
           }
           content += '</div>';
           return content;
@@ -468,7 +468,7 @@
     var cityValue = $('#citysAdd').val();
     var districtValue = $('#districtsAdd').val();
     var status = '0';
-    if ($('#statusAdd:checked').val()) {
+    if ($('#statusAdd').is(':checked')) {
       status = '1';
     }
     var parentId = "";

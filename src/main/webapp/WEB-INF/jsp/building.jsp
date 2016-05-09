@@ -42,14 +42,26 @@
   
   .modal-body-content {padding-top: 5px;}
   
-  .ace-thumbnails>li {
-    width: 150px;
-    height: 155px;
-    margin-left: 20px;
-    text-align: center;
-  } 
-  
   .date-picker {width: 110px;}
+  
+  .ace-thumbnails>li {
+    width: 170px;
+    /* height: 155px; */
+    margin-left: 10px; 
+    text-align: center;
+    border: 0;
+  } 
+  .thumbnail>a {
+    display: block;
+    height: 115px;
+    overflow: hidden;
+  }
+  .thumbnail .caption {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
   
   .dropzone .dz-preview, 
   .dropzone-previews .dz-preview {margin-left: 27px;}
@@ -191,7 +203,7 @@
 			          <table id="tableBuilding" class="table table-striped table-bordered table-hover" width="100%">
 			            <thead>
 			              <tr>
-			                <th></th>
+			                <th width="50"></th>
 			                <th class="text-center" width="50"><label><input type="checkbox" class="ace" /><span class="lbl"></span></label></th>
 			                <th>楼盘名称</th>
 			                <th class="text-center" width="70">类型</th>
@@ -380,7 +392,7 @@
                     </div>
                   </form> -->
                   <div class="tabbable">
-                    <ul class="nav nav-tabs" id="buildingTab">
+                    <ul class="nav nav-tabs img-tabs">
                       <li class="active">
                         <a href="#buildingImages" data-toggle="tab" aria-controls="buildingImages">
                           <i class="green icon-picture bigger-110"></i>楼盘图片
@@ -470,6 +482,7 @@
   <script src="${ctx}/js/bootstrap-wysiwyg.min.js"></script>
   <script src="${ctx}/js/dropzone.min.js"></script>
   <script src="${ctx}/js/jquery.colorbox-min.js"></script>
+  <script src="${ctx}/js/fuelux/fuelux.spinner.min.js"></script>
 	<script>
 	var d = null;
 	var tableBuilding = null;
@@ -892,7 +905,7 @@
 	    }
 	  }).prev().addClass('wysiwyg-style2');
 		
-		$('#buildingTab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		$('.img-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
       //e.target // newly activated tab
       //e.relatedTarget // previous active tab
       var target = $(e.target).attr("aria-controls");
@@ -961,14 +974,13 @@
         $('#imagesNum').text(data.length);
         for (var i=0; i<data.length; i++) {
           var content = '';
-          content += '<li>';
+          /* content += '<li>';
           content += '  <a href="${imageUrl}' + data[i].url + '" data-rel="colorbox">';
           content += '    <img alt="150x150" src="${imageUrl}' + data[i].thumb + '" />';
           content += '  </a>';
           content += '  <div class="tags">';
           content += '    <span class="label-holder">';
           //content += '      <span class="label label-info arrowed">' + data[i].title + '</span>';
-          content += '      <input type="text" name="" value="'+data[i].title+'">';
           content += '    </span>';
           content += '  </div>';
           content += '  <div class="tools tools-top">';
@@ -977,8 +989,26 @@
           //content += '    <a href="#"><i class="icon-pencil"></i></a>';
           content += '    <a href="#" onclick="trashImage(\'' + data[i].id + '\')"><i class="icon-remove red"></i></a>';
           content += '  </div>';
-          content += '</li>';
+          content += '</li>'; */
+          content += '<li>';
+          content += ' <div class="thumbnail">';
+          content += '  <a href="${imageUrl}' + data[i].url + '" title="' + data[i].title + '" data-rel="colorbox">';
+        	content += '   <img src="${imageUrl}' + data[i].thumb + '" alt="...">';
+        	content += '  </a>';
+        	content += '  <div class="caption">';
+        	content += '    <h6><span id="title_' + data[i].id + '">' + data[i].title + '</span><input class="form-control" type="text" id="input_' + data[i].id + '" value="' + data[i].title + '"></h6>';
+        	content += '    <p><input type="text" id="spinner_' + data[i].id + '"></p>';
+        	content += '    <p class="action-buttons"><a class="green" href="#" onclick="saveImage(\'' + data[i].id + '\')" title="保存"><i class="icon-save bigger-130"></i></a><a class="red" href="#" onclick="trashImage(\'' + data[i].id + '\');" title="删除"><i class="icon-trash bigger-130"></i></a></p>';
+        	content += '   </div>';
+        	content += ' </div>';
+	        content += '</li>';   
           $imageThumbnails.append(content);
+          $('#title_' + data[i].id).hide();
+          var sort = data[i].sort;
+          $('#spinner_' + data[i].id).ace_spinner({value:sort,min:0,max:200,step:1, btn_up_class:'btn-info' , btn_down_class:'btn-info'})
+          .on('change', function(){
+            //alert(this.value)
+          });
         }
         $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
       }
@@ -1045,6 +1075,22 @@
       }
     });
 	}
+	function saveImage(imageId) {
+		var url = '${ctx}/home/image/update?random='+ Math.random();
+    var params = {
+        id: imageId,
+        title: $('#input_' + imageId).val(),
+        sort: $('#spinner_' + imageId).val()
+    };
+    $.post(url, params, function(result) {
+      dialog({
+       title: '消息',
+       content: result.message,
+       okValue: '确定',
+       ok: true
+     }).width(100).showModal();
+    }, 'json');
+	}
 	function trashImage(imageId) {
 		dialog({
       title: '消息',
@@ -1063,7 +1109,9 @@
              content: result.message,
              okValue: '确定',
              ok: function () {
-            	 queryBuildingImages();
+            	 if (result.status) {
+            		 queryBuildingImages();
+            	 }
                return true;
              }
            }).width(100).showModal();
@@ -1102,10 +1150,8 @@
     }).width(100).showModal();
 	}
 	
-	function dropzoneImage(buildingId, type) {
+	function dropzoneImage(foreignId, type) {
 		var params = '?random=' + Math.random();
-		//params += '&foreignId=' + buildingId;
-		//params += '&type=' + type;
 		try {
 			$(".dropzone").dropzone({
 		    url: '${ctx}/home/file/upload' + params,
@@ -1121,7 +1167,7 @@
         dictCancelUploadConfirmation: '你确定要取消上传吗?',
 		    previewTemplate: '<div class="dz-preview dz-file-preview">\n  <div class="dz-details">\n    <div class="dz-filename"><span data-dz-name></span></div>\n    <div class="dz-size" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class="progress progress-small progress-striped active"><div class="progress-bar progress-bar-success" data-dz-uploadprogress></div></div>\n  <div class="dz-success-mark"><span></span></div>\n  <div class="dz-error-mark"><span></span></div>\n  <div class="dz-error-message error-message-tip"><span data-dz-errormessage></span></div>\n</div>',
 		    params: {
-          foreignId: buildingId,
+          foreignId: foreignId,
           type: type
         },
         init: function() {

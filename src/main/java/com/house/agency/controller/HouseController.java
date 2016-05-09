@@ -17,6 +17,7 @@ import com.house.agency.entity.House;
 import com.house.agency.page.IPage;
 import com.house.agency.param.home.HouseHomeQueryParam;
 import com.house.agency.param.manage.HouseManageQueryParam;
+import com.house.agency.service.IConfigureService;
 import com.house.agency.service.IHouseService;
 import com.house.agency.service.IRegionService;
 import com.myself.common.exception.ServiceException;
@@ -36,15 +37,24 @@ public class HouseController extends BaseController {
 	@Autowired
 	private IRegionService regionService;
 	
+	@Autowired
+	private IConfigureService configureService;
+	
 	@RequestMapping("/used/sale")
 	public String pageUsedSale(Model model) {
 		setModel(model, regionService);
+		
+		String imageUrl = configureService.getValueByKey("image_url");
+		model.addAttribute("imageUrl", imageUrl);
 		return "house";
 	}
 	
 	@RequestMapping("/new/sale")
 	public String pageNewSale(Model model) {
 		setModel(model, regionService);
+		
+		String imageUrl = configureService.getValueByKey("image_url");
+		model.addAttribute("imageUrl", imageUrl);
 		return "house";
 	}
 	
@@ -97,6 +107,9 @@ public class HouseController extends BaseController {
 	@RequestMapping("")
 	public String pageHouse(Model model) {
 		setModel(model, regionService);
+		
+		String imageUrl = configureService.getValueByKey("image_url");
+		model.addAttribute("imageUrl", imageUrl);
 		return "houses";
 	}
 	

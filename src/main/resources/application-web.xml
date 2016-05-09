@@ -83,6 +83,14 @@
       <value>com.house.agency.service.ITradeService</value>  
     </property>
   </bean>
+  <bean id="tradeImageService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    <property name="serviceUrl">  
+      <value>http://localhost:8088/agency-core/hessian/tradeImageService</value>   
+    </property>   
+    <property name="serviceInterface">  
+      <value>com.house.agency.service.ITradeImageService</value>  
+    </property>
+  </bean>
   <bean id="configureService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
     <property name="serviceUrl">  
       <value>http://localhost:8088/agency-core/hessian/configureService</value>   
