@@ -1117,7 +1117,7 @@
           content += '   <img src="${imageUrl}' + data[i].thumb + '" alt="...">';
           content += '  </a>';
           content += '  <div class="caption">';
-          content += '    <h6><span id="titleHouse_' + data[i].id + '">' + data[i].title + '</span></h6>';
+          content += '    <h6><input class="form-control" type="text" id="inputHouse_' + data[i].id + '" value="' + data[i].title + '" readonly></h6>';
           content += '    <label class="switch-box">';
           content += '      <input class="ace ace-switch ace-switch-3" type="checkbox" id="statusHouse_' + data[i].id + '" onclick="switchImage(this, \'' + data[i].id + '\')" value="' + activeId + '" ' + checked + '>';
           content += '      <span class="lbl"></span>';
@@ -1203,7 +1203,7 @@
           content += '   <img src="${imageUrl}' + data[i].thumb + '" alt="...">';
           content += '  </a>';
           content += '  <div class="caption">';
-          content += '    <h6><span id="titleBuilding_' + data[i].id + '">' + data[i].title + '</span></h6>';
+          content += '    <h6><input class="form-control" type="text" id="inputBuilding_' + data[i].id + '" value="' + data[i].title + '" readonly></h6>';
           content += '    <label class="switch-box">';
         	content += '      <input class="ace ace-switch ace-switch-3" type="checkbox" id="statusBuilding_' + data[i].id + '" onclick="switchImage(this, \'' + data[i].id + '\')" value="' + activeId + '" ' + checked + '>';
           content += '      <span class="lbl"></span>';
