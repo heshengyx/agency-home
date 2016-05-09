@@ -42,6 +42,27 @@ public class TradeController extends BaseController {
 		return jMessage;
 	}
 	
+	@RequestMapping("/getData")
+	@ResponseBody
+	public Object getData(String id) {
+		JsonMessage jMessage = new JsonMessage();
+		Trade data = null;
+		try {
+			data = tradeService.getDataById(id);
+			jMessage.setStatus(JsonMessage.TRUE);
+			jMessage.setData(data);
+		} catch (Exception e) {
+			jMessage.setStatus(JsonMessage.FALSE);
+			if (e instanceof ServiceException) {
+				jMessage.setMessage(e.getMessage());
+			} else {
+				jMessage.setMessage("系统异常");
+			}
+			logger.error(jMessage.getMessage(), e);
+		}
+		return jMessage;
+	}
+	
 	@RequestMapping("/trash")
 	@ResponseBody
 	public Object trash(String id) {

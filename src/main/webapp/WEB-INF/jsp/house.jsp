@@ -278,7 +278,7 @@
 		        </div>
 	        </div>
 	        
-	        <!-- model-add -->
+	        <!-- modal-add -->
 	        <div id="modal-add" class="modal" tabindex="-1">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -394,7 +394,55 @@
               </div>
             </div>
           </div>
-          <!-- model-add -->
+          <!-- modal-add -->
+          <!-- modal-edit -->
+          <div id="modal-edit" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-body overflow-visible modal-body-content">
+                  <div class="widget-container-span">
+                    <div class="widget-box transparent">
+                      <div class="widget-header">
+                        <h6>房源修改</h6>
+                        <div class="widget-toolbar no-border">
+                          <small id="smallTitle"></small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <form class="form-horizontal">
+                    <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">标题：</label>
+                      <div class="col-md-8">
+                        <input class="input-field" type="text" id="titleEdit" placeholder="标题">
+                      </div>
+                    </div>
+                    <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">价格：</label>
+                      <div class="col-md-3">
+                        <div class="input-group">
+                          <input class="input-field" type="text" id="priceEdit" placeholder="价格">
+                          <div class="input-group-addon"><small>万</small></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">描述：</label>
+                      <div class="col-md-10">
+                        <div class="wysiwyg-editor" id="contentEdit"></div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="modal-footer">
+                  <button class="btn btn-xs" data-dismiss="modal"><i class="icon-remove"></i>关闭</button>
+                  <button class="btn btn-xs btn-primary" id="btnHouseUpdate"><i class="icon-ok"></i>保存</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- modal-edit -->
           <!-- modal-image -->
           <div id="modal-image" class="modal fade modal-pane" tabindex="-1">
             <div class="modal-dialog">
@@ -600,12 +648,13 @@
           return content;
         }},
         { 'orderable': false, "targets": 8, "render": function(data, type, row) {
-        	var contentData = data.buildingName + '<small>（' + data.districtName + '-' + data.townName + '）' + data.floorName + '，' + data.card + '</small>';
+        	var title = data.buildingName + '<small>（' + data.districtName + '-' + data.townName + '）' + data.floorName + '，' + data.card;
+        	title += data.room + '室' + data.saloon + '厅' + data.toilet + '卫</small>';
         	var content = '<div class="text-center">';
           content += '  <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
-          content += '  <a class="blue" href="#modal-image" role="button" data-toggle="modal" data-title="' + contentData + '" data-trade="' + data.tradeId + '" data-house="' + data.houseId + '" data-building="' + data.buildingId + '" title="图片"><i class="icon-picture bigger-130"></i></a><br>';
+          content += '  <a class="blue" href="#modal-image" role="button" data-toggle="modal" data-title="' + title + '" data-trade="' + data.tradeId + '" data-house="' + data.houseId + '" data-building="' + data.buildingId + '" title="图片"><i class="icon-picture bigger-130"></i></a><br>';
           content += '  <a class="blue" href="#" title="详情"><i class="icon-zoom-in bigger-130"></i></a>';
-          content += '  <a class="green" href="#" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
+          content += '  <a class="green" href="#" onclick="editHouse(\'' + data.tradeId + '\', \'' + title + '\');" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
           content += '  <a class="red" href="#" onclick="trashHouse(\'' + data.tradeId + '\');"  title="删除"><i class="icon-trash bigger-130"></i></a>';
           content += '</div>';
           content += '<div class="visible-xs visible-sm hidden-md hidden-lg">';
@@ -833,6 +882,26 @@
     }
     $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+ 
      '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+  }
+	function editHouse(tradeId, title) {
+    var url = '${ctx}/home/trade/getData?random='+ Math.random();
+    var params = {
+        id: tradeId
+    };
+    $.post(url, params, function(result) {
+      if (result.status) {
+    	  $('#smallTitle').html(title);
+    	  $('#titleEdit').val(result.data.title);
+        $('#modal-edit').modal('show');
+      } else {
+        dialog({
+          title: '消息',
+          content: result.message,
+          okValue: '确定',
+          ok: true
+        }).width(100).showModal();
+      }
+    }, 'json');
   }
 	function queryRegions(regionId, name, _this, fieldIds) {
     addActivedName(fieldIds[0], regionId, name, _this);
