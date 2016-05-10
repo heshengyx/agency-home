@@ -377,7 +377,7 @@
                           <div class="form-group form-row">
                             <label class="col-md-2 control-label no-padding-right">描述：</label>
                             <div class="col-md-10">
-                              <div class="wysiwyg-editor" id="content"></div>
+                              <div class="wysiwyg-editor content-editor" id="contentAdd"></div>
                             </div>
                           </div>
 				                </form>
@@ -386,7 +386,6 @@
                   </tbody>
                   </table>
                 </div>
-
                 <div class="modal-footer">
                   <button class="btn btn-xs" data-dismiss="modal"><i class="icon-remove"></i>关闭</button>
                   <button class="btn btn-xs btn-primary" id="btnHouseSave"><i class="icon-ok"></i>保存</button>
@@ -411,6 +410,7 @@
                     </div>
                   </div>
                   <form class="form-horizontal">
+                    <input type="hidden" id="tradeId">
                     <div class="form-group form-row">
                       <label class="col-md-2 control-label no-padding-right">标题：</label>
                       <div class="col-md-8">
@@ -429,12 +429,11 @@
                     <div class="form-group form-row">
                       <label class="col-md-2 control-label no-padding-right">描述：</label>
                       <div class="col-md-10">
-                        <div class="wysiwyg-editor" id="contentEdit"></div>
+                        <div class="wysiwyg-editor content-editor" id="contentEdit"></div>
                       </div>
                     </div>
                   </form>
                 </div>
-
                 <div class="modal-footer">
                   <button class="btn btn-xs" data-dismiss="modal"><i class="icon-remove"></i>关闭</button>
                   <button class="btn btn-xs btn-primary" id="btnHouseUpdate"><i class="icon-ok"></i>保存</button>
@@ -790,7 +789,7 @@
 			var houseId = $('#houseId').val();
       var title = $('#titleAdd').val();
       var price = $('#priceAdd').val();
-      var content = $('#content').html();
+      var content = $('#contentAdd').html();
       var url = '${ctx}/home/trade/save?random='+ Math.random();
       var params = {
     		  houseId: houseId,
@@ -813,7 +812,34 @@
       }, 'json');
 		});
 		
-		$('#content').ace_wysiwyg({
+		$('#btnHouseUpdate').click(function() {
+      var tradeId = $('#tradeId').val();
+      var title = $('#titleEdit').val();
+      var price = $('#priceEdit').val();
+      var content = $('#contentEdit').html();
+      var url = '${ctx}/home/trade/save?random='+ Math.random();
+      var params = {
+          id: tradeId,
+          title: title,
+          price: price * 100,
+          type: '1',
+          content: content
+      };
+      $.post(url, params, function(result) {
+        $('#modal-edit').modal('hide');
+        dialog({
+         title: '消息',
+         content: result.message,
+         okValue: '确定',
+         ok: function () {
+           tableHouse.ajax.reload();
+           return true;
+         }
+       }).width(100).showModal();
+      }, 'json');
+    });
+		
+		$('.content-editor').ace_wysiwyg({
 	    toolbar:
 	    [
 	      'font',
@@ -890,8 +916,12 @@
     };
     $.post(url, params, function(result) {
       if (result.status) {
+    	  console.log(result.data);
     	  $('#smallTitle').html(title);
+    	  $('#tradeId').val(tradeId);
     	  $('#titleEdit').val(result.data.title);
+    	  $('#priceEdit').val(result.data.price/100);
+    	  $('#contentEdit').html(result.data.content);
         $('#modal-edit').modal('show');
       } else {
         dialog({

@@ -42,6 +42,26 @@ public class TradeController extends BaseController {
 		return jMessage;
 	}
 	
+	@RequestMapping("/saveOrUpdate")
+	@ResponseBody
+	public Object saveOrUpdate(Trade param) {
+		JsonMessage jMessage = new JsonMessage();
+		try {
+			tradeService.saveOrUpdate(param);
+			jMessage.setStatus(JsonMessage.TRUE);
+			jMessage.setMessage("保存成功");
+		} catch (Exception e) {
+			jMessage.setStatus(JsonMessage.FALSE);
+			if (e instanceof ServiceException) {
+				jMessage.setMessage(e.getMessage());
+			} else {
+				jMessage.setMessage("系统异常");
+			}
+			logger.error(jMessage.getMessage(), e);
+		}
+		return jMessage;
+	}
+	
 	@RequestMapping("/getData")
 	@ResponseBody
 	public Object getData(String id) {
