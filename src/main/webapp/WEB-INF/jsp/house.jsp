@@ -71,6 +71,7 @@
     left: 0;
     min-width: 0;
   }
+  .switch-box {padding-top: 5px;}
   </style>
   </css>
 </head>
@@ -427,6 +428,15 @@
                       </div>
                     </div>
                     <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">状态：</label>
+                      <div class="col-md-8">
+                        <label class="switch-box">
+                         <input class="ace ace-switch ace-switch-3" type="checkbox" id="statusEdit" checked/>
+                         <span class="lbl"></span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="form-group form-row">
                       <label class="col-md-2 control-label no-padding-right">描述：</label>
                       <div class="col-md-10">
                         <div class="wysiwyg-editor content-editor" id="contentEdit"></div>
@@ -570,11 +580,17 @@
       $.colorbox.resize();
     }
   };
+	var $spinner = null;
 	$(document).ready(function() {
 		Dropzone.options.myAwesomeDropzone = false;
 	  Dropzone.autoDiscover = false;
 		$('#townsPane').hide();
 		$('#townsPaneAdd').hide();
+		/* $spinner = $('.spinner-field').ace_spinner({value:1,min:0,max:200,step:1, btn_up_class:'btn-info' , btn_down_class:'btn-info'})
+    .on('change', function(){
+    }); */
+		console.log($spinner);
+		
 		tableHouse = $('#tableHouse').DataTable({
 			'language': {
         'processing':  '处理中...',
@@ -641,8 +657,12 @@
           return content;
         }},
         { 'orderable': false, 'targets': 7, 'render': function(data, type, row) {
-          var content = '<div class="text-center">';
-          content += '<span class="label label-sm label-warning">有效</span>';
+        	var content = '<div class="text-center">';
+          if (+data.status) {
+            content += '<span class="label label-sm label-success">有效</span>';
+          } else {
+            content += '<span class="label label-sm arrowed"><s>失效</s></span>';
+          }
           content += '</div>';
           return content;
         }},
@@ -718,6 +738,9 @@
       dropzoneImage(houseId, '1');
     });
     $('#modal-image').on('hidden.bs.modal', function (event) {
+      //alert(1);
+    });
+    $('#modal-edit').on('hidden.bs.modal', function (event) {
       //alert(1);
     });
 		
@@ -817,7 +840,7 @@
       var title = $('#titleEdit').val();
       var price = $('#priceEdit').val();
       var content = $('#contentEdit').html();
-      var url = '${ctx}/home/trade/save?random='+ Math.random();
+      var url = '${ctx}/home/trade/saveOrUpdate?random='+ Math.random();
       var params = {
           id: tradeId,
           title: title,
@@ -916,11 +939,17 @@
     };
     $.post(url, params, function(result) {
       if (result.status) {
-    	  console.log(result.data);
     	  $('#smallTitle').html(title);
     	  $('#tradeId').val(tradeId);
     	  $('#titleEdit').val(result.data.title);
     	  $('#priceEdit').val(result.data.price/100);
+    	  //$('#priceEdit').ace_spinner({value:result.data.price/100});
+    	  var status = result.data.status;
+    	  if (+status) {
+          $('#statusEdit').attr('checked', 'checked');
+        } else {
+          $('#statusEdit').removeAttr('checked');
+        }
     	  $('#contentEdit').html(result.data.content);
         $('#modal-edit').modal('show');
       } else {
