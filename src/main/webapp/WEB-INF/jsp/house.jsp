@@ -233,6 +233,8 @@
       <input id="tradeId" type="hidden" value="0">
       <input id="houseId" type="hidden" value="0">
       <input id="buildingId" type="hidden" value="0">
+      <input id="houseIdAdd" type="hidden" value="0">
+      <input id="buildingIdAdd" type="hidden" value="0">
       
 	    <div class="row">
 	      <div class="col-xs-12 widget-container-span">
@@ -332,7 +334,7 @@
 					                            <option value="">选择栋座</option>
 					                          </select>
 					                          <small>~</small>
-					                          <select class="input-select" id="houseAdd">
+					                          <select class="input-select" id="cardAdd">
 					                            <option value="">选择房号</option>
 					                          </select>
 					                        </div>
@@ -719,7 +721,7 @@
 		queryBuildingName('buildingName', 'buildingUnit', 'districtsValue', 'townsValue');
     queryBuildingName('buildingNameAdd', 'buildingUnitAdd', 'districtsAddValue', 'townsAddValue');
     changeBuildingUnit('buildingUnit', 'house');
-    changeBuildingUnit('buildingUnitAdd', 'houseAdd');
+    changeBuildingUnit('buildingUnitAdd', 'cardAdd');
     
     $('#modal-image').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget);
@@ -809,12 +811,14 @@
     });
 		
 		$('#btnHouseSave').click(function() {
-			var houseId = $('#houseId').val();
+			var buildingId = $('#buildingIdAdd').val();
+			var houseId = $('#houseIdAdd').val();
       var title = $('#titleAdd').val();
       var price = $('#priceAdd').val();
       var content = $('#contentAdd').html();
-      var url = '${ctx}/home/trade/save?random='+ Math.random();
+      var url = '${ctx}/home/trade/saveOrUpdate?random='+ Math.random();
       var params = {
+    		  buildingId: buildingId,
     		  houseId: houseId,
     		  title: title,
     		  price: price * 100,
@@ -845,7 +849,6 @@
           id: tradeId,
           title: title,
           price: price * 100,
-          type: '1',
           content: content
       };
       $.post(url, params, function(result) {
@@ -899,11 +902,11 @@
 	    }
 	  }).prev().addClass('wysiwyg-style2');
 		
-		$('#houseAdd').change(function() {
+		$('#cardAdd').change(function() {
 			var value = $(this).val();
 			if(value) {
 				var values = value.split(',');
-				$('#houseId').val(values[0]);
+				$('#houseIdAdd').val(values[0]);
 				$('#areaAdd').val(jmoney(values[1]) + '㎡');
 				$('#patternAdd').val(values[2] + '室' + values[3] + '厅' + values[4] + '卫');
 				$('#faceAdd').val(values[5]);
@@ -1025,6 +1028,7 @@
         if (selected) {
           var buildingId = selected.buildingId;
           if (buildingId) {
+        	  $('#buildingIdAdd').val(buildingId);
             var url = '${ctx}/home/buildingUnit/select?random='+ Math.random();
             var params = {
                 buildingId: buildingId
@@ -1078,7 +1082,7 @@
       okValue: '确定',
       ok: function () {
         var that = this;
-        this.title('删除中…');
+        that.title('删除中…');
         var url = '${ctx}/home/trade/trash?random='+ Math.random();
         var params = {
             id: tradeId
@@ -1121,8 +1125,8 @@
           var content = '';
           content += '<li>';
           content += ' <div class="thumbnail">';
-          content += '  <a href="${imageUrl}' + data[i].url + '" title="' + data[i].title + '" data-rel="colorboxActive">';
-          content += '   <img src="${imageUrl}' + data[i].thumb + '" alt="...">';
+          content += '  <a href="${imageUrl}/' + data[i].url + '" title="' + data[i].title + '" data-rel="colorboxActive">';
+          content += '   <img src="${imageUrl}/' + data[i].thumb + '" alt="...">';
           content += '  </a>';
           content += '  <div class="caption">';
           content += '    <h6><input class="form-control" type="text" id="inputActive_' + data[i].activeId + '" value="' + data[i].title + '" readonly></h6>';
@@ -1241,8 +1245,8 @@
           var content = '';
           content += '<li>';
           content += ' <div class="thumbnail">';
-          content += '  <a href="${imageUrl}' + data[i].url + '" title="' + data[i].title + '" data-rel="colorboxHouse">';
-          content += '   <img src="${imageUrl}' + data[i].thumb + '" alt="...">';
+          content += '  <a href="${imageUrl}/' + data[i].url + '" title="' + data[i].title + '" data-rel="colorboxHouse">';
+          content += '   <img src="${imageUrl}/' + data[i].thumb + '" alt="...">';
           content += '  </a>';
           content += '  <div class="caption">';
           content += '    <h6><input class="form-control" type="text" id="inputHouse_' + data[i].id + '" value="' + data[i].title + '" readonly></h6>';
@@ -1283,8 +1287,8 @@
           var content = '';
           content += '<li>';
           content += ' <div class="thumbnail">';
-          content += '  <a href="${imageUrl}' + data[i].url + '" title="' + data[i].title + '" data-rel="colorboxMy">';
-          content += '   <img src="${imageUrl}' + data[i].thumb + '" alt="...">';
+          content += '  <a href="${imageUrl}/' + data[i].url + '" title="' + data[i].title + '" data-rel="colorboxMy">';
+          content += '   <img src="${imageUrl}/' + data[i].thumb + '" alt="...">';
           content += '  </a>';
           content += '  <div class="caption">';
           content += '    <h6><span id="titleMy_' + data[i].id + '">' + data[i].title + '</span><input class="form-control" type="text" id="inputMy_' + data[i].id + '" value="' + data[i].title + '"></h6>';
@@ -1327,8 +1331,8 @@
           var content = '';
           content += '<li>';
           content += ' <div class="thumbnail">';
-          content += '  <a href="${imageUrl}' + data[i].url + '" title="' + data[i].title + '" data-rel="colorboxBuilding">';
-          content += '   <img src="${imageUrl}' + data[i].thumb + '" alt="...">';
+          content += '  <a href="${imageUrl}/' + data[i].url + '" title="' + data[i].title + '" data-rel="colorboxBuilding">';
+          content += '   <img src="${imageUrl}/' + data[i].thumb + '" alt="...">';
           content += '  </a>';
           content += '  <div class="caption">';
           content += '    <h6><input class="form-control" type="text" id="inputBuilding_' + data[i].id + '" value="' + data[i].title + '" readonly></h6>';
@@ -1353,8 +1357,10 @@
 		}
 	}
 	function saveTradeImage(_this, imageId) {
-		var url = "${ctx}/home/tradeImage/save?random="+ Math.random();
+		var url = "${ctx}/home/tradeImage/saveData?random="+ Math.random();
     var params = {
+    		buildingId: $('#buildingId').val(),
+    		houseId: $('#houseId').val(),
         tradeId: $('#tradeId').val(),
         imageId: imageId
     };

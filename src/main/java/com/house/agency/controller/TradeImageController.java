@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.house.agency.entity.TradeImage;
+import com.house.agency.param.TradeImageParam;
 import com.house.agency.service.ITradeImageService;
 import com.myself.common.exception.ServiceException;
 import com.myself.common.message.JsonMessage;
@@ -22,12 +23,12 @@ public class TradeImageController extends BaseController {
 	@Autowired
 	private ITradeImageService tradeImageService;
 	
-	@RequestMapping("/save")
+	@RequestMapping("/saveData")
 	@ResponseBody
-	public Object save(TradeImage param) {
+	public Object saveData(TradeImageParam param) {
 		JsonMessage jMessage = new JsonMessage();
 		try {
-			String id = tradeImageService.save(param);
+			String id = tradeImageService.saveData(param);
 			jMessage.setStatus(JsonMessage.TRUE);
 			jMessage.setData(id);
 			jMessage.setMessage("保存成功");

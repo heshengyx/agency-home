@@ -22,32 +22,12 @@ public class TradeController extends BaseController {
 	@Autowired
 	private ITradeService tradeService;
 	
-	@RequestMapping("/save")
-	@ResponseBody
-	public Object save(Trade param) {
-		JsonMessage jMessage = new JsonMessage();
-		try {
-			tradeService.save(param);
-			jMessage.setStatus(JsonMessage.TRUE);
-			jMessage.setMessage("保存成功");
-		} catch (Exception e) {
-			jMessage.setStatus(JsonMessage.FALSE);
-			if (e instanceof ServiceException) {
-				jMessage.setMessage(e.getMessage());
-			} else {
-				jMessage.setMessage("系统异常");
-			}
-			logger.error(jMessage.getMessage(), e);
-		}
-		return jMessage;
-	}
-	
 	@RequestMapping("/saveOrUpdate")
 	@ResponseBody
-	public Object saveOrUpdate(Trade param) {
+	public Object saveOrUpdate(Trade param, String buildingId) {
 		JsonMessage jMessage = new JsonMessage();
 		try {
-			tradeService.saveOrUpdate(param);
+			tradeService.saveOrUpdate(param, buildingId);
 			jMessage.setStatus(JsonMessage.TRUE);
 			jMessage.setMessage("保存成功");
 		} catch (Exception e) {
