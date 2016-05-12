@@ -373,6 +373,18 @@
             </li>
             <li>
               <a href="#" class="dropdown-toggle">
+                <i class="icon-globe"></i>
+                <span class="menu-text"> 客源 </span>
+                <b class="arrow icon-angle-down"></b>
+              </a>
+              <ul class="submenu">
+                <li>
+                  <a href="${ctx}/home/customer"><i class="icon-double-angle-right"></i>客户</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#" class="dropdown-toggle">
                 <i class="icon-table"></i>
                 <span class="menu-text"> 小区 </span>
                 <b class="arrow icon-angle-down"></b>

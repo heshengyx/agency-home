@@ -1,6 +1,7 @@
 package com.house.agency.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import com.house.agency.service.IRegionService;
 import com.myself.common.exception.ServiceException;
 import com.myself.common.message.JsonMessage;
 import com.myself.common.message.JsonResult;
+import com.myself.common.utils.MapUtil;
 
 @Controller
 @RequestMapping("/home/house")
@@ -46,6 +48,10 @@ public class HouseController extends BaseController {
 		
 		String imageUrl = configureService.getValueByKey("image_url");
 		model.addAttribute("imageUrl", imageUrl);
+		
+		String match = configureService.getValueByKey("match");
+		Map<String, String> matchs = MapUtil.getMap(match, "[,]");
+		model.addAttribute("matchs", matchs);
 		return "house";
 	}
 	

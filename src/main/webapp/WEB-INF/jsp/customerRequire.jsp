@@ -2,7 +2,7 @@
 <%@ include file="/common/include.jsp"%> 
 <html>
 <head>
-  <title>地区-爱房网</title>
+  <title>客户-爱房网</title>
   <link href="${ctx}/css/jquery.autocompleter.css" rel="stylesheet">
   <link href="${ctx}/css/autocompleter.css" rel="stylesheet">
   <link href="${ctx}/css/datepicker.css" rel="stylesheet">
@@ -52,25 +52,16 @@
 	<div class="main-content">
 	  <div class="breadcrumbs" id="breadcrumbs">
 	    <ul class="breadcrumb">
-	      <li><i class="icon-home home-icon"></i><a href="#">地区</a></li>
-	      <li class="active">${name}</li>
-	    </ul><!-- .breadcrumb -->
-	
-	    <!-- <div class="nav-search" id="nav-search">
-	      <form class="form-search">
-	        <span class="input-icon">
-	          <input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
-	          <i class="icon-search nav-search-icon"></i>
-	        </span>
-	      </form>
-	    </div> --><!-- #nav-search -->
+	      <li><i class="icon-home home-icon"></i><a href="#">客源</a></li>
+	      <li class="active">客户</li>
+	    </ul>
 	  </div>
 	
 	  <div class="page-content">
       <div class="widget-container-span">
         <div class="widget-box transparent">
           <div class="widget-header">
-            <h5>${name}搜索</h5>
+            <h5>客户搜索</h5>
             <div class="widget-toolbar no-border">
               <a href="#" data-action="collapse"><i class="icon-chevron-up"></i></a>
             </div>
@@ -83,42 +74,16 @@
                   <td>
                     <form class="form-horizontal" id="searchForm">
                       <div class="form-group form-row">
-                        <label class="col-md-1 control-label no-padding-right">地区：</label>
-                        <div class="col-md-11">
-                          <select class="input-select" id="countrys" disabled>
-                            <option value="">选择国家</option>
-                            <c:forEach var="data" items="${regions}">
-                            <option value="${data.id}">${data.name}</option>
-                            </c:forEach>
-                          </select>
-                          <select class="input-select" id="provinces" disabled>
-                            <option value="">选择省份</option>
-                          </select>
-                          <select class="input-select" id="citys" disabled>
-                            <option value="">选择市县</option>
-                          </select>
-                          <select class="input-select" id="districts" disabled>
-                            <option value="">选择城区</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-group form-row">
-                        <label class="col-md-1 control-label no-padding-right">名称：</label>
+                        <label class="col-md-1 control-label no-padding-right">姓名：</label>
                         <div class="col-md-2">
-                          <input class="input-text" type="text" id="name" name="name" placeholder="${name}名称">
-                        </div>
-                      </div>
-                      <div class="form-group form-row">
-                        <label class="col-md-1 control-label no-padding-right">编码：</label>
-                        <div class="col-md-2">
-                          <input class="input-text" type="text" id="code" placeholder="${name}编码">
+                          <input type="text" id="name" name="name" placeholder="客户名称">
                         </div>
                       </div>
                       <div class="form-group form-row">
                         <div class="col-md-3 col-md-offset-1">
                           <div class="input-group">
                             <span class="input-group-btn">
-                              <button type="submit" class="btn btn-info btn-xs" id="btnRegionSearch">搜索<i class="icon-search icon-on-right"></i></button>
+                              <button type="submit" class="btn btn-info btn-xs">搜索<i class="icon-search icon-on-right"></i></button>
                               &nbsp;
                               <button type="reset" class="btn btn-xs">重置<i class="icon-undo icon-on-right"></i></button>
                             </span>
@@ -134,16 +99,12 @@
         </div>
       </div><!-- /.page-header -->
       
-      <input id="parentIdValue" type="hidden">
-      <input id="parentIdAddValue" type="hidden">
-      <input id="levelValue" type="hidden" value="${level}">
-      
 	    <div class="row">
 	      <div class="col-xs-12 widget-container-span">
 	        <!-- PAGE CONTENT BEGINS -->
 	        <div class="widget-box">
 		        <div class="widget-header header-color-blue">
-		          <h5><i class="icon-table"></i>${name}列表</h5>
+		          <h5><i class="icon-table"></i>客户列表</h5>
 	            <div class="widget-toolbar">
 	              <button class="btn btn-minier btn-purple" data-toggle="modal" data-target="#modal-add" data-whatever="add">新增<i class="icon-edit align-top icon-on-right"></i>
                 </button>
@@ -154,13 +115,13 @@
 
 		        <div class="widget-body widget-none">
 			        <div class="table-responsive">
-			          <table id="tableRegion" class="table table-striped table-bordered table-hover" width="100%">
+			          <table id="tableCustomer" class="table table-striped table-bordered table-hover" width="100%">
 			            <thead>
 			              <tr>
 			                <th width="50"></th>
 			                <th class="text-center" width="50"><label><input type="checkbox" class="ace" /><span class="lbl"></span></label></th>
-			                <th>${name}名称</th>
-			                <th>${name}编码</th>
+			                <th>客户名称</th>
+			                <th>手机</th>
 			                <th width="130"><i class="icon-time hidden-480"></i>创建时间</th>
 			                <th class="text-center hidden-480" width="80">状态</th>
 			                <th class="text-center" width="140">操作</th>
@@ -177,48 +138,22 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h5 class="blue bigger">${name}新增</h5>
+                  <h5 class="blue bigger">客户新增</h5>
                 </div>
                 <!-- form -->
-                <form class="form-horizontal" id="dataForm">
-                  <div class="modal-body overflow-visible modal-body-content">                  
-                    <input id="regionId" type="hidden">
+                <form class="form-horizontal" id="dataAddForm">
+                  <input type="hidden" id="dataId">
+                  <div class="modal-body overflow-visible modal-body-content">                
                     <div class="form-group form-row">
-                      <label class="col-md-2 control-label no-padding-right">地区：</label>
+                      <label class="col-md-2 control-label no-padding-right">姓名：</label>
                       <div class="col-md-8">
-                        <select class="input-select" id="countrysAdd" disabled>
-                          <option value="">选择国家</option>
-                          <c:forEach var="data" items="${regions}">
-                          <option value="${data.id}">${data.name}</option>
-                          </c:forEach>
-                        </select>
-                        <select class="input-select" id="provincesAdd" disabled>
-                          <option value="">选择省份</option>
-                        </select>
-                        <select class="input-select" id="citysAdd" disabled>
-                          <option value="">选择市县</option>
-                        </select>
-                        <select class="input-select" id="districtsAdd" disabled>
-                          <option value="">选择城区</option>
-                        </select>
+                        <input type="text" id="nameAdd" placeholder="客户名称">
                       </div>
                     </div>
                     <div class="form-group form-row">
-                      <label class="col-md-2 control-label no-padding-right">名称：</label>
+                      <label class="col-md-2 control-label no-padding-right">手机：</label>
                       <div class="col-md-8">
-                        <input class="input-text" type="text" id="nameAdd" name="name" placeholder="${name}名称">
-                      </div>
-                    </div>
-                    <div class="form-group form-row">
-                      <label class="col-md-2 control-label no-padding-right">编码：</label>
-                      <div class="col-md-8">
-                        <input class="input-text" type="text" id="codeAdd" placeholder="${name}编码">
-                      </div>
-                    </div>
-                    <div class="form-group form-row">
-                      <label class="col-md-2 control-label no-padding-right">序号：</label>
-                      <div class="col-md-8">
-                        <input class="input-text" type="text" id="seqAdd" placeholder="排序序号">
+                        <input type="text" id="phoneAdd" placeholder="手机">
                       </div>
                     </div>
                     <div class="form-group form-row">
@@ -233,7 +168,7 @@
 	                </div>
 	                <div class="modal-footer">
 	                  <button class="btn btn-xs" data-dismiss="modal"><i class="icon-remove"></i>关闭</button>
-	                  <button class="btn btn-xs btn-primary" id="btnRegionSave1" type="submit"><i class="icon-ok"></i>保存</button>
+	                  <button class="btn btn-xs btn-primary" type="submit"><i class="icon-ok"></i>保存</button>
 	                </div>
                 </form>
                 <!-- form -->
@@ -241,7 +176,6 @@
             </div>
           </div>
           <!-- modal-add -->
-          <!--  -->
 	        <!-- PAGE CONTENT ENDS -->
 	      </div><!-- /.col -->
 	    </div><!-- /.row -->
@@ -260,16 +194,16 @@
   <script src="${ctx}/js/bootstrapValidator.min.js"></script>
 	<script>
 	var d = null;
-	var tableRegion = null;
-	var tableRegionUnit = null;
+	var tableCustomer = null;
+	var tableCustomerUnit = null;
 	$(document).ready(function() {
 		$('#searchForm').bootstrapValidator({
       submitHandler: function(validator, form, submitButton) {
-    	  queryRegionDatas();
+    	  queryCustomers();
     	  validator.disableSubmitButtons(false);
       }
     });
-		$('#dataForm').bootstrapValidator({
+		$('#dataAddForm').bootstrapValidator({
 			/* message: 'This value is not valid',
       feedbackIcons: {
         valid: 'glyphicon glyphicon-ok',
@@ -289,41 +223,7 @@
         }
       }
 		});
-		<c:if test="${level == '2' || level == '3' || level == '4' || level == '5'}">
-		$('#countrys').removeAttr("disabled");
-		$('#countrysAdd').removeAttr("disabled");
-		<c:if test="${level == '3' || level == '4' || level == '5'}">
-		$('#provinces').removeAttr("disabled");
-		$('#countrys').change(function() {
-			changeRegion($(this).val(), 'provinces', ['citys', 'districts']);
-    });
-		$('#provincesAdd').removeAttr("disabled");
-    $('#countrysAdd').change(function() {
-      changeRegion($(this).val(), 'provincesAdd', ['citysAdd', 'districtsAdd']);
-    });
-		</c:if>
-		<c:if test="${level == '4' || level == '5'}">
-    $('#citys').removeAttr("disabled");
-    $('#provinces').change(function() {
-      changeRegion($(this).val(), 'citys', ['districts']);
-    });
-    $('#citysAdd').removeAttr("disabled");
-    $('#provincesAdd').change(function() {
-      changeRegion($(this).val(), 'citysAdd', ['districtsAdd']);
-    });
-    </c:if>
-    <c:if test="${level == '5'}">
-    $('#districts').removeAttr("disabled");
-    $('#citys').change(function() {
-      changeRegion($(this).val(), 'districts', []);
-    });
-    $('#districtsAdd').removeAttr("disabled");
-    $('#citysAdd').change(function() {
-      changeRegion($(this).val(), 'districtsAdd', []);
-    });
-    </c:if>
-		</c:if>
-		tableRegion = $('#tableRegion').DataTable({
+		tableCustomer = $('#tableCustomer').DataTable({
 			'language': {
          'processing':  '处理中...',
          'lengthMenu':  '每页 _MENU_ 条记录',
@@ -342,12 +242,12 @@
       'serverSide': true, //开启服务器模式
       //'deferRender': true, //开启延迟渲染
       'ajax': {
-        'url': '${ctx}/home/region/queryManageData',
+        'url': '${ctx}/home/customer/queryData',
         'type': 'POST',
         'data': function ( d ) { //添加额外的参数发送到服务器
           //d.tag = 'release';
           //d.sort = $('#sort').val();
-          d.level = '${level}';
+          //d.level = '${level}';
         }
       },
 			'columnDefs': [
@@ -363,7 +263,7 @@
           return data.name;
         }},
         { 'orderable': false, 'targets': 3, 'render': function(data, type, row) {
-          return data.code;
+          return data.phone;
         }},
         { 'targets': 4, 'render': function(data, type, row) {
           var content = to_date_hm(data.createTime);
@@ -382,10 +282,12 @@
         { 'orderable': false, 'targets': 6, 'render': function(data, type, row) {
         	var content = '<div class="text-center">';
           content += '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
+          //content += '  <a class="blue" href="#modal-table" role="button" data-toggle="modal" data-customer="' + data.id + '" title="查看需求"><i class="icon-info bigger-130"></i></a>';
+          //content += '  <a class="blue" href="#" title="新增需求"><i class="icon-edit bigger-130"></i></a><br>';
           content += '  <a class="blue" href="#" title="详情"><i class="icon-zoom-in bigger-130"></i></a>';
-          content += '  <a class="green" href="#" onclick="editRegion(\'' + data.id + '\');" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
+          content += '  <a class="green" href="#" onclick="editCustomer(\'' + data.id + '\');" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
           //content += '  <a class="green" href="#modal-add" role="button" data-toggle="modal" data-region="' + data.id + '" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
-          content += '  <a class="red" href="#" onclick="trashRegion(\'' + data.id + '\');" title="删除" ><i class="icon-trash bigger-130"></i></a>';
+          content += '  <a class="red" href="#" onclick="trashCustomer(\'' + data.id + '\');" title="删除" ><i class="icon-trash bigger-130"></i></a>';
           content += '</div>';
           content += '<div class="visible-xs visible-sm hidden-md hidden-lg">';
           content += '  <div class="inline position-relative">';
@@ -431,9 +333,9 @@
     	  
       }
 		});
-		tableRegion.on('order.dt search.dt',
+		tableCustomer.on('order.dt search.dt',
       function () {
-			  tableRegion.column(0, {
+			  tableCustomer.column(0, {
           search: 'applied',
           order: 'applied'
         }).nodes().each(function (cell, i) {
@@ -444,51 +346,28 @@
 		$('#modal-add').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget);
 		  var whatever = button.data('whatever');
-			$('#dataForm').data('bootstrapValidator').resetForm();
+			$('#dataAddForm').data('bootstrapValidator').resetForm();
 			if (whatever) {
 				$('#nameAdd').val('');
-				$('#codeAdd').val('');
-				$('#seqAdd').val('');
-				$('#districtsAdd').children().not(':first').remove();
-		    $('#citysAdd').children().not(':first').remove();
-		    $('#provincesAdd').children().not(':first').remove();
-		    $('#countrysAdd').val('');
+				$('#phoneAdd').val('');
+				$('#statusAdd').attr('checked', 'checked');
 			}
 		});
 	});
 	
 	function submitForm() {
-		var regionId = $('#regionId').val();
+		var dataId = $('#dataId').val();
     var name = $('#nameAdd').val();
-    var code = $('#codeAdd').val();
-    var level = $('#levelValue').val();
-    var seq = $('#seqAdd').val();
-    var countryValue = $('#countrysAdd').val();
-    var provinceValue = $('#provincesAdd').val();
-    var cityValue = $('#citysAdd').val();
-    var districtValue = $('#districtsAdd').val();
+    var phone = $('#phoneAdd').val();
     var status = '0';
     if ($('#statusAdd').is(':checked')) {
       status = '1';
     }
-    var parentId = "";
-    if (districtValue) {
-      parentId = districtValue;
-    } else if (cityValue) {
-      parentId = cityValue;
-    } else if (provinceValue) {
-      parentId = provinceValue;
-    } else {
-      parentId = countryValue;
-    }
-    var url = '${ctx}/home/region/saveOrUpdate?random='+ Math.random();
+    var url = '${ctx}/home/customer/saveOrUpdate?random='+ Math.random();
     var params = {
-        id: regionId,
-        parentId: parentId,
+    		id: dataId,
         name: name,
-        code: code,
-        level: level,
-        seq: seq,
+        phone: phone,
         status: status
     };
     $.post(url, params, function(result) {
@@ -498,15 +377,15 @@
        content: result.message,
        okValue: '确定',
        ok: function () {
-         queryRegionDatas();
+         queryCustomers();
          return true;
        }
      }).width(100).showModal();
     }, 'json');
 	}
-	function queryRegionDatas() {
+	function queryCustomers() {
 		d = dialog({
-      title: '${name}载入中...'
+      title: '查询载入中...'
     });
     d.showModal();
     var search = '?random=' + Math.random();
@@ -514,92 +393,25 @@
     if (nameValue) {
     	search += '&name=' + nameValue;
     }
-    var codeValue = $('#code').val();
-    if (codeValue) {
-      search += '&code=' + codeValue;
-    }
-    var countryValue = $('#countrys').val();
-    var provinceValue = $('#provinces').val();
-    var cityValue = $('#citys').val();
-    var districtValue = $('#districts').val();
-    if (districtValue) {
-      search += '&parentId=' + districtValue;
-    } else if (cityValue) {
-    	search += '&parentId=' + cityValue;
-    } else if (provinceValue) {
-      search += '&parentId=' + provinceValue;
-    } else {
-    	search += '&parentId=' + countryValue;
-    }
-    tableRegion.ajax.url('${ctx}/home/region/queryManageData' + search).load();
+    tableCustomer.ajax.url('${ctx}/home/customer/queryData' + search).load();
     d.close();
 	}
-	function resetRegion(fieldId) {
-		var $children = $('#' + fieldId);
-	  $children.children().not(':first').remove();
-	}
-	function changeRegion(regionId, fieldId, childrens) {
-		var $children = $('#' + fieldId);
-	  $children.children().not(':first').remove();
-		if (regionId) {
-      var url = '${ctx}/home/region/list?random='+ Math.random();
-      var params = {
-        parentId: regionId
-      };
-
-      $.post(url, params, function(result) {
-        if (result.status) {
-          for (var i=0; i<result.data.length; i++) {
-            $htmlOpt = $('<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>');
-            $children.append($htmlOpt);
-          }
-        }
-      }, 'json');
-    }
-		for (var i=0; i<childrens.length; i++) {
-			var children = childrens[i];
-			resetRegion(children);
-		}
-	}
-	function editRegion(regionId) {
-		var url = '${ctx}/home/region/getData?random='+ Math.random();
+	function editCustomer(dataId) {
+		var url = '${ctx}/home/customer/getData?random='+ Math.random();
     var params = {
-        id: regionId
+        id: dataId
     };
     $.post(url, params, function(result) {
       if (result.status) {
-    	  $('#districtsAdd').children().not(':first').remove();
-    	  $('#citysAdd').children().not(':first').remove();
-    	  $('#provincesAdd').children().not(':first').remove();
-    	  $('#regionId').val(regionId);
-    	  var $select = null;
-    	  for (var key in result.data) {
-    		  var keys = key.split('_');
-    		  var values = result.data[key];
-    		  if (keys[0] === '5') {
-    			  $('#nameAdd').val(keys[3]);
-    			  $('#codeAdd').val(keys[4]);
-    			  $('#seqAdd').val(keys[5]);
-    			  if (+keys[6]) {
-    				  $('#statusAdd').attr('checked', 'checked');
-    			  } else {
-    				  $('#statusAdd').removeAttr('checked');
-    			  }
-    		  } else if (keys[0] === '4') {
-    			  $select = $('#districtsAdd');
-    		  } else if (keys[0] === '3') {
-    			  $select = $('#citysAdd');
-          } else if (keys[0] === '2') {
-        	  $select = $('#provincesAdd');
-        	  $('#countrysAdd').val(keys[2]);
-          }
-    		  //$select.children().not(':first').remove();
-    		  for (var i=0; i<values.length; i++) {
-            $htmlOpt = $('<option value="' + values[i].id + '">' + values[i].name + '</option>');
-            $select.append($htmlOpt);
-            $select.val(keys[1]);
-          }
-    	  }
+    	  $('#dataId').val(dataId);
+    	  $('#nameAdd').val(result.data.name);
+    	  $('#phoneAdd').val(result.data.phone);
+    	  var status = result.data.status;
+    	  if (+status) {
+          $('#statusAdd').attr('checked', 'checked');
+        } else {
+          $('#statusAdd').removeAttr('checked');
+        }
     	  $('#modal-add').modal('show');
       } else {
     	  dialog({
@@ -611,7 +423,7 @@
       }
     }, 'json');
 	}
-	function trashRegion(regionId) {
+	function trashCustomer(dataId) {
 		dialog({
       title: '消息',
       content: '确定要删除吗?',
@@ -619,9 +431,9 @@
       ok: function () {
         var that = this;
         this.title('删除中…');
-        var url = '${ctx}/home/region/trash?random='+ Math.random();
+        var url = '${ctx}/home/customer/trash?random='+ Math.random();
         var params = {
-            id: regionId
+            id: dataId
         };
         $.post(url, params, function(result) {
           dialog({
@@ -629,7 +441,7 @@
             content: result.message,
             okValue: '确定',
             ok: function () {
-              tableRegion.ajax.reload();
+              tableCustomer.ajax.reload();
               return true;
             }
           }).width(100).showModal();

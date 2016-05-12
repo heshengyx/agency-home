@@ -8,6 +8,8 @@
 	<mapping path="/home/building" decorator="/WEB-INF/layout/mainLayout.jsp"/>
 	<mapping path="/home/house" decorator="/WEB-INF/layout/mainLayout.jsp"/>
 	
+	<mapping path="/home/customer" decorator="/WEB-INF/layout/mainLayout.jsp"/>
+	
 	<mapping path="/home/region/country" decorator="/WEB-INF/layout/mainLayout.jsp"/>
 	<mapping path="/home/region/province" decorator="/WEB-INF/layout/mainLayout.jsp"/>
 	<mapping path="/home/region/city" decorator="/WEB-INF/layout/mainLayout.jsp"/>

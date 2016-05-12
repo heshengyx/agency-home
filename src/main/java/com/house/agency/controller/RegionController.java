@@ -120,9 +120,9 @@ public class RegionController extends BaseController {
 		return jMessage;
 	}
 	
-	@RequestMapping("/edit")
+	@RequestMapping("/getData")
 	@ResponseBody
-	public Object edit(String id) {
+	public Object getData(String id) {
 		JsonMessage jMessage = new JsonMessage();
 		Map<String, List<Region>> regions = new LinkedHashMap<String, List<Region>>();
 		try {

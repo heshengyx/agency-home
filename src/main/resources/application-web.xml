@@ -99,6 +99,14 @@
       <value>com.house.agency.service.IConfigureService</value>  
     </property>
   </bean>
+  <bean id="customerService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+    <property name="serviceUrl">  
+      <value>http://localhost:8088/agency-core/hessian/customerService</value>   
+    </property>   
+    <property name="serviceInterface">  
+      <value>com.house.agency.service.ICustomerService</value>  
+    </property>
+  </bean>
   
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">  
 		<property name="basename" value="messages"/>

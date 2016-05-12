@@ -72,6 +72,7 @@
     min-width: 0;
   }
   .switch-box {padding-top: 5px;}
+  .checkbox-all {border-bottom: 1px dotted #e2e2e2;}
   </style>
   </css>
 </head>
@@ -377,6 +378,29 @@
                               </div>
                             </div>
                           </div>
+                          <c:if test="${!empty matchs}">
+                          <div class="form-group form-row">
+                            <label class="col-md-2 control-label no-padding-right">配套：</label>
+                            <div class="col-md-10">
+                              <div class="smaller lighter blue checkbox-all">
+	                              <label>
+	                                <input class="ace match-addall" type="checkbox" value="all" />
+	                                <span class="lbl"> 全选</span>
+	                              </label>
+                              </div>
+                              <ul class="list-inline">
+                                <c:forEach var="item" items="${matchs}">
+                                <li>
+	                                <label>
+	                                  <input class="ace match-add" type="checkbox" value="${item.key}" />
+	                                  <span class="lbl"> ${item.value}</span>
+	                                </label>
+                                </li>
+                                </c:forEach>
+                              </ul>
+                            </div>
+                          </div>
+                          </c:if>
                           <div class="form-group form-row">
                             <label class="col-md-2 control-label no-padding-right">描述：</label>
                             <div class="col-md-10">
@@ -429,6 +453,29 @@
                         </div>
                       </div>
                     </div>
+                    <c:if test="${!empty matchs}">
+                    <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">配套：</label>
+                      <div class="col-md-10">
+                        <div class="smaller lighter blue checkbox-all">
+                          <label>
+                            <input class="ace match-editall" type="checkbox" value="all" />
+                            <span class="lbl"> 全选</span>
+                          </label>
+                        </div>
+                        <ul class="list-inline">
+                          <c:forEach var="item" items="${matchs}">
+                          <li>
+                            <label>
+                              <input class="ace match-edit" type="checkbox" value="${item.key}" />
+                              <span class="lbl"> ${item.value}</span>
+                            </label>
+                          </li>
+                          </c:forEach>
+                        </ul>
+                      </div>
+                    </div>
+                    </c:if>
                     <div class="form-group form-row">
                       <label class="col-md-2 control-label no-padding-right">状态：</label>
                       <div class="col-md-8">
@@ -550,6 +597,7 @@
 	</div><!-- /.main-content -->
 	<jscript>
 	<script src="${ctx}/js/format-util.js"></script>
+	<script src="${ctx}/js/mapper.js"></script>
 	<script src="${ctx}/js/jquery.dataTables.min.js"></script>
   <script src="${ctx}/js/dataTables.bootstrap.js"></script>
   <script src="${ctx}/js/jquery.autocompleter.js"></script>
@@ -582,16 +630,11 @@
       $.colorbox.resize();
     }
   };
-	var $spinner = null;
 	$(document).ready(function() {
 		Dropzone.options.myAwesomeDropzone = false;
 	  Dropzone.autoDiscover = false;
 		$('#townsPane').hide();
 		$('#townsPaneAdd').hide();
-		/* $spinner = $('.spinner-field').ace_spinner({value:1,min:0,max:200,step:1, btn_up_class:'btn-info' , btn_down_class:'btn-info'})
-    .on('change', function(){
-    }); */
-		console.log($spinner);
 		
 		tableHouse = $('#tableHouse').DataTable({
 			'language': {
@@ -843,12 +886,20 @@
       var tradeId = $('#tradeId').val();
       var title = $('#titleEdit').val();
       var price = $('#priceEdit').val();
+      var matchs = [];
+      $('.match-edit').each(function() {
+    	  var $this = $(this);
+    	  if ($(this).is(':checked')) {
+    		  matchs.push($this.val());
+   	    }
+      });
       var content = $('#contentEdit').html();
       var url = '${ctx}/home/trade/saveOrUpdate?random='+ Math.random();
       var params = {
           id: tradeId,
           title: title,
           price: price * 100,
+          matchs: matchs.join(),
           content: content
       };
       $.post(url, params, function(result) {
@@ -953,6 +1004,18 @@
         } else {
           $('#statusEdit').removeAttr('checked');
         }
+    	  var map = new Map();
+    	  var matchs = result.data.matchs;
+    	  matchs = matchs.split(',');
+    	  for (var i = 0; i < matchs.length; i++) {
+    		  map.put(matchs[i], matchs[i]);
+    	  }
+    	  $('.match-edit').each(function() {
+ 	        var $this = $(this);
+ 	        if (map.containsKey($this.val())) {
+ 	        	$this.attr('checked', 'checked');
+ 	        }
+ 	      });
     	  $('#contentEdit').html(result.data.content);
         $('#modal-edit').modal('show');
       } else {
