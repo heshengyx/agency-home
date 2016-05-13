@@ -2,7 +2,8 @@
 <%@ include file="/common/include.jsp"%> 
 <html>
 <head>
-  <title>客户-爱房网</title>
+  <title>客户需求-爱房网</title>
+  <link href="${ctx}/css/chosen.css" rel="stylesheet">
   <link href="${ctx}/css/jquery.autocompleter.css" rel="stylesheet">
   <link href="${ctx}/css/autocompleter.css" rel="stylesheet">
   <link href="${ctx}/css/datepicker.css" rel="stylesheet">
@@ -45,6 +46,10 @@
   .ace-thumbnails>li {margin-left: 20px;} 
   
   .switch-box {padding-top: 5px;}
+  
+  .chosen-container>.chosen-single, [class*="chosen-container"]>.chosen-single {
+    height: 28px;
+  }
   </style>
   </css>
 </head>
@@ -74,9 +79,111 @@
                   <td>
                     <form class="form-horizontal" id="searchForm">
                       <div class="form-group form-row">
+                        <label class="col-md-1 control-label no-padding-right">区域：</label>
+                        <div class="col-md-11">
+                          <ul class="list-inline" id="districts">
+                            <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['districts', 'towns', 'townsPane']);">不限</button></li>
+                            <c:forEach var="data" items="${regions}">
+                            <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['districts', 'towns', 'townsPane']);">${data.name}</button></li>
+                            </c:forEach> 
+                          </ul>
+                          <div id="townsPane">
+                            <hr class="hr-line">
+                            <ul class="list-inline" id="towns">
+                              <li><button type="button" class="btn btn-danger btn-xs">不限</button></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group form-row">
+                        <label class="col-md-1 control-label no-padding-right">楼盘：</label>
+                        <div class="col-md-3">
+                          <div class="input-group">
+                            <input class="input-field" type="text" id="buildingName" placeholder="楼盘名称">
+                            <span class="input-group-addon"><i class="icon-home"></i></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group form-row">
                         <label class="col-md-1 control-label no-padding-right">姓名：</label>
-                        <div class="col-md-2">
-                          <input type="text" id="name" name="name" placeholder="客户名称">
+                        <div class="col-md-11">
+                          <select class="input-select chosen-select" id="name">
+                            <option value="">不限</option>
+                            <c:forEach var="data" items="${customers}">
+                            <option value="${data.id}">${data.name}</option>
+                            </c:forEach>
+                          </select>
+                          &nbsp;
+                          <label>
+                            <input name="type" type="radio" class="ace" checked>
+                            <span class="lbl"> 不限</span>
+                          </label>
+                          &nbsp;
+                          <label>
+                            <input name="type" type="radio" class="ace">
+                            <span class="lbl"> 求购</span>
+                          </label>
+                          &nbsp;
+                          <label>
+                            <input name="type" type="radio" class="ace">
+                            <span class="lbl"> 求租</span>
+                          </label>
+                          <!-- <small>~</small>
+                          <select class="input-select" id="type">
+                            <option value="">不限</option>
+                            <option value="1">求购</option>
+                          </select> -->
+                          <!-- <select class="input-select chosen-select" id="form-field-select-3">
+                            <option value="">不限</option>
+                            <option value="AL">Alabama</option>
+                            <option value="AK">Alaska</option>
+                            <option value="AZ">Arizona</option>
+                          </select> -->
+                        </div>
+                      </div>
+                      <div class="form-group form-row">
+                        <label class="col-md-1 control-label no-padding-right">价格：</label>
+                        <div class="col-md-3">
+                          <input class="input-text" type="text" id="priceBegin">
+                          <small>~</small>
+                          <input class="input-text" type="text" id="priceEnd">
+                        </div>
+                        <label class="col-md-1 control-label no-padding-right">面积：</label>
+                        <div class="col-md-3">
+                          <input class="input-text" type="text" id="priceBegin">
+                          <small>~</small>
+                          <input class="input-text" type="text" id="priceEnd">
+                        </div>
+                      </div>
+                      <div class="form-group form-row">
+                        <label class="col-md-1 control-label no-padding-right">户型：</label>
+                        <div class="col-md-8">
+                          <select class="input-select" id="room">
+                            <option value="0">选择室</option>
+                            <option value="1">1室</option>
+                            <option value="2">2室</option>
+                            <option value="3">3室</option>
+                            <option value="4">4室</option>
+                            <option value="5">5室</option>
+                          </select>
+                          <small>~</small>
+                          <select class="input-select" id="saloon">
+                            <option value="0">选择厅</option>
+                            <option value="1">1厅</option>
+                            <option value="2">2厅</option>
+                            <option value="3">3厅</option>
+                            <option value="4">4厅</option>
+                            <option value="5">5厅</option>
+                          </select>
+                          <small>~</small>
+                          <select class="input-select" id="toilet">
+                            <option value="0">选择卫</option>
+                            <option value="1">1卫</option>
+                            <option value="2">2卫</option>
+                            <option value="3">3卫</option>
+                            <option value="4">4卫</option>
+                            <option value="5">5卫</option>
+                          </select>
                         </div>
                       </div>
                       <div class="form-group form-row">
@@ -99,12 +206,19 @@
         </div>
       </div><!-- /.page-header -->
       
+      <input id="districtsValue" type="hidden">
+      <input id="townsValue" type="hidden">
+      <input id="districtsAddValue" type="hidden">
+      <input id="townsAddValue" type="hidden">
+      <input id="buildingId" type="hidden">
+      <input id="buildingIdAdd" type="hidden">
+      
 	    <div class="row">
 	      <div class="col-xs-12 widget-container-span">
 	        <!-- PAGE CONTENT BEGINS -->
 	        <div class="widget-box">
 		        <div class="widget-header header-color-blue">
-		          <h5><i class="icon-table"></i>客户列表</h5>
+		          <h5><i class="icon-table"></i>客户需求列表</h5>
 	            <div class="widget-toolbar">
 	              <button class="btn btn-minier btn-purple" data-toggle="modal" data-target="#modal-add" data-whatever="add">新增<i class="icon-edit align-top icon-on-right"></i>
                 </button>
@@ -115,13 +229,13 @@
 
 		        <div class="widget-body widget-none">
 			        <div class="table-responsive">
-			          <table id="tableCustomer" class="table table-striped table-bordered table-hover" width="100%">
+			          <table id="tableCustomerRequire" class="table table-striped table-bordered table-hover" width="100%">
 			            <thead>
 			              <tr>
 			                <th width="50"></th>
 			                <th class="text-center" width="50"><label><input type="checkbox" class="ace" /><span class="lbl"></span></label></th>
 			                <th>客户名称</th>
-			                <th>手机</th>
+			                <th>类型</th>
 			                <th width="130"><i class="icon-time hidden-480"></i>创建时间</th>
 			                <th class="text-center hidden-480" width="80">状态</th>
 			                <th class="text-center" width="140">操作</th>
@@ -145,15 +259,102 @@
                   <input type="hidden" id="dataId">
                   <div class="modal-body overflow-visible modal-body-content">                
                     <div class="form-group form-row">
-                      <label class="col-md-2 control-label no-padding-right">姓名：</label>
-                      <div class="col-md-8">
-                        <input type="text" id="nameAdd" placeholder="客户名称">
+                      <label class="col-md-2 control-label no-padding-right">区域：</label>
+                      <div class="col-md-10">
+                        <ul class="list-inline" id="districtsAdd">
+                          <li><button type="button" class="btn btn-danger btn-xs" onclick="queryRegions('', '', this, ['districtsAdd', 'townsAdd', 'townsPaneAdd']);">不限</button></li>
+                          <c:forEach var="data" items="${regions}">
+                          <li><button type="button" class="btn btn-link btn-xs" onclick="queryRegions('${data.id}', '${data.name}', this, ['districtsAdd', 'townsAdd', 'townsPaneAdd']);">${data.name}</button></li>
+                          </c:forEach> 
+                        </ul>
+                        <div id="townsPaneAdd">
+                          <hr class="hr-line">
+                          <ul class="list-inline" id="townsAdd">
+                            <li><button type="button" class="btn btn-danger btn-xs">不限</button></li>
+                          </ul>
+                        </div>
                       </div>
                     </div>
                     <div class="form-group form-row">
-                      <label class="col-md-2 control-label no-padding-right">手机：</label>
+                      <label class="col-md-2 control-label no-padding-right">楼盘：</label>
+                      <div class="col-md-5">
+                        <div class="input-group">
+                          <input class="input-field" type="text" id="buildingNameAdd" placeholder="楼盘名称">
+                          <span class="input-group-addon"><i class="icon-home"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">姓名：</label>
+                      <div class="col-md-10">
+                        <select class="input-select input-chosen" id="nameAdd">
+                          <option value="">不限</option>
+                          <c:forEach var="data" items="${customers}">
+                          <option value="${data.id}">${data.name}</option>
+                          </c:forEach>
+                        </select>
+                        &nbsp;
+                        <label>
+                          <input name="typeAdd" type="radio" class="ace" checked>
+                          <span class="lbl"> 不限</span>
+                        </label>
+                        &nbsp;
+                        <label>
+                          <input name="typeAdd" type="radio" class="ace">
+                          <span class="lbl"> 求购</span>
+                        </label>
+                        &nbsp;
+                        <label>
+                          <input name="typeAdd" type="radio" class="ace">
+                          <span class="lbl"> 求租</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">价格：</label>
+                      <div class="col-md-5">
+                        <input class="input-text" type="text" id="priceBeginAdd">
+                        <small>~</small>
+                        <input class="input-text" type="text" id="priceEndAdd">
+                      </div>
+                    </div>
+                    <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">面积：</label>
+                      <div class="col-md-5">
+                        <input class="input-text" type="text" id="areaBeginAdd">
+                        <small>~</small>
+                        <input class="input-text" type="text" id="areaEndAdd">
+                      </div>
+                    </div>
+                    <div class="form-group form-row">
+                      <label class="col-md-2 control-label no-padding-right">户型：</label>
                       <div class="col-md-8">
-                        <input type="text" id="phoneAdd" placeholder="手机">
+                        <select class="input-select input-chosen" multiple="" id="roomAdd" data-placeholder="不限">
+                          <option value="0">不限</option>
+                          <option value="1">1室</option>
+                          <option value="2">2室</option>
+                          <option value="3">3室</option>
+                          <option value="4">4室</option>
+                          <option value="5">5室</option>
+                        </select>
+                        <small>~</small>
+                        <select class="input-select input-chosen" multiple="" id="saloonAdd" data-placeholder="不限">
+                          <option value="0">不限</option>
+                          <option value="1">1厅</option>
+                          <option value="2">2厅</option>
+                          <option value="3">3厅</option>
+                          <option value="4">4厅</option>
+                          <option value="5">5厅</option>
+                        </select>
+                        <small>~</small>
+                        <select class="input-select input-chosen" multiple="" id="toiletAdd" data-placeholder="不限">
+                          <option value="0">不限</option>
+                          <option value="1">1卫</option>
+                          <option value="2">2卫</option>
+                          <option value="3">3卫</option>
+                          <option value="4">4卫</option>
+                          <option value="5">5卫</option>
+                        </select>
                       </div>
                     </div>
                     <div class="form-group form-row">
@@ -183,6 +384,7 @@
 	</div><!-- /.main-content -->
 	<jscript>
 	<script src="${ctx}/js/format-util.js"></script>
+	<script src="${ctx}/js/chosen.jquery.min.js"></script>
 	<script src="${ctx}/js/jquery.dataTables.min.js"></script>
   <script src="${ctx}/js/dataTables.bootstrap.js"></script>
   <script src="${ctx}/js/jquery.autocompleter.js"></script>
@@ -194,12 +396,15 @@
   <script src="${ctx}/js/bootstrapValidator.min.js"></script>
 	<script>
 	var d = null;
-	var tableCustomer = null;
-	var tableCustomerUnit = null;
+	var tableCustomerRequire = null;
+	var tableCustomerRequireUnit = null;
 	$(document).ready(function() {
+		$('#townsPane').hide();
+		$('#townsPaneAdd').hide();
+		$('.chosen-select').chosen(); 
 		$('#searchForm').bootstrapValidator({
       submitHandler: function(validator, form, submitButton) {
-    	  queryCustomers();
+    	  queryCustomerRequires();
     	  validator.disableSubmitButtons(false);
       }
     });
@@ -212,8 +417,8 @@
       }, */
       submitHandler: function(validator, form, submitButton) {
         submitForm();
-      },
-			fields: {
+      }
+			/* fields: {
 				name: {
           validators: {
             notEmpty: {
@@ -221,9 +426,9 @@
             }
           }
         }
-      }
+      } */
 		});
-		tableCustomer = $('#tableCustomer').DataTable({
+		tableCustomerRequire = $('#tableCustomerRequire').DataTable({
 			'language': {
          'processing':  '处理中...',
          'lengthMenu':  '每页 _MENU_ 条记录',
@@ -242,7 +447,7 @@
       'serverSide': true, //开启服务器模式
       //'deferRender': true, //开启延迟渲染
       'ajax': {
-        'url': '${ctx}/home/customer/queryData',
+        'url': '${ctx}/home/customerRequire/queryData',
         'type': 'POST',
         'data': function ( d ) { //添加额外的参数发送到服务器
           //d.tag = 'release';
@@ -260,10 +465,10 @@
           return content;
         }},
         { 'orderable': false, 'targets': 2, 'render': function(data, type, row) {
-          return data.name;
+          return '1';
         }},
         { 'orderable': false, 'targets': 3, 'render': function(data, type, row) {
-          return data.phone;
+          return '2';
         }},
         { 'targets': 4, 'render': function(data, type, row) {
           var content = to_date_hm(data.createTime);
@@ -285,9 +490,9 @@
           //content += '  <a class="blue" href="#modal-table" role="button" data-toggle="modal" data-customer="' + data.id + '" title="查看需求"><i class="icon-info bigger-130"></i></a>';
           //content += '  <a class="blue" href="#" title="新增需求"><i class="icon-edit bigger-130"></i></a><br>';
           content += '  <a class="blue" href="#" title="详情"><i class="icon-zoom-in bigger-130"></i></a>';
-          content += '  <a class="green" href="#" onclick="editCustomer(\'' + data.id + '\');" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
+          content += '  <a class="green" href="#" onclick="editCustomerRequire(\'' + data.id + '\');" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
           //content += '  <a class="green" href="#modal-add" role="button" data-toggle="modal" data-region="' + data.id + '" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
-          content += '  <a class="red" href="#" onclick="trashCustomer(\'' + data.id + '\');" title="删除" ><i class="icon-trash bigger-130"></i></a>';
+          content += '  <a class="red" href="#" onclick="trashCustomerRequire(\'' + data.id + '\');" title="删除" ><i class="icon-trash bigger-130"></i></a>';
           content += '</div>';
           content += '<div class="visible-xs visible-sm hidden-md hidden-lg">';
           content += '  <div class="inline position-relative">';
@@ -333,9 +538,9 @@
     	  
       }
 		});
-		tableCustomer.on('order.dt search.dt',
+		tableCustomerRequire.on('order.dt search.dt',
       function () {
-			  tableCustomer.column(0, {
+			  tableCustomerRequire.column(0, {
           search: 'applied',
           order: 'applied'
         }).nodes().each(function (cell, i) {
@@ -343,31 +548,64 @@
         });
     }).draw();
 		
-		$('#modal-add').on('show.bs.modal', function (event) {
+		queryBuildingName('buildingName', 'buildingId', 'districtsValue', 'townsValue');
+		queryBuildingName('buildingNameAdd', 'buildingIdAdd', 'districtsAddValue', 'townsAddValue');
+		
+		/* $('#modal-add').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget);
 		  var whatever = button.data('whatever');
 			$('#dataAddForm').data('bootstrapValidator').resetForm();
 			if (whatever) {
-				$('#nameAdd').val('');
-				$('#phoneAdd').val('');
 				$('#statusAdd').attr('checked', 'checked');
 			}
-		});
+		}); */
+		$('#modal-add').on('shown.bs.modal', function (event) {
+			$('.input-chosen').chosen();
+			var button = $(event.relatedTarget);
+      var whatever = button.data('whatever');
+      $('#dataAddForm').data('bootstrapValidator').resetForm();
+      if (whatever) {
+        $('#statusAdd').attr('checked', 'checked');
+      }
+    });
 	});
 	
 	function submitForm() {
 		var dataId = $('#dataId').val();
-    var name = $('#nameAdd').val();
-    var phone = $('#phoneAdd').val();
+    var customerId = $('#nameAdd').val();
+    var buildingId = $('#buildingIdAdd').val();
+    var priceBegin = $('#priceBeginAdd').val();
+    var priceEnd = $('#priceEndAdd').val();
+    var areaBegin = $('#areaBeginAdd').val();
+    var areaEnd = $('#areaEndAdd').val();
+    var rooms = $('#roomAdd').val();
+    if (rooms) {
+    	rooms = rooms.join();
+    }
+    var saloons = $('#saloonAdd').val();
+    if (saloons) {
+    	saloons = saloons.join();
+    }
+    var toilets = $('#toiletAdd').val();
+    if (toilets) {
+    	toilets = toilets.join();
+    }
     var status = '0';
     if ($('#statusAdd').is(':checked')) {
       status = '1';
     }
-    var url = '${ctx}/home/customer/saveOrUpdate?random='+ Math.random();
+    var url = '${ctx}/home/customerRequire/saveOrUpdate?random='+ Math.random();
     var params = {
     		id: dataId,
-        name: name,
-        phone: phone,
+    		customerId: customerId,
+    		buildingIds: buildingId,
+    		priceBegin: priceBegin * 100,
+    		priceEnd: priceEnd * 100,
+    		areaBegin: areaBegin * 100,
+    		areaEnd: areaEnd * 100,
+    		rooms: rooms,
+    		saloons: saloons,
+    		toilets: toilets,
         status: status
     };
     $.post(url, params, function(result) {
@@ -377,13 +615,13 @@
        content: result.message,
        okValue: '确定',
        ok: function () {
-         queryCustomers();
+         queryCustomerRequires();
          return true;
        }
      }).width(100).showModal();
     }, 'json');
 	}
-	function queryCustomers() {
+	function queryCustomerRequires() {
 		d = dialog({
       title: '查询载入中...'
     });
@@ -393,11 +631,11 @@
     if (nameValue) {
     	search += '&name=' + nameValue;
     }
-    tableCustomer.ajax.url('${ctx}/home/customer/queryData' + search).load();
+    tableCustomerRequire.ajax.url('${ctx}/home/customerRequire/queryData' + search).load();
     d.close();
 	}
-	function editCustomer(dataId) {
-		var url = '${ctx}/home/customer/getData?random='+ Math.random();
+	function editCustomerRequire(dataId) {
+		var url = '${ctx}/home/customerRequire/getData?random='+ Math.random();
     var params = {
         id: dataId
     };
@@ -423,7 +661,7 @@
       }
     }, 'json');
 	}
-	function trashCustomer(dataId) {
+	function trashCustomerRequire(dataId) {
 		dialog({
       title: '消息',
       content: '确定要删除吗?',
@@ -431,7 +669,7 @@
       ok: function () {
         var that = this;
         this.title('删除中…');
-        var url = '${ctx}/home/customer/trash?random='+ Math.random();
+        var url = '${ctx}/home/customerRequire/trash?random='+ Math.random();
         var params = {
             id: dataId
         };
@@ -441,7 +679,7 @@
             content: result.message,
             okValue: '确定',
             ok: function () {
-              tableCustomer.ajax.reload();
+              tableCustomerRequire.ajax.reload();
               return true;
             }
           }).width(100).showModal();
@@ -451,6 +689,72 @@
       cancel: function () {}
     }).width(100).showModal();
 	}
+	function queryRegions(regionId, name, _this, fieldIds) {
+    addActivedName(fieldIds[0], regionId, name, _this);
+    var $towns = $('#' + fieldIds[1]);
+    var $townsPane = $('#' + fieldIds[2]);
+    $towns.children().not(':first').remove();
+    if (regionId) {
+      var url = '${ctx}/home/region/list?random='+ Math.random();
+      var params = {
+        parentId: regionId
+      };
+      $.post(url, params, function(result) {
+        if (result.status) {
+          for (var i=0; i<result.data.length; i++) {
+            $htmlLi = $('<li><button type="button" class="btn btn-link btn-xs" onclick="addActivedName(\'' + fieldIds[1] + '\', \'' + result.data[i].id + '\', \'' + result.data[i].name + '\', this);">' + result.data[i].name + '</button></li>');
+            $towns.append($htmlLi).append('\n');
+          }
+          $townsPane.show();
+        }
+      }, 'json');
+    } else {
+      $townsPane.hide();
+      $towns.children(':first').children().removeClass('btn-link').addClass('btn-danger');
+    }
+  }
+	function addActivedName(fieldId, val, name, _this) {
+    $('#' + fieldId + ' li>button.btn-danger').removeClass('btn-danger').addClass('btn-link');
+    if (_this) {
+      $(_this).removeClass('btn-link').addClass('btn-danger');
+    }
+    $('#' + fieldId + 'Value').val(val);
+  }
+	function queryBuildingName(buildingName, buildingId, districts, towns) {
+    $('#' + buildingName).autocompleter({
+      // marker for autocomplete matches
+      highlightMatches: true,
+      // object to local or url to remote search
+      source: '${ctx}/home/building/search',
+      // custom template
+      template: '{{ label }} <span>({{ districtName }}-{{ townName }})</span>',
+      // show hint
+      hint: true,
+      // abort source if empty field
+      empty: false,
+      // max results
+      //limit: 1,
+      combine: function() {
+        var districtId = $('#' + districts).val();
+        var townId = $('#' + towns).val();
+        if (townId) {
+          districtId = '';
+        } else {
+          townId = '';
+        }
+        return {
+          buildingName: $('#' + buildingName).val(),
+          districtId: districtId,
+          townId: townId
+        };
+      },
+      callback: function (value, index, selected) {
+        if (selected) {
+          $('#' + buildingId).val(selected.buildingId);
+        }
+      }
+    });
+  }
 	</script>
 	</jscript>
 </body>

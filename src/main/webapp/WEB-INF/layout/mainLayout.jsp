@@ -381,6 +381,9 @@
                 <li>
                   <a href="${ctx}/home/customer"><i class="icon-double-angle-right"></i>客户</a>
                 </li>
+                <li>
+                  <a href="${ctx}/home/customerRequire"><i class="icon-double-angle-right"></i>需求</a>
+                </li>
               </ul>
             </li>
             <li>

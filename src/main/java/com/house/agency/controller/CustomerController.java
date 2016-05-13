@@ -34,7 +34,7 @@ public class CustomerController extends BaseController {
 	private ICustomerService customerService;
 	
 	@RequestMapping("")
-	public String pageHouse(Model model) {
+	public String page(Model model) {
 		setModel(model, regionService);
 		
 		return "customer";
