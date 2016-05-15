@@ -263,7 +263,7 @@
 
 		        <div class="widget-body widget-none">
 			        <div class="table-responsive">
-			          <table id="tableHouse" class="table table-striped table-bordered table-hover" width="100%">
+			          <table class="table table-striped table-bordered table-hover" id="tableHouse" width="100%">
 			            <thead>
 			              <tr>
 			                <th width="50"></th>

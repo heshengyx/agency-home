@@ -4,11 +4,10 @@
 <head>
   <title>客户需求-爱房网</title>
   <link href="${ctx}/css/chosen.css" rel="stylesheet">
-  <link href="${ctx}/css/jquery.autocompleter.css" rel="stylesheet">
-  <link href="${ctx}/css/autocompleter.css" rel="stylesheet">
   <link href="${ctx}/css/datepicker.css" rel="stylesheet">
   <link href="${ctx}/css/colorbox.css" rel="stylesheet">
   <link href="${ctx}/css/bootstrapValidator.min.css" rel="stylesheet">
+  <link href="${ctx}/css/jquery-ui-1.10.3.full.min.css" rel="stylesheet">
   <css>
   <style>
   .hr-line {
@@ -50,6 +49,9 @@
   .chosen-container>.chosen-single, [class*="chosen-container"]>.chosen-single {
     height: 28px;
   }
+  .ui-autocomplete {z-index: 1050;}
+  
+  .padding-left-body {padding-left: 20px;}
   </style>
   </css>
 </head>
@@ -107,7 +109,7 @@
                       <div class="form-group form-row">
                         <label class="col-md-1 control-label no-padding-right">姓名：</label>
                         <div class="col-md-11">
-                          <select class="input-select chosen-select" id="name">
+                          <select class="input-select chosen-select" id="customer">
                             <option value="">不限</option>
                             <c:forEach var="data" items="${customers}">
                             <option value="${data.id}">${data.name}</option>
@@ -128,17 +130,6 @@
                             <input name="type" type="radio" class="ace">
                             <span class="lbl"> 求租</span>
                           </label>
-                          <!-- <small>~</small>
-                          <select class="input-select" id="type">
-                            <option value="">不限</option>
-                            <option value="1">求购</option>
-                          </select> -->
-                          <!-- <select class="input-select chosen-select" id="form-field-select-3">
-                            <option value="">不限</option>
-                            <option value="AL">Alabama</option>
-                            <option value="AK">Alaska</option>
-                            <option value="AZ">Arizona</option>
-                          </select> -->
                         </div>
                       </div>
                       <div class="form-group form-row">
@@ -150,9 +141,9 @@
                         </div>
                         <label class="col-md-1 control-label no-padding-right">面积：</label>
                         <div class="col-md-3">
-                          <input class="input-text" type="text" id="priceBegin">
+                          <input class="input-text" type="text" id="areaBegin">
                           <small>~</small>
-                          <input class="input-text" type="text" id="priceEnd">
+                          <input class="input-text" type="text" id="areaEnd">
                         </div>
                       </div>
                       <div class="form-group form-row">
@@ -205,7 +196,6 @@
           </div>
         </div>
       </div><!-- /.page-header -->
-      
       <input id="districtsValue" type="hidden">
       <input id="townsValue" type="hidden">
       <input id="districtsAddValue" type="hidden">
@@ -235,7 +225,9 @@
 			                <th width="50"></th>
 			                <th class="text-center" width="50"><label><input type="checkbox" class="ace" /><span class="lbl"></span></label></th>
 			                <th>客户名称</th>
-			                <th>类型</th>
+			                <th class="text-center" width="80">类型</th>
+			                <th>需求</th>
+			                <th class="text-center" width="80">匹配</th>
 			                <th width="130"><i class="icon-time hidden-480"></i>创建时间</th>
 			                <th class="text-center hidden-480" width="80">状态</th>
 			                <th class="text-center" width="140">操作</th>
@@ -287,7 +279,7 @@
                     <div class="form-group form-row">
                       <label class="col-md-2 control-label no-padding-right">姓名：</label>
                       <div class="col-md-10">
-                        <select class="input-select input-chosen" id="nameAdd">
+                        <select class="input-select input-chosen" id="customerAdd">
                           <option value="">不限</option>
                           <c:forEach var="data" items="${customers}">
                           <option value="${data.id}">${data.name}</option>
@@ -295,17 +287,12 @@
                         </select>
                         &nbsp;
                         <label>
-                          <input name="typeAdd" type="radio" class="ace" checked>
-                          <span class="lbl"> 不限</span>
-                        </label>
-                        &nbsp;
-                        <label>
-                          <input name="typeAdd" type="radio" class="ace">
+                          <input name="typeAdd" type="radio" class="ace" value="1" checked>
                           <span class="lbl"> 求购</span>
                         </label>
                         &nbsp;
                         <label>
-                          <input name="typeAdd" type="radio" class="ace">
+                          <input name="typeAdd" type="radio" class="ace" value="2">
                           <span class="lbl"> 求租</span>
                         </label>
                       </div>
@@ -377,6 +364,41 @@
             </div>
           </div>
           <!-- modal-add -->
+          <!-- modal-table -->
+          <div id="modal-table" class="modal fade modal-pane" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header no-padding">
+                  <div class="table-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                      <span class="white">&times;</span>
+                    </button>
+                    <span id="nameText"></span><small>（<span id="phoneText"></span>）<span id="typeText"></span>,<span id="buildingText"></span></small>
+                  </div>
+                </div>
+
+                <div class="modal-body no-padding">
+                  <p class="padding-left-body">价格：<span id="priceText"></span>(万)</p>
+                  <p class="padding-left-body">面积：<span id="areaText"></span>(㎡)</p>
+                  <p class="padding-left-body">户型：<span id="patternText"></span></p>
+                  <div class="space-4"></div>
+                  <table class="table table-striped table-bordered table-hover" id="tableHouse" width="100%">
+	                  <thead>
+	                    <tr>
+	                      <th width="50"></th>
+	                      <th>楼盘信息</th>
+	                      <th width="115">价格（万）</th>
+	                      <th width="115">面积（㎡）</th>
+	                      <th width="130"><i class="icon-time hidden-480"></i>发布时间</th>
+	                      <th class="text-center" width="80">操作</th>
+	                    </tr>
+	                  </thead>
+	                </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- modal-table -->
 	        <!-- PAGE CONTENT ENDS -->
 	      </div><!-- /.col -->
 	    </div><!-- /.row -->
@@ -387,21 +409,21 @@
 	<script src="${ctx}/js/chosen.jquery.min.js"></script>
 	<script src="${ctx}/js/jquery.dataTables.min.js"></script>
   <script src="${ctx}/js/dataTables.bootstrap.js"></script>
-  <script src="${ctx}/js/jquery.autocompleter.js"></script>
   <script src="${ctx}/js/date-time/bootstrap-datepicker.min.js"></script>
   <script src="${ctx}/js/bootbox.min.js"></script>
   <script src="${ctx}/js/jquery.hotkeys.min.js"></script>
   <script src="${ctx}/js/bootstrap-wysiwyg.min.js"></script>
   <script src="${ctx}/js/jquery.colorbox-min.js"></script>
   <script src="${ctx}/js/bootstrapValidator.min.js"></script>
+  <script src="${ctx}/js/jquery-ui-1.10.3.full.min.js"></script>
 	<script>
 	var d = null;
+	var tableHouse = null;
 	var tableCustomerRequire = null;
-	var tableCustomerRequireUnit = null;
 	$(document).ready(function() {
+		$('.chosen-select').chosen();
 		$('#townsPane').hide();
-		$('#townsPaneAdd').hide();
-		$('.chosen-select').chosen(); 
+		$('#townsPaneAdd').hide(); 
 		$('#searchForm').bootstrapValidator({
       submitHandler: function(validator, form, submitButton) {
     	  queryCustomerRequires();
@@ -450,9 +472,6 @@
         'url': '${ctx}/home/customerRequire/queryData',
         'type': 'POST',
         'data': function ( d ) { //添加额外的参数发送到服务器
-          //d.tag = 'release';
-          //d.sort = $('#sort').val();
-          //d.level = '${level}';
         }
       },
 			'columnDefs': [
@@ -465,16 +484,40 @@
           return content;
         }},
         { 'orderable': false, 'targets': 2, 'render': function(data, type, row) {
-          return '1';
+        	var content = '';
+          content += '<h4>' + data.name + '</h4>';
+          content += data.phone;
+          return content;
         }},
         { 'orderable': false, 'targets': 3, 'render': function(data, type, row) {
-          return '2';
+        	var content = '<div class="text-center">';
+          if (data.type == '1') {
+            content += '求购';
+          } else {
+            content += '求租';
+          }
+          content += '</div>';
+          return content;
         }},
-        { 'targets': 4, 'render': function(data, type, row) {
-          var content = to_date_hm(data.createTime);
+        { 'orderable': false, 'targets': 4, 'render': function(data, type, row) {
+          var content = '';
+          content += getData(data.districtName, '不限') + ',' + getData(data.townName, '不限') + ',' + data.buildingName + '<br>';
+          content += '价格(万)：' + jmoney(data.priceBegin) + '~' + jmoney(data.priceEnd) + '<br>';
+          content += '面积(㎡)：' + jmoney(data.areaBegin) + '~' + jmoney(data.areaEnd) + '<br>';
+          content += '户型：' + data.rooms + '室~' + data.saloons + '厅~' + data.toilets + '卫';
           return content;
         }},
         { 'orderable': false, 'targets': 5, 'render': function(data, type, row) {
+          var content = '<div class="text-center">';
+          content += '<a class="green" href="#" onclick="customerRequireHouse(\'' + data.requireId + '\');" title="查看房源"><span class="badge badge-info">' + data.num + '</span></a>';
+          content += '</div>';
+          return content;
+        }},
+        { 'targets': 6, 'render': function(data, type, row) {
+          var content = to_date_hm(data.createTime);
+          return content;
+        }},
+        { 'orderable': false, 'targets': 7, 'render': function(data, type, row) {
           var content = '<div class="text-center">';
           if (+data.status) {
         	  content += '<span class="label label-sm label-success">有效</span>';
@@ -484,15 +527,15 @@
           content += '</div>';
           return content;
         }},
-        { 'orderable': false, 'targets': 6, 'render': function(data, type, row) {
+        { 'orderable': false, 'targets': 8, 'render': function(data, type, row) {
         	var content = '<div class="text-center">';
           content += '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
           //content += '  <a class="blue" href="#modal-table" role="button" data-toggle="modal" data-customer="' + data.id + '" title="查看需求"><i class="icon-info bigger-130"></i></a>';
           //content += '  <a class="blue" href="#" title="新增需求"><i class="icon-edit bigger-130"></i></a><br>';
           content += '  <a class="blue" href="#" title="详情"><i class="icon-zoom-in bigger-130"></i></a>';
-          content += '  <a class="green" href="#" onclick="editCustomerRequire(\'' + data.id + '\');" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
+          content += '  <a class="green" href="#" onclick="editCustomerRequire(\'' + data.requireId + '\');" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
           //content += '  <a class="green" href="#modal-add" role="button" data-toggle="modal" data-region="' + data.id + '" title="编辑"><i class="icon-pencil bigger-130"></i></a>';
-          content += '  <a class="red" href="#" onclick="trashCustomerRequire(\'' + data.id + '\');" title="删除" ><i class="icon-trash bigger-130"></i></a>';
+          content += '  <a class="red" href="#" onclick="trashCustomerRequire(\'' + data.requireId + '\');" title="删除" ><i class="icon-trash bigger-130"></i></a>';
           content += '</div>';
           content += '<div class="visible-xs visible-sm hidden-md hidden-lg">';
           content += '  <div class="inline position-relative">';
@@ -532,15 +575,95 @@
         { 'data': null },
         { 'data': null },
         { 'data': null },
+        { 'data': null },
+        { 'data': null },
         { 'data': null }
       ],
       initComplete: function () {
     	  
       }
 		});
+		tableHouse = $('#tableHouse').DataTable({
+      'language': {
+        'processing':  '处理中...',
+        'lengthMenu':  '每页 _MENU_ 条记录',
+        'zeroRecords': '没有找到记录',
+        'infoEmpty':   '无记录',
+        'info':        '当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录',
+        'paginate': {
+          'first':     '首页',
+          'previous':  '上页',
+          'next':      '下页',
+          'last':      '末页'
+        }
+      },
+      'dom': 't<"row"<"col-xs-6"i><"col-xs-6"p>>',
+      'processing': true,
+      'serverSide': true, //开启服务器模式
+      //'deferRender': true, //开启延迟渲染
+      'ajax': {
+        'url': '${ctx}/home/house/queryByCustomerRequire',
+        'type': 'POST',
+        'data': function ( d ) { //添加额外的参数发送到服务器
+        }
+      },
+      'columnDefs': [
+        { 'orderable': false, 'targets': 0},
+        { 'orderable': false, 'targets': 1, 'render': function(data, type, row) {
+          var content = '';
+          content += data.buildingName + '<small>（' + data.districtName + '-' + data.townName + '）</small><br>';
+          content += data.room + '室' + data.saloon + '厅' + data.toilet + '卫';
+          return content;
+        }},
+        { 'targets': 2, 'render': function(data, type, row) {
+          var content = '<div class="text-right">';
+          content += jmoney(data.price);
+          content += '</div>';
+          return content;
+        }},
+        { 'targets': 3, 'render': function(data, type, row) {
+          var content = '<div class="text-right">';
+          content += jmoney(data.area);
+          content += '</div>';
+          return content;
+        }},
+        { 'targets': 4, 'render': function(data, type, row) {
+          var content = to_date(data.releaseTime);
+          return content;
+        }},
+        { 'orderable': false, "targets": 5, "render": function(data, type, row) {
+        	var content = '<div class="text-center">';
+        	content += '<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">';
+        	content += '<a class="blue" href="#" title="详情"><i class="icon-zoom-in bigger-130"></i></a>';
+        	content += '</div>';
+        	content += '</div>';
+          return content;
+        }}
+      ],
+      'order': [
+        [0, null]
+      ],
+      'columns': [
+        { 'data': null },
+        { 'data': null },
+        { 'data': null },
+        { 'data': null },
+        { 'data': null },
+        { 'data': null }
+      ]
+    });
 		tableCustomerRequire.on('order.dt search.dt',
       function () {
 			  tableCustomerRequire.column(0, {
+          search: 'applied',
+          order: 'applied'
+        }).nodes().each(function (cell, i) {
+          cell.innerHTML = i + 1;
+        });
+    }).draw();
+		tableHouse.on('order.dt search.dt',
+      function () {
+			  tableHouse.column(0, {
           search: 'applied',
           order: 'applied'
         }).nodes().each(function (cell, i) {
@@ -567,13 +690,23 @@
       if (whatever) {
         $('#statusAdd').attr('checked', 'checked');
       }
+      //queryBuildingName('buildingNameAdd', 'buildingIdAdd', 'districtsAddValue', 'townsAddValue');
     });
 	});
-	
+	function getData(data, text) {
+		var content = '';
+		if (data) {
+			content = data;
+		} else {
+			content = text; 
+		}
+		return content;
+	}
 	function submitForm() {
 		var dataId = $('#dataId').val();
-    var customerId = $('#nameAdd').val();
+    var customerId = $('#customerAdd').val();
     var buildingId = $('#buildingIdAdd').val();
+    var type = $('#typeAdd').val();
     var priceBegin = $('#priceBeginAdd').val();
     var priceEnd = $('#priceEndAdd').val();
     var areaBegin = $('#areaBeginAdd').val();
@@ -606,6 +739,7 @@
     		rooms: rooms,
     		saloons: saloons,
     		toilets: toilets,
+    		type: type,
         status: status
     };
     $.post(url, params, function(result) {
@@ -627,9 +761,49 @@
     });
     d.showModal();
     var search = '?random=' + Math.random();
-    var nameValue = $('#name').val();
-    if (nameValue) {
-    	search += '&name=' + nameValue;
+    var districtId = $('#districtsValue').val();
+    if (districtId) {
+      search += '&districtId=' + districtId;
+    }
+    var townId = $('#townsValue').val();
+    if (townId) {
+      search += '&townId=' + townId;
+    }
+    var buildingId = $('#buildingId').val();
+    if (buildingId) {
+      search += '&buildingId=' + buildingId;
+    }
+    var priceBegin = $('#priceBegin').val();
+    if (priceBegin) {
+      search += '&priceBegin=' + priceBegin;
+    }
+    var priceEnd = $('#priceEnd').val();
+    if (priceEnd) {
+      search += '&priceEnd=' + priceEnd;
+    }
+    var areaBegin = $('#areaBegin').val();
+    if (areaBegin) {
+      search += '&areaBegin=' + areaBegin;
+    }
+    var areaEnd = $('#areaEnd').val();
+    if (areaEnd) {
+      search += '&areaEnd=' + areaEnd;
+    }
+    var rooms = $('#room').val();
+    if (rooms) {
+      search += '&rooms=' + rooms;
+    }
+    var saloons = $('#saloon').val();
+    if (saloons) {
+      search += '&saloons=' + saloons;
+    }
+    var toilets = $('#toilet').val();
+    if (toilets) {
+      search += '&toilets=' + toilets;
+    }
+    var type = $('#type').val();
+    if (type) {
+      search += '&type=' + type;
     }
     tableCustomerRequire.ajax.url('${ctx}/home/customerRequire/queryData' + search).load();
     d.close();
@@ -642,7 +816,7 @@
     $.post(url, params, function(result) {
       if (result.status) {
     	  $('#dataId').val(dataId);
-    	  $('#nameAdd').val(result.data.name);
+    	  $('#customerAdd').val(result.data.name);
     	  $('#phoneAdd').val(result.data.phone);
     	  var status = result.data.status;
     	  if (+status) {
@@ -721,40 +895,125 @@
     $('#' + fieldId + 'Value').val(val);
   }
 	function queryBuildingName(buildingName, buildingId, districts, towns) {
-    $('#' + buildingName).autocompleter({
-      // marker for autocomplete matches
-      highlightMatches: true,
-      // object to local or url to remote search
-      source: '${ctx}/home/building/search',
-      // custom template
-      template: '{{ label }} <span>({{ districtName }}-{{ townName }})</span>',
-      // show hint
-      hint: true,
-      // abort source if empty field
-      empty: false,
-      // max results
-      //limit: 1,
-      combine: function() {
-        var districtId = $('#' + districts).val();
-        var townId = $('#' + towns).val();
-        if (townId) {
-          districtId = '';
-        } else {
-          townId = '';
-        }
-        return {
-          buildingName: $('#' + buildingName).val(),
-          districtId: districtId,
-          townId: townId
-        };
+		var districtId = $('#' + districts).val();
+    var townId = $('#' + towns).val();
+    if (townId) {
+      districtId = '';
+    } else {
+      townId = '';
+    }
+		$('#' + buildingName).autocomplete({
+      source: function( request, response ) {
+        $.ajax({
+          url: '${ctx}/home/building/search',
+          dataType: 'json',
+          data:{
+            buildingName: request.term,
+            districtId: districtId,
+            townId: townId
+          },
+          success: function( data ) {
+            response( $.map( data, function( item ) {
+              return item;
+            }));
+          }
+        });
       },
-      callback: function (value, index, selected) {
-        if (selected) {
-          $('#' + buildingId).val(selected.buildingId);
-        }
+      minLength: 1,
+      select: function( event, ui ) {
+    	  $('#' + buildingId).val(ui.item.buildingId);
       }
     });
   }
+	function customerRequireHouse(dataId) {
+		var url = '${ctx}/home/customerRequire/getDataByRequireId?random='+ Math.random();
+    var params = {
+    		requireId: dataId
+    };
+    $.post(url, params, function(result) {
+      if (result.status) {
+    	  $('#nameText').html(result.data.name);
+    	  $('#phoneText').html(result.data.phone);
+    	  var typeText = '';
+    	  var type = result.data.type;
+    	  if (type == '1') {
+    		  typeText = '求购';
+    	  } else {
+    		  typeText = '求租';
+    	  }
+    	  $('#typeText').html(typeText);
+    	  var buildingText = getData(result.data.districtName, '不限') + ',' + getData(result.data.townName, '不限') + ',' + result.data.buildingName + '<br>';
+    	  $('#buildingText').html(buildingText);
+    	  var priceText = jmoney(result.data.priceBegin) + '~' + jmoney(result.data.priceEnd);
+    	  $('#priceText').html(priceText);
+        var areaText = jmoney(result.data.areaBegin) + '~' + jmoney(result.data.areaEnd);
+        $('#areaText').html(areaText);
+        var patternText = result.data.rooms + '室~' + result.data.saloons + '厅~' + result.data.toilets + '卫';
+        $('#patternText').html(patternText);
+        
+        d = dialog({
+          title: '房源载入中...'
+        });
+        d.showModal();
+        var search = '?random=' + Math.random();
+        var districtId = result.data.districtIds;
+        if (districtId) {
+        	search += '&districtId=' + districtId;
+        }
+        var townId = result.data.townIds;
+        if (townId) {
+          search += '&townId=' + townId;
+        }
+        var buildingId = result.data.buildingIds;
+        if (buildingId) {
+          search += '&buildingId=' + buildingId;
+        }
+        var priceBegin = result.data.priceBegin;
+        if (priceBegin) {
+          search += '&priceBegin=' + priceBegin;
+        }
+        var priceEnd = result.data.priceEnd;
+        if (priceEnd) {
+          search += '&priceEnd=' + priceEnd;
+        }
+        var areaBegin = result.data.areaBegin;
+        if (areaBegin) {
+          search += '&areaBegin=' + areaBegin;
+        }
+        var areaEnd = result.data.areaEnd;
+        if (areaEnd) {
+          search += '&areaEnd=' + areaEnd;
+        }
+        var rooms = result.data.rooms;
+        if (rooms) {
+          search += '&rooms=' + rooms;
+        }
+        var saloons = result.data.saloons;
+        if (saloons) {
+          search += '&saloons=' + saloons;
+        }
+        var toilets = result.data.toilets;
+        if (toilets) {
+          search += '&toilets=' + toilets;
+        }
+        var type = result.data.type;
+        if (type) {
+          search += '&type=' + type;
+        }
+        
+        tableHouse.ajax.url('${ctx}/home/house/queryByCustomerRequire' + search).load();
+        d.close();
+        $('#modal-table').modal('show');
+      } else {
+        dialog({
+          title: '消息',
+          content: result.message,
+          okValue: '确定',
+          ok: true
+        }).width(100).showModal();
+      }
+    }, 'json');
+	}
 	</script>
 	</jscript>
 </body>

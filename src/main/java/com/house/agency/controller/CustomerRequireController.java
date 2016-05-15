@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.house.agency.data.home.CustomerRequireHomeData;
 import com.house.agency.entity.Customer;
 import com.house.agency.entity.CustomerRequire;
 import com.house.agency.entity.User;
@@ -51,13 +52,13 @@ public class CustomerRequireController extends BaseController {
 	@RequestMapping("/queryData")
 	@ResponseBody
 	public Object queryData(CustomerRequireQueryParam param) {
-		IPage<CustomerRequire> datas = customerRequireService.query(param, param.getPage(),
+		IPage<CustomerRequireHomeData> datas = customerRequireService.queryData(param, param.getPage(),
 				param.getLength());
-		JsonResult<CustomerRequire> jResult = new JsonResult<CustomerRequire>();
+		JsonResult<CustomerRequireHomeData> jResult = new JsonResult<CustomerRequireHomeData>();
 		jResult.setDraw(param.getDraw());
 		jResult.setRecordsTotal(datas.getTotalRecord());
 		jResult.setRecordsFiltered(datas.getTotalRecord());
-		jResult.setData((List<CustomerRequire>) datas.getData());
+		jResult.setData((List<CustomerRequireHomeData>) datas.getData());
 		return jResult;
 	}
 	
@@ -88,6 +89,27 @@ public class CustomerRequireController extends BaseController {
 		CustomerRequire data = null;
 		try {
 			data = customerRequireService.getDataById(id);
+			jMessage.setStatus(JsonMessage.TRUE);
+			jMessage.setData(data);
+		} catch (Exception e) {
+			jMessage.setStatus(JsonMessage.FALSE);
+			if (e instanceof ServiceException) {
+				jMessage.setMessage(e.getMessage());
+			} else {
+				jMessage.setMessage("系统异常");
+			}
+			logger.error(jMessage.getMessage(), e);
+		}
+		return jMessage;
+	}
+	
+	@RequestMapping("/getDataByRequireId")
+	@ResponseBody
+	public Object getDataByRequireId(String requireId) {
+		JsonMessage jMessage = new JsonMessage();
+		CustomerRequireHomeData data = null;
+		try {
+			data = customerRequireService.getDataByRequireId(requireId);
 			jMessage.setStatus(JsonMessage.TRUE);
 			jMessage.setData(data);
 		} catch (Exception e) {

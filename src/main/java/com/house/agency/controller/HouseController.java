@@ -144,4 +144,17 @@ public class HouseController extends BaseController {
 		jResult.setData((List<HouseManageData>) datas.getData());
 		return jResult;
 	}
+	
+	@RequestMapping("/queryByCustomerRequire")
+	@ResponseBody
+	public Object queryByCustomerRequire(HouseHomeQueryParam param) {
+		IPage<HouseHomeData> datas = houseService.queryByCustomerRequire(param, param.getPage(),
+				param.getLength());
+		JsonResult<HouseHomeData> jResult = new JsonResult<HouseHomeData>();
+		jResult.setDraw(param.getDraw());
+		jResult.setRecordsTotal(datas.getTotalRecord());
+		jResult.setRecordsFiltered(datas.getTotalRecord());
+		jResult.setData((List<HouseHomeData>) datas.getData());
+		return jResult;
+	}
 }

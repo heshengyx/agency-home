@@ -768,8 +768,8 @@
           var content = '';
           content += '<li>';
           content += ' <div class="thumbnail">';
-          content += '  <a href="${imageUrl}' + data[i].url + '" title="' + data[i].title + '" data-rel="colorbox">';
-          content += '   <img src="${imageUrl}' + data[i].thumb + '" alt="...">';
+          content += '  <a href="${imageUrl}/' + data[i].url + '" title="' + data[i].title + '" data-rel="colorbox">';
+          content += '   <img src="${imageUrl}/' + data[i].thumb + '" alt="...">';
           content += '  </a>';
           content += '  <div class="caption">';
           content += '    <h6><span id="title_' + data[i].id + '">' + data[i].title + '</span><input class="form-control" type="text" id="input_' + data[i].id + '" value="' + data[i].title + '"></h6>';

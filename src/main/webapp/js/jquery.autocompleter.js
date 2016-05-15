@@ -265,7 +265,6 @@
     function _search(query, source, limit) {
         var response = [];
         query = query.toUpperCase();
-
         if (source.length) {
             for (var i = 0; i < 2; i++) {
                 for (var item in source) {
@@ -329,8 +328,10 @@
                     beforeSend: function (xhr) {
                         data.$autocompleter.addClass('autocompleter-ajax');
                         _clear(data);
+                        console.log("===================1" + data.cache);
                         if (data.cache) {
                             var stored = _getCache(this.url);
+                            console.log(stored);
                             if (stored) {
                                 xhr.abort();
                                 _response(stored, data);
@@ -339,6 +340,7 @@
                     }
                 })
                 .done(function (response) {
+                	console.log("===================done" + data.cache);
                     // Get subobject from responce
                     if (data.offset) {
                         response = _grab(response, data.offset);
@@ -382,7 +384,6 @@
      */
     function _response(response, data) {
         _buildList(response, data);
-
         if (data.$autocompleter.hasClass('autocompleter-focus')) {
             _open(null, data);
         }
@@ -445,7 +446,6 @@
                 data.hintText = hintText;
             }
         }
-
         // Update data
         data.response = list;
         data.$autocompleter.find(".autocompleter-list").html(menu);
@@ -634,7 +634,6 @@
      */
     function _open(e, instanceData) {
         var data = e ? e.data : instanceData;
-
         if (!data.$node.prop("disabled") && !data.$autocompleter.hasClass("autocompleter-show") && data.$list && data.$list.length ) {
             data.$autocompleter.removeClass("autocompleter-closed").addClass("autocompleter-show");
             $body.on("click.autocompleter-" + data.guid, ":not(.autocompleter-item)", data, _closeHelper);

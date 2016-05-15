@@ -218,7 +218,7 @@
                     <div class="form-group form-row">
                       <label class="col-md-2 control-label no-padding-right">序号：</label>
                       <div class="col-md-8">
-                        <input class="input-text" type="text" id="seqAdd" placeholder="排序序号">
+                        <input class="input-text" type="text" id="sortAdd" placeholder="排序序号">
                       </div>
                     </div>
                     <div class="form-group form-row">
@@ -448,7 +448,7 @@
 			if (whatever) {
 				$('#nameAdd').val('');
 				$('#codeAdd').val('');
-				$('#seqAdd').val('');
+				$('#sortAdd').val('');
 				$('#districtsAdd').children().not(':first').remove();
 		    $('#citysAdd').children().not(':first').remove();
 		    $('#provincesAdd').children().not(':first').remove();
@@ -462,7 +462,7 @@
     var name = $('#nameAdd').val();
     var code = $('#codeAdd').val();
     var level = $('#levelValue').val();
-    var seq = $('#seqAdd').val();
+    var sort = $('#sortAdd').val();
     var countryValue = $('#countrysAdd').val();
     var provinceValue = $('#provincesAdd').val();
     var cityValue = $('#citysAdd').val();
@@ -488,7 +488,7 @@
         name: name,
         code: code,
         level: level,
-        seq: seq,
+        sort: sort,
         status: status
     };
     $.post(url, params, function(result) {
@@ -579,7 +579,7 @@
     		  if (keys[0] === '5') {
     			  $('#nameAdd').val(keys[3]);
     			  $('#codeAdd').val(keys[4]);
-    			  $('#seqAdd').val(keys[5]);
+    			  $('#sortAdd').val(keys[5]);
     			  if (+keys[6]) {
     				  $('#statusAdd').attr('checked', 'checked');
     			  } else {

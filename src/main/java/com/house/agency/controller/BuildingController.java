@@ -63,6 +63,7 @@ public class BuildingController extends BaseController {
 	@RequestMapping("/search")
 	@ResponseBody
 	public Object search(BuildingQueryParam param) {
+		param.setStatus("1");
 		return buildingService.list(param);
 	}
 	
