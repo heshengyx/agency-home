@@ -15,6 +15,7 @@ import com.house.agency.data.home.HouseHomeData;
 import com.house.agency.data.home.HouseHomeDescData;
 import com.house.agency.data.manage.HouseManageData;
 import com.house.agency.entity.House;
+import com.house.agency.enums.ConfigureEnum;
 import com.house.agency.page.IPage;
 import com.house.agency.param.home.HouseHomeQueryParam;
 import com.house.agency.param.manage.HouseManageQueryParam;
@@ -46,10 +47,20 @@ public class HouseController extends BaseController {
 	public String pageUsedSale(Model model) {
 		setModel(model, regionService);
 		
-		String imageUrl = configureService.getValueByKey("image_url");
-		model.addAttribute("imageUrl", imageUrl);
+		String imageUrl = ConfigureEnum.IMAGE_URL.getValue();
+		String match = ConfigureEnum.MATCH.getValue();
 		
-		String match = configureService.getValueByKey("match");
+		StringBuilder keys = new StringBuilder("");
+		keys.append("'");
+		keys.append(imageUrl);
+		keys.append("','");
+		keys.append(match);
+		keys.append("'");
+		
+		Map<String, String> map = configureService.queryValueByKey(keys.toString());
+		imageUrl = map.get(imageUrl);
+		model.addAttribute("imageUrl", imageUrl);
+		match = map.get(match);
 		Map<String, String> matchs = MapUtil.getMap(match, "[,]");
 		model.addAttribute("matchs", matchs);
 		return "house";
