@@ -352,7 +352,7 @@
 									<a href="${ctx}/home/house/new/sale"><i class="icon-double-angle-right"></i>出售</a>
 								</li>
 								<li>
-									<a href="${ctx}/manage/house/add"><i class="icon-double-angle-right"></i>出租</a>
+									<a href="${ctx}/home/house/add"><i class="icon-double-angle-right"></i>出租</a>
 								</li>
 							</ul>
 						</li>
@@ -367,7 +367,7 @@
                   <a href="${ctx}/home/house/used/sale"><i class="icon-double-angle-right"></i>出售</a>
                 </li>
                 <li>
-                  <a href="${ctx}/manage/house/add"><i class="icon-double-angle-right"></i>出租</a>
+                  <a href="${ctx}/home/house/add"><i class="icon-double-angle-right"></i>出租</a>
                 </li>
               </ul>
             </li>
@@ -383,45 +383,6 @@
                 </li>
                 <li>
                   <a href="${ctx}/home/customerRequire"><i class="icon-double-angle-right"></i>需求</a>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a href="#" class="dropdown-toggle">
-                <i class="icon-table"></i>
-                <span class="menu-text"> 小区 </span>
-                <b class="arrow icon-angle-down"></b>
-              </a>
-              <ul class="submenu">
-                <li>
-                  <a href="${ctx}/home/building"><i class="icon-double-angle-right"></i>楼盘</a>
-                </li>
-                <li>
-                  <a href="${ctx}/home/house"><i class="icon-double-angle-right"></i>房源</a>
-                </li>
-              </ul>
-            </li>
-						<li>
-              <a href="#" class="dropdown-toggle">
-                <i class="icon-table"></i>
-                <span class="menu-text"> 地区 </span>
-                <b class="arrow icon-angle-down"></b>
-              </a>
-              <ul class="submenu">
-                <li>
-                  <a href="${ctx}/home/region/country"><i class="icon-double-angle-right"></i>国家</a>
-                </li>
-                <li>
-                  <a href="${ctx}/home/region/province"><i class="icon-double-angle-right"></i>省份</a>
-                </li>
-                <li>
-                  <a href="${ctx}/home/region/city"><i class="icon-double-angle-right"></i>市县</a>
-                </li>
-                <li>
-                  <a href="${ctx}/home/region/district"><i class="icon-double-angle-right"></i>城区</a>
-                </li>
-                <li>
-                  <a href="${ctx}/home/region/town"><i class="icon-double-angle-right"></i>乡镇</a>
                 </li>
               </ul>
             </li>

@@ -455,7 +455,7 @@
          'processing':  '处理中...',
          'lengthMenu':  '每页 _MENU_ 条记录',
          'zeroRecords': '没有找到记录',
-         'infoEmpty':   '无记录',
+         'infoEmpty':   '&nbsp;',
          'info':        '当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录',
          'paginate': {
            'first':     '首页',
@@ -588,7 +588,7 @@
         'processing':  '处理中...',
         'lengthMenu':  '每页 _MENU_ 条记录',
         'zeroRecords': '没有找到记录',
-        'infoEmpty':   '无记录',
+        'infoEmpty':   '&nbsp;',
         'info':        '当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录',
         'paginate': {
           'first':     '首页',
