@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.house.agency.data.home.HouseHomeData;
-import com.house.agency.data.home.HouseHomeDescData;
+import com.house.agency.data.home.HouseHomeInfoData;
 import com.house.agency.data.manage.HouseManageData;
 import com.house.agency.entity.House;
 import com.house.agency.enums.ConfigureEnum;
@@ -48,21 +48,18 @@ public class HouseController extends BaseController {
 		setModel(model, regionService);
 		
 		String imageUrl = ConfigureEnum.IMAGE_URL.getValue();
-		String match = ConfigureEnum.MATCH.getValue();
+		String matchs = ConfigureEnum.MATCHS.getValue();
 		
 		StringBuilder keys = new StringBuilder("");
 		keys.append("'");
 		keys.append(imageUrl);
 		keys.append("','");
-		keys.append(match);
+		keys.append(matchs);
 		keys.append("'");
 		
 		Map<String, String> map = configureService.queryValueByKey(keys.toString());
-		imageUrl = map.get(imageUrl);
-		model.addAttribute("imageUrl", imageUrl);
-		match = map.get(match);
-		Map<String, String> matchs = MapUtil.getMap(match, "[,]");
-		model.addAttribute("matchs", matchs);
+		model.addAttribute("imageUrl", map.get(imageUrl));
+		model.addAttribute("matchs", MapUtil.getMap(matchs, "[,]"));
 		return "house";
 	}
 	
@@ -84,7 +81,7 @@ public class HouseController extends BaseController {
 	@ResponseBody
 	public Object select(String buildingUnitId) {
 		JsonMessage jMessage = new JsonMessage();
-		List<HouseHomeDescData> datas = null;
+		List<HouseHomeInfoData> datas = null;
 		try {
 			datas = houseService.queryByBuildingUnitId(buildingUnitId);
 			jMessage.setStatus(JsonMessage.TRUE);
