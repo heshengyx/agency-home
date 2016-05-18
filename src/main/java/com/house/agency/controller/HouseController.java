@@ -59,7 +59,7 @@ public class HouseController extends BaseController {
 		
 		Map<String, String> map = configureService.queryValueByKey(keys.toString());
 		model.addAttribute("imageUrl", map.get(imageUrl));
-		model.addAttribute("matchs", MapUtil.getMap(matchs, "[,]"));
+		model.addAttribute("matchs", MapUtil.getMapKeyLong(map.get(matchs), "[,]"));
 		return "house";
 	}
 	

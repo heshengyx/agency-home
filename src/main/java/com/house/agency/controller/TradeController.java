@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.house.agency.entity.Trade;
+import com.house.agency.entity.User;
 import com.house.agency.service.ITradeService;
 import com.myself.common.exception.ServiceException;
 import com.myself.common.message.JsonMessage;
@@ -26,6 +27,8 @@ public class TradeController extends BaseController {
 	@ResponseBody
 	public Object saveOrUpdate(Trade param, String buildingId) {
 		JsonMessage jMessage = new JsonMessage();
+		User user = getCurrentUser();
+		param.setUserId(user.getId());
 		try {
 			tradeService.saveOrUpdate(param, buildingId);
 			jMessage.setStatus(JsonMessage.TRUE);
