@@ -24,17 +24,17 @@ public class LoginController extends BaseController {
 	@ResponseBody
 	public Object login(User user) {
 		JsonMessage jMessage = new JsonMessage();
-		String username = user.getUsername();
+		String account = user.getAccount();
 		UsernamePasswordToken token = new UsernamePasswordToken(
-				username, user.getPassword());
+				account, user.getPassword());
 		Subject subject = SecurityUtils.getSubject();
 		try {
 			// token.setRememberMe(true);
 			subject.login(token);
 			jMessage.setStatus(JsonMessage.TRUE);
-			logger.info("[{}]登录成功", new Object[]{username});
+			logger.info("[{}]登录成功", new Object[]{account});
 		} catch (Exception e) {
-			logger.error("[{}]登录失败", new Object[]{username}, e);
+			logger.error("[{}]登录失败", new Object[]{account}, e);
 			jMessage.setStatus(JsonMessage.FALSE);
 			jMessage.setMessage("登录失败");
 		}

@@ -75,9 +75,9 @@
                         <fieldset>
                           <label class="block clearfix">
                             <span class="block input-icon input-icon-right">
-                              <input type="text" class="form-control" name="username" placeholder="手机/账号/邮箱" />
+                              <input type="text" class="form-control" name="account" placeholder="手机/账号/邮箱" />
                               <i class="icon-user"></i>
-                              <span id="usernameMessage"></span>
+                              <span id="accountMessage"></span>
                             </span>
                           </label>
 
@@ -204,7 +204,7 @@
 
                           <label class="block clearfix">
                             <span class="block input-icon input-icon-right">
-                              <input type="text" class="form-control" placeholder="Username" />
+                              <input type="text" class="form-control" placeholder="account" />
                               <i class="icon-user"></i>
                             </span>
                           </label>
@@ -297,8 +297,8 @@
 			    }, 'json');
 			  },
 			  fields: {
-			    username: {
-			    	container: '#usernameMessage',
+			    account: {
+			    	container: '#accountMessage',
             validators: {
               notEmpty: {
             	  message: '账号不能为空'
