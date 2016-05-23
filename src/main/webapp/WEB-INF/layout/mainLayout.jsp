@@ -386,6 +386,18 @@
                 </li>
               </ul>
             </li>
+            <li>
+              <a href="#" class="dropdown-toggle">
+                <i class="icon-user"></i>
+                <span class="menu-text"> 用户信息 </span>
+                <b class="arrow icon-angle-down"></b>
+              </a>
+              <ul class="submenu">
+                <li>
+                  <a href="${ctx}/home/user"><i class="icon-double-angle-right"></i>个人资料</a>
+                </li>
+              </ul>
+            </li>
 					</ul><!-- /.nav-list -->
 
 					<div class="sidebar-collapse" id="sidebar-collapse">

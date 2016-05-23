@@ -10,6 +10,8 @@
 	
 	<mapping path="/home/customer" decorator="/WEB-INF/layout/mainLayout.jsp"/>
 	<mapping path="/home/customerRequire" decorator="/WEB-INF/layout/mainLayout.jsp"/>
+	
+	<mapping path="/home/user" decorator="/WEB-INF/layout/mainLayout.jsp"/>
 
 	<!-- 排除，不进行装饰的路径 -->
 	<mapping path="/avatars/*" exclude="true"/>

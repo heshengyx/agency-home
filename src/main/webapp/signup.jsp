@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>用户登录-爱房网</title>
+    <title>用户注册-爱房网</title>
     <!-- basic styles -->
     <link href="${ctx}/css/bootstrap.min.css" rel="stylesheet">
     <link href="${ctx}/css/font-awesome.min.css" rel="stylesheet">
@@ -30,6 +30,7 @@
     <![endif]-->
     
     <!-- page specific plugin styles -->
+    <link href="${ctx}/css/ui-dialog.css" rel="stylesheet">
     <link href="${ctx}/css/bootstrapValidator.min.css" rel="stylesheet">
     
     <!-- inline styles related to this page -->
@@ -58,24 +59,32 @@
                 </h1>
                 <!-- <h4 class="blue">&copy; Company Name</h4> -->
               </div>
-
               <div class="space-6"></div>
 
               <div class="position-relative">
-                <div id="login-box" class="login-box visible widget-box no-border">
+                <div id="signup-box" class="signup-box visible widget-box no-border">
                   <div class="widget-body">
                     <div class="widget-main">
-                      <h4 class="header blue lighter bigger">
-                        <i class="icon-coffee green"></i>用户登录
+                      <h4 class="header green lighter bigger">
+                        <i class="icon-group blue"></i>用户注册
                       </h4>
 
                       <div class="space-6"></div>
+                      <p> 请填写以下信息: </p>
 
-                      <form id="dataForm" action="${ctx}/home/login" method="post">
+                      <form id="dataForm" action="${ctx}/home/signup" method="post">
                         <fieldset>
                           <label class="block clearfix">
                             <span class="block input-icon input-icon-right">
-                              <input type="text" class="form-control" name="account" placeholder="手机/账号/邮箱" />
+                              <input type="email" class="form-control" name="email" placeholder="邮箱" />
+                              <i class="icon-envelope"></i>
+                              <span id="emailMessage"></span>
+                            </span>
+                          </label>
+
+                          <label class="block clearfix">
+                            <span class="block input-icon input-icon-right">
+                              <input type="text" class="form-control" name="account" id="account" placeholder="账号" />
                               <i class="icon-user"></i>
                               <span id="accountMessage"></span>
                             </span>
@@ -88,69 +97,42 @@
                               <span id="passwordMessage"></span>
                             </span>
                           </label>
-                          
-                          <div id="alert-box"></div>
-                          
-                          <div class="hidden" id="alert-model">
-                          <div class="alert alert-danger">
-			                      <button type="button" class="close" data-dismiss="alert">
-			                        <i class="icon-remove"></i>
-			                      </button>
-			                      <strong>
-			                        <i class="icon-remove"></i><span class="errors"></span>
-			                      </strong>
-			                    </div>
-			                    </div>
-                          <div class="space"></div>
-                          <div class="clearfix">
-                            <label class="inline">
-                              <input type="checkbox" class="ace" />
-                              <span class="lbl"> 记住我</span>
-                            </label>
 
-                            <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
-                              <i class="icon-key"></i>登录
+                          <label class="block clearfix">
+                            <span class="block input-icon input-icon-right">
+                              <input type="password" class="form-control" name="pwdConfirm" placeholder="确认密码" />
+                              <i class="icon-retweet"></i>
+                              <span id="pwdConfirmMessage"></span>
+                            </span>
+                          </label>
+
+                          <label class="block">
+                            <input type="checkbox" class="ace" />
+                            <span class="lbl">我接受注册<a href="#">条款</a></span>
+                          </label>
+
+                          <div class="space-24"></div>
+
+                          <div class="clearfix">
+                            <button type="reset" class="width-30 pull-left btn btn-sm">
+                              <i class="icon-refresh"></i>重置
+                            </button>
+
+                            <button type="submit" class="width-65 pull-right btn btn-sm btn-success">提交
+                              <i class="icon-arrow-right icon-on-right"></i>
                             </button>
                           </div>
-
-                          <div class="space-4"></div>
                         </fieldset>
                       </form>
+                    </div>
 
-                      <div class="social-or-login center">
-                        <span class="bigger-110">或者 其他登录</span>
-                      </div>
-
-                      <div class="social-login center">
-                        <a class="btn btn-primary">
-                          <i class="icon-facebook"></i>
-                        </a>
-
-                        <a class="btn btn-info">
-                          <i class="icon-twitter"></i>
-                        </a>
-
-                        <a class="btn btn-danger">
-                          <i class="icon-google-plus"></i>
-                        </a>
-                      </div>
-                    </div><!-- /widget-main -->
-
-                    <div class="toolbar clearfix">
-                      <div>
-                        <a href="#" onclick="show_box('forgot-box');" class="forgot-password-link">
-                          <i class="icon-arrow-left"></i>忘记密码
-                        </a>
-                      </div>
-
-                      <div>
-                        <a href="${ctx}/signup.jsp" class="user-signup-link">我要注册
-                          <i class="icon-arrow-right"></i>
-                        </a>
-                      </div>
+                    <div class="toolbar center">
+                      <a href="${ctx}/login.jsp"  class="back-to-login-link">
+                        <i class="icon-arrow-left"></i>返回登录
+                      </a>
                     </div>
                   </div><!-- /widget-body -->
-                </div><!-- /login-box -->
+                </div><!-- /signup-box -->
               </div><!-- /position-relative -->
             </div>
           </div><!-- /.col -->
@@ -178,26 +160,64 @@
     <script src="${ctx}/js/ace-elements.min.js"></script>
     <script src="${ctx}/js/ace.min.js"></script>
     <script src="${ctx}/js/bootstrapValidator.min.js"></script>
+    <script src="${ctx}/js/dialog-min.js"></script>
+    <script src="${ctx}/js/dialog-util.js"></script>
     <script>
     $(document).ready(function() {
 			$('#dataForm').bootstrapValidator({
 			  submitHandler: function(validator, form, submitButton) {
 			    $.post(form.attr('action'), form.serialize(), function(result) {
 			      if (result.status) {
-			    	  window.location.href = '${ctx}/home/house/used/sale';
+			    	  dialog({
+	              title: '消息',
+	              content: '恭喜！账号：' + $('#account').val() + '注册成功。',
+	              okValue: '确定',
+	              ok: function () {
+	                var that = this;
+	                that.close().remove();
+                  location.href = "${ctx}/login.jsp";
+	              }
+	            }).width(150).showModal();
 			      } else {
-			    	  $('.errors').html('账号或密码错误');
-			    	  $('#alert-box').html($('#alert-model').html());
+			    	  //$('#message').text(result.message);
 		          validator.disableSubmitButtons(false);
 			      }
 			    }, 'json');
 			  },
 			  fields: {
+				  email: {
+            container: '#emailMessage',
+            validators: {
+              notEmpty: {
+                message: '邮箱不能为空'
+              },
+              emailAddress: {
+            	  message: '邮箱格式不正确'
+              }
+            }
+          },
 			    account: {
 			    	container: '#accountMessage',
             validators: {
               notEmpty: {
             	  message: '账号不能为空'
+              },
+              stringLength: {
+            	  min: 6,
+            	  max: 20,
+            	  message: '账号必须在6个字符至20个字符之间'
+              },
+              different: {
+                field: 'password',
+                message: '账号不能与密码相同'
+              },
+              regexp: {
+            	  regexp: '[a-zA-Z0-9_\.]+',
+            		message: '账号只能包含字母，数字，点和下划线'
+              },
+              remote: {
+            	  url: '${ctx}/home/check',
+            	  message: '此账号已存在'
               }
             }
           },
@@ -206,16 +226,33 @@
             validators: {
               notEmpty: {
             	  message: '密码不能为空'
+              },
+              stringLength: {
+                min: 6,
+                max: 20,
+                message: '密码必须在6个字符至20个字符之间'
+              },
+              different: {
+            	  field: 'account',
+            	  message: '密码不能与账号相同'
+              }
+            }
+          },
+          pwdConfirm: {
+            container: '#pwdConfirmMessage',
+            validators: {
+              notEmpty: {
+                message: '确认密码不能为空'
+              },
+              identical: {
+            	  field: 'password',
+            	  message: '两次密码输入不一致'
               }
             }
           }
 			  }
 		  });
     });
-    function show_box(id) {
-      $('.widget-box.visible').removeClass('visible');
-      $('#'+id).addClass('visible');
-    }
     </script>
   </body>
 </html>

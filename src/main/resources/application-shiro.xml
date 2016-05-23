@@ -43,11 +43,14 @@
         /fonts/** = anon
         /avatars/** = anon
         /login.jsp = anon
+        /signup.jsp = anon
         /unauthor.jsp = anon
         /404.jsp = anon
         /505.jsp = anon
         /home/login = anon
         /home/logout = anon
+        /home/signup = anon
+        /home/check = anon
        
         /home/** = authc  
 			</value>  
